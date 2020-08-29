@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Tray, Menu, dialog } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -11,6 +11,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let tray
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
@@ -35,12 +36,54 @@ function createWindow () {
     mainWindow = null
   })
 }
+// 创建图标
+function createTray () {
+  const truckPic = process.platform === 'darwin' ? `${__static}/truck.png` : `${__static}/truck-nodarwin.png`
+  tray = new Tray(truckPic) // 指定图片的路径
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '关于',
+      click () {
+        dialog.showMessageBox({
+          title: 'ets666',
+          message: 'ets666',
+          detail: `Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666`
+        })
+      }
+    }
+    // { label: 'Item3', type: 'radio', checked: true }
+  ])
+  tray.setToolTip('ets666')
+  tray.setContextMenu(contextMenu)
+}
 
-app.on('ready', createWindow)
+function createMenu () {
+  // darwin表示macOS，针对macOS的设置
+  if (process.platform === 'darwin') {
+    const template = [
+      {
+        label: 'ets666',
+        submenu: [
+          {
+            role: 'quit'
+          }]
+      }]
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
+  } else {
+    // windows及linux系统
+    Menu.setApplicationMenu(null)
+  }
+}
 
+app.on('ready', () => {
+  createWindow()
+  createTray()
+  createMenu()
+})
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+  if (process.platform !== 'darwin') { // 当操作系统不是darwin（macOS）的话
+    app.quit() // 退出应用
   }
 })
 
