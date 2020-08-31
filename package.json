@@ -30,9 +30,6 @@
     "files": [
       "dist/electron/**/*"
     ],
-    "electronDownload": {
-      "mirror": "https://npm.taobao.org/mirrors/electron/"
-    },
     "dmg": {
       "contents": [
         {

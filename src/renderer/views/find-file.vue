@@ -35,7 +35,7 @@ export default {
     loadFile () {
       this.fullscreenLoading = true
       const _this = this
-      const cmdStr = process.cwd() + '/static/SII_Decrypt.exe ' + this.gamePath + 'game.sii'
+      const cmdStr = process.cwd() + '/static/SII_Decrypt.exe ' + this.gamePath + '/game.sii'
       // const cmdStr = 'ifconfig'
 
       // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
@@ -43,11 +43,7 @@ export default {
 
       // 打印正常的后台可执行程序输出
       workerProcess.stdout.on('data', function (data) {
-        _this.$notify({
-          title: '成功',
-          message: '解码成功',
-          type: 'success'
-        })
+        console.log(data)
       })
 
       // 打印错误的后台可执行程序输出
@@ -63,6 +59,25 @@ export default {
       // 退出之后的输出
       workerProcess.on('close', function (code) {
         console.log('out code：' + code)
+        if (code === 0) {
+          _this.$notify({
+            title: '成功',
+            message: '解码成功',
+            type: 'success'
+          })
+        } else if (code === 1) {
+          _this.$notify({
+            title: '成功',
+            message: '已解码',
+            type: 'success'
+          })
+        } else {
+          _this.$notify({
+            title: '失败',
+            message: '读取失败',
+            type: 'success'
+          })
+        }
         _this.fullscreenLoading = false
       })
     }
