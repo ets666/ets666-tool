@@ -1,32 +1,70 @@
 <template>
-  <div class="box">
+  <div class="box" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="content">
       请选择存档所在目录
     </div>
     <div>
-      <el-input style="width: 80%;" v-model="input" placeholder="请选择文件路径"></el-input>
+      <el-input style="width: 70%;" v-model="gamePath" placeholder="请选择文件路径"></el-input>
       <el-button @click="openFileHandler">选择</el-button>
+      <el-button style="margin-left: 0;" @click="loadFile">加载</el-button>
       <input ref="input_file" type="file" readonly webkitdirectory directory style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" @change="fileChange">
     </div>
   </div>
 </template>
 
 <script>
+import { exec } from 'child_process'
+
 export default {
   name: 'find-file',
   data () {
     return {
-      input: ''
+      gamePath: '',
+      fullscreenLoading: false
     }
   },
   methods: {
     openFileHandler () {
       this.$refs.input_file.click()
     },
+    // 获取path
     fileChange () {
-      console.log(this.$refs.input_file.files)
       const file = this.$refs.input_file.files[0]
-      this.input = file.path
+      this.gamePath = file.path
+    },
+    loadFile () {
+      this.fullscreenLoading = true
+      const _this = this
+      const cmdStr = process.cwd() + '/static/SII_Decrypt.exe ' + this.gamePath + 'game.sii'
+      // const cmdStr = 'ifconfig'
+
+      // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
+      const workerProcess = exec(cmdStr, { })
+
+      // 打印正常的后台可执行程序输出
+      workerProcess.stdout.on('data', function (data) {
+        _this.$notify({
+          title: '成功',
+          message: '解码成功',
+          type: 'success'
+        })
+      })
+
+      // 打印错误的后台可执行程序输出
+      workerProcess.stderr.on('data', function (data) {
+        _this.$alert('请确认存档所在地址是否正确!', '解码失败', {
+          confirmButtonText: '确定',
+          callback: action => {
+            _this.fullscreenLoading = false
+          }
+        })
+      })
+
+      // 退出之后的输出
+      workerProcess.on('close', function (code) {
+        console.log('out code：' + code)
+        _this.fullscreenLoading = false
+      })
     }
   }
 }
