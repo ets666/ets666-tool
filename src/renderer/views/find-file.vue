@@ -14,6 +14,8 @@
 
 <script>
 import { exec } from 'child_process'
+const fs = require('fs')
+const path = require('path')
 
 export default {
   name: 'find-file',
@@ -35,11 +37,22 @@ export default {
     loadFile () {
       this.fullscreenLoading = true
       const _this = this
-      const cmdStr = process.cwd() + '/static/SII_Decrypt.exe ' + this.gamePath + '/game.sii'
-      // const cmdStr = 'ifconfig'
-
+      const oldUrl = path.join(process.cwd(), '/static/SII_Decrypt.exe')
+      const newUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+      fs.stat(oldUrl, function (err) {
+        if (err) {
+          _this.runCmd(newUrl)
+        } else {
+          _this.runCmd(oldUrl)
+        }
+      })
+    },
+    runCmd (cmdStr) {
+      const _this = this
+      cmdStr = cmdStr + ' "' + `${path.join(_this.gamePath, '/game.sii')}` + '"'
+      console.log(cmdStr)
       // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-      const workerProcess = exec(cmdStr, { })
+      const workerProcess = exec(cmdStr, {})
 
       // 打印正常的后台可执行程序输出
       workerProcess.stdout.on('data', function (data) {

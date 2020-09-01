@@ -30,6 +30,12 @@
     "files": [
       "dist/electron/**/*"
     ],
+    "extraResources": [
+      {
+        "from": "./static/SII_Decrypt.exe",
+        "to": "./SII_Decrypt.exe"
+      }
+    ],
     "dmg": {
       "contents": [
         {
