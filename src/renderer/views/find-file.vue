@@ -6,7 +6,7 @@
     <div>
       <el-input style="width: 70%;" v-model="gamePath" placeholder="请选择文件路径"></el-input>
       <el-button @click="openFileHandler">选择</el-button>
-      <el-button style="margin-left: 0;" @click="loadFile">加载</el-button>
+      <el-button style="margin-left: 0;" @click="isExists">加载</el-button>
       <input ref="input_file" type="file" readonly webkitdirectory directory style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" @change="fileChange">
     </div>
   </div>
@@ -34,15 +34,37 @@ export default {
       const file = this.$refs.input_file.files[0]
       this.gamePath = file.path
     },
-    loadFile () {
+    // 判断文件是否存在
+    isExists () {
+      const _this = this
+      const oldName = path.join(_this.gamePath, '/game.sii')
       this.fullscreenLoading = true
+      fs.access(oldName, fs.F_OK, (err) => {
+        if (err) {
+          _this.fullscreenLoading = false
+          _this.$message.error('文件不存在！')
+          return
+        }
+        _this.loadFile()
+      })
+    },
+    loadFile () {
       const _this = this
       const oldUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
       // const newUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+      const oldName = path.join(_this.gamePath, '/game.sii')
+      const newName = path.join(_this.gamePath, '/game.sii.bak')
+      fs.copyFile(oldName, newName, function (err) {
+        if (err) {
+          console.log('err')
+        } else {
+          console.log('copy')
+        }
+      })
       fs.stat(oldUrl, function (err) {
         if (err) {
           // _this.runCmd(newUrl)
-          this.$message.error('没有找到解码器')
+          _this.$message.error('没有找到解码器')
         } else {
           _this.runCmd(oldUrl)
         }
