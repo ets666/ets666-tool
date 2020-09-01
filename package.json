@@ -32,8 +32,8 @@
     ],
     "extraResources": [
       {
-        "from": "./static/SII_Decrypt.exe",
-        "to": "./SII_Decrypt.exe"
+        "from": "resources/",
+        "to": "./"
       }
     ],
     "dmg": {
@@ -55,7 +55,8 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "target": ["portable"]
     },
     "linux": {
       "icon": "build/icons"

@@ -37,11 +37,12 @@ export default {
     loadFile () {
       this.fullscreenLoading = true
       const _this = this
-      const oldUrl = path.join(process.cwd(), '/static/SII_Decrypt.exe')
-      const newUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+      const oldUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+      // const newUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
       fs.stat(oldUrl, function (err) {
         if (err) {
-          _this.runCmd(newUrl)
+          // _this.runCmd(newUrl)
+          this.$message.error('没有找到解码器')
         } else {
           _this.runCmd(oldUrl)
         }
