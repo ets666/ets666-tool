@@ -36,18 +36,17 @@ export default {
     },
     // 判断文件是否存在
     isExists () {
-      this.$electron.ipcRenderer.send('request:game:path', [this.gamePath])
-      // const _this = this
-      // const oldName = path.join(_this.gamePath, '/game.sii')
-      // this.fullscreenLoading = true
-      // fs.access(oldName, fs.F_OK, (err) => {
-      //   if (err) {
-      //     _this.fullscreenLoading = false
-      //     _this.$message.error('路径错误!')
-      //     return
-      //   }
-      //   _this.loadFile()
-      // })
+      const _this = this
+      const oldName = path.join(_this.gamePath, '/game.sii')
+      this.fullscreenLoading = true
+      fs.access(oldName, fs.F_OK, (err) => {
+        if (err) {
+          _this.fullscreenLoading = false
+          _this.$message.error('文件不存在！')
+          return
+        }
+        _this.loadFile()
+      })
     },
     loadFile () {
       const _this = this
