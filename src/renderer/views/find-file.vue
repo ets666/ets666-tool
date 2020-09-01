@@ -4,7 +4,7 @@
       请选择存档所在目录
     </div>
     <div>
-      <el-input style="width: 70%;" v-model="gamePath" placeholder="请选择文件路径"></el-input>
+      <el-input style="width: 70%;" v-model="gamePath" disabled placeholder="请选择文件路径"></el-input>
       <el-button @click="openFileHandler">选择</el-button>
       <el-button style="margin-left: 0;" @click="isExists">加载</el-button>
       <input ref="input_file" type="file" readonly webkitdirectory directory style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" @change="fileChange">
@@ -36,17 +36,18 @@ export default {
     },
     // 判断文件是否存在
     isExists () {
-      const _this = this
-      const oldName = path.join(_this.gamePath, '/game.sii')
-      this.fullscreenLoading = true
-      fs.access(oldName, fs.F_OK, (err) => {
-        if (err) {
-          _this.fullscreenLoading = false
-          _this.$message.error('文件不存在！')
-          return
-        }
-        _this.loadFile()
-      })
+      this.$electron.ipcRenderer.send('request:game:path', [this.gamePath])
+      // const _this = this
+      // const oldName = path.join(_this.gamePath, '/game.sii')
+      // this.fullscreenLoading = true
+      // fs.access(oldName, fs.F_OK, (err) => {
+      //   if (err) {
+      //     _this.fullscreenLoading = false
+      //     _this.$message.error('路径错误!')
+      //     return
+      //   }
+      //   _this.loadFile()
+      // })
     },
     loadFile () {
       const _this = this
