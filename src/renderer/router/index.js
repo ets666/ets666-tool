@@ -7,8 +7,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'find-file',
-      component: require('@/views/find-file.vue').default
+      name: 'index',
+      component: require('@/views/index/index.vue').default
     },
     {
       path: '*',

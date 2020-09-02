@@ -22,7 +22,18 @@ export default {
   data () {
     return {
       gamePath: '',
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      fileInfo: '',
+      savePath: ''
+    }
+  },
+  created () {
+    try {
+      let data = fs.readFileSync(path.join(process.cwd(), '/resources/db.json'))
+      this.fileInfo = data.toString()
+      this.savePath = JSON.parse(this.fileInfo).path
+    } catch (error) {
+      this.savePath = ''
     }
   },
   methods: {
@@ -36,6 +47,12 @@ export default {
     },
     // 判断文件是否存在
     isExists () {
+      const str = JSON.parse(this.fileInfo)
+      str.path = this.gamePath
+      fs.writeFileSync(path.join(process.cwd(), '/resources/db.json'), JSON.stringify(str), error => {
+        if (error) return console.log('写入文件失败,原因是' + error.message)
+        // console.log("写入成功");
+      })
       const _this = this
       const oldName = path.join(_this.gamePath, '/game.sii')
       this.fullscreenLoading = true
@@ -51,7 +68,6 @@ export default {
     loadFile () {
       const _this = this
       const oldUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
-      // const newUrl = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
       const oldName = path.join(_this.gamePath, '/game.sii')
       const newName = path.join(_this.gamePath, '/game.sii.bak')
       fs.copyFile(oldName, newName, function (err) {
@@ -63,7 +79,6 @@ export default {
       })
       fs.stat(oldUrl, function (err) {
         if (err) {
-          // _this.runCmd(newUrl)
           _this.$message.error('没有找到解码器')
         } else {
           _this.runCmd(oldUrl)
