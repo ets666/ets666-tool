@@ -20,8 +20,16 @@ export default {
   data () {
     return {
       gamePath: '',
-      fileInfo: '',
-      savePath: ''
+      fileInfo: ''
+    }
+  },
+  mounted () {
+    try {
+      let data = fs.readFileSync(path.join(process.cwd(), '/resources/db.json'))
+      this.fileInfo = data.toString()
+      this.gamePath = JSON.parse(this.fileInfo).path
+    } catch (error) {
+      this.gamePath = ''
     }
   },
   methods: {

@@ -1,17 +1,20 @@
 <template>
   <div class="w h">
     <select-euro-path v-if="!savePath" @pathSave="pathSave" />
+    <setting v-else @changePath="changePath" />
   </div>
 </template>
 
 <script>
 import SelectEuroPath from './components/select-euro-path'
+import Setting from './components/setting'
 const fs = require('fs')
 const path = require('path')
 
 export default {
   components: {
-    SelectEuroPath
+    SelectEuroPath,
+    Setting
   },
   data () {
     return {
@@ -31,6 +34,9 @@ export default {
   methods: {
     pathSave (path) {
       this.savePath = path
+    },
+    changePath () {
+      this.savePath = ''
     }
   }
 }
