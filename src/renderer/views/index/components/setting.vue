@@ -114,7 +114,7 @@
       </div>
 
       <div class="box">
-        <el-button type="primary" class="btn">保存联运任务</el-button>
+        <el-button type="primary" class="btn" :disabled="!(profile && save)">保存联运任务</el-button>
       </div>
     </div>
 
