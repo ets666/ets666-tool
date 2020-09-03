@@ -1,5 +1,5 @@
 <template>
-  <div class="w h">
+  <div class="w h" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="menu_box">
       <div class="path_box">
         路径:
@@ -110,7 +110,7 @@
 
     <div class="menu_box">
       <div class="box" style="margin-right: 10px;">
-        <el-button type="primary" class="btn" @click="saveSetting">一键修改存档</el-button>
+        <el-button type="primary" class="btn" :disabled="!(profile && save)" @click="saveSetting">一键修改存档</el-button>
       </div>
 
       <div class="box">
@@ -163,7 +163,8 @@ export default {
         endCargo: '',
         cargo: '',
         mileage: ''
-      }
+      },
+      fullscreenLoading: false
     }
   },
   created () {
@@ -217,6 +218,49 @@ export default {
       })
     },
     saveSetting () {
+      const _this = this
+      _this.fullscreenLoading = true
+      const obj = {
+        setting: _this.setting,
+        jobInfo: _this.jobInfo,
+        job: _this.job
+      }
+      const gameSiiPath = this.savePath + '/profiles/' + this.profile + '/save/' + this.save
+      fileEdit.SiiDecrypt(gameSiiPath, (code) => {
+        switch (code) {
+          case 0:
+          case 1:
+            // _this.$notify({ title: '成功', message: '解码成功', type: 'success' })
+            fileEdit.editGameSii(gameSiiPath, '/game.sii', obj, (file) => {
+              _this.$alert('保存成功', '成功', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  _this.fullscreenLoading = false
+                }
+              })
+            }, (err) => {
+              _this.$alert(err, '错误', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  _this.fullscreenLoading = false
+                }
+              })
+            })
+            break
+
+          default:
+            _this.$notify({ title: '失败', message: '解码失败', type: 'success' })
+            _this.fullscreenLoading = false
+            break
+        }
+      }, (err) => {
+        _this.$alert(err, '错误', {
+          confirmButtonText: '确定',
+          callback: action => {
+            _this.fullscreenLoading = false
+          }
+        })
+      })
     }
   }
 }

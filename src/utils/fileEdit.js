@@ -1,3 +1,4 @@
+import { exec } from 'child_process'
 const fs = require('fs')
 const path = require('path')
 
@@ -54,7 +55,7 @@ export function mapDir (dir, callback, finish) {
 }
 
 /**
- * @description:
+ * @description:查找文件夹名字
  * @param {String} dir 文件路径
  * @param {String} filedirname 需要查找的文件夹名
  * @param {function} callback 成功返回函数
@@ -82,6 +83,121 @@ export function mapDirName (dir, filedirname, callback, errorcallback) {
         }
       })
       callback && callback(filedir)
+    })
+  })
+}
+
+/**
+ * @description: 文件路径是否存在
+ * @param {String} dir 文件路径
+ * @param {String} filedirname 需要查找的文件夹名
+ * @param {function} callback 成功返回函数
+ * @param {function} errorcallback 失败返回函数
+ */
+export function isExists (dir, filedirname, callback, errorcallback) {
+  const dirurl = path.join(dir, filedirname)
+  fs.access(dirurl, fs.F_OK, (err) => {
+    if (err) {
+      errorcallback && errorcallback('无效的路径')
+      return
+    }
+    const flag = true
+    callback && callback(flag)
+  })
+}
+
+/**
+ * @description: 解码game.sii
+ * @param {String} dir 文件路径
+ * @param {function} callback 成功返回函数
+ * @param {function} errorcallback 失败返回函数
+ */
+export function SiiDecrypt (dir, callback, errorcallback) {
+  const siiPath = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+  const gameSiiPath = path.join(dir, '/game.sii')
+  const backSiiPath = path.join(dir, '/game_bak.sii')
+  fs.access(gameSiiPath, fs.F_OK, (err) => {
+    if (err) {
+      errorcallback && errorcallback('没有找存档')
+      return
+    }
+    // backup
+    fs.copyFileSync(gameSiiPath, backSiiPath)
+
+    // 解码
+    const cmdStr = siiPath + ' "' + gameSiiPath + '"'
+    // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
+    const workerProcess = exec(cmdStr, {})
+
+    // 打印错误的后台可执行程序输出
+    workerProcess.stderr.on('data', function (data) {
+      errorcallback && errorcallback('解码失败')
+    })
+
+    // 退出之后的输出
+    workerProcess.on('close', function (code) {
+      callback && callback(code)
+    })
+  })
+}
+
+/**
+ * @description: 修改存档信息
+ * @param {String} dir 文件路径
+ * @param {String} filedirname 需要查找的文件夹名
+ * @param {function} callback 成功返回函数
+ * @param {function} errorcallback 失败返回函数
+ */
+export function editGameSii (dir, filedirname, info, callback, errorcallback) {
+  const {setting, jobInfo, job} = info
+  console.log(setting)
+  console.log(jobInfo)
+  console.log(job)
+  const gameSiiPath = path.join(dir, filedirname)
+  fs.readFile(gameSiiPath, (err, data) => {
+    if (err) {
+      errorcallback && errorcallback('读取存档失败')
+      return
+    }
+    let gameInfo = data.toString()
+    if (setting.money) {
+      const subStr = new RegExp(/money_account: [^,\n]+/)
+      gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
+    }
+    if (setting.level) {
+      const subStr = new RegExp(/experience_points: [^,\n]+/)
+      gameInfo = gameInfo.replace(subStr, 'experience_points: 582499')
+    }
+
+    if (setting.skills) {
+      // const subStr = new RegExp(/money_account: [^,\n]+/)
+      // gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
+    }
+
+    if (setting.city) {
+      // const subStr = new RegExp(/money_account: [^,\n]+/)
+      // gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
+    }
+
+    if (setting.garage) {
+      // const subStr = new RegExp(/money_account: [^,\n]+/)
+      // gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
+    }
+    if (setting.damage) {
+      const subStr = new RegExp(/wear: [^,\n]+/g)
+      gameInfo = gameInfo.replace(subStr, 'wear: 0')
+    }
+    if (setting.oil) {
+      const subStr = new RegExp(/fuel_relative: [^,\n]+/g)
+      gameInfo = gameInfo.replace(subStr, 'fuel_relative: 1')
+    }
+    const buf = Buffer.from(gameInfo)
+    buf.toString('utf8')
+    fs.writeFile(gameSiiPath, gameInfo, function (err) {
+      if (err) {
+        console.error('写入失败')
+      }
+      callback && callback()
     })
   })
 }
