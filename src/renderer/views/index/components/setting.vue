@@ -12,7 +12,7 @@
         <div class="mb10">
           选择存档:
         </div>
-        <el-select v-model="profile" size="mini" placeholder="请选择档案" class="mb10">
+        <el-select v-model="profile" size="mini" placeholder="请选择档案" class="mb10" @change="changeProfile">
           <el-option
             v-for="item in profileOptions"
             :key="item.value"
@@ -110,7 +110,7 @@
 
     <div class="menu_box">
       <div class="box" style="margin-right: 10px;">
-        <el-button type="primary" class="btn">一键修改存档</el-button>
+        <el-button type="primary" class="btn" @click="saveSetting">一键修改存档</el-button>
       </div>
 
       <div class="box">
@@ -128,6 +128,8 @@
 
 <script>
 import moment from 'moment'
+import { hex2utf8 } from '../../../../utils/byte'
+const fileEdit = require('../../../../utils/fileEdit')
 const fs = require('fs')
 const path = require('path')
 
@@ -138,14 +140,8 @@ export default {
       tody: moment().format('yyyy年MM月DD日'),
       profile: '',
       save: '',
-      profileOptions: [{
-        value: '选项1',
-        label: '黄金糕'
-      }],
-      saveOptions: [{
-        value: '选项1',
-        label: '黄金糕'
-      }],
+      profileOptions: [],
+      saveOptions: [],
       setting: {
         money: false,
         level: false,
@@ -178,9 +174,49 @@ export default {
       this.savePath = ''
     }
   },
+  mounted () {
+    this.init()
+  },
   methods: {
+    init () {
+      const _this = this
+      _this.profileOptions = []
+      fileEdit.mapDirName(this.savePath, '/profiles', (file) => {
+        file.forEach((element) => {
+          const obj = {
+            value: element,
+            label: hex2utf8(element)
+          }
+          _this.profileOptions.push(obj)
+        })
+      }, (err) => {
+        _this.$nextTick(() => {
+          _this.$message.error(err)
+        })
+      })
+    },
     changePath () {
       this.$emit('changePath')
+    },
+    changeProfile (path) {
+      const _this = this
+      _this.saveOptions = []
+      console.log(this.savePath, '/profiles/' + path)
+      fileEdit.mapDirName(this.savePath, '/profiles/' + path + '/save', (file) => {
+        file.forEach((element) => {
+          const obj = {
+            value: element,
+            label: element
+          }
+          _this.saveOptions.push(obj)
+        })
+      }, (err) => {
+        _this.$nextTick(() => {
+          _this.$message.error(err)
+        })
+      })
+    },
+    saveSetting () {
     }
   }
 }
