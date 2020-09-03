@@ -72,7 +72,16 @@ export function mapDirName (dir, filedirname, callback, errorcallback) {
         errorcallback && errorcallback('文件不存在')
         return
       }
-      callback && callback(files)
+      // 只读取文件夹
+      const filedir = []
+      files.forEach((filename) => {
+        const pathname = path.join(dirurl, filename)
+        const statInfo = fs.statSync(pathname)
+        if (statInfo.isDirectory()) {
+          filedir.push(filename)
+        }
+      })
+      callback && callback(filedir)
     })
   })
 }
