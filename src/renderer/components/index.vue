@@ -29,9 +29,7 @@ export default {
   },
   created () {
     try {
-      let data = fs.readFileSync(path.join(process.cwd(), '/resources/db.json'))
-      this.fileInfo = data.toString()
-      this.savePath = JSON.parse(this.fileInfo).path
+      this.savePath = this.$db.read().get('path').value()
     } catch (error) {
       this.savePath = ''
     }
@@ -49,10 +47,11 @@ export default {
     isExists () {
       const str = JSON.parse(this.fileInfo)
       str.path = this.gamePath
-      fs.writeFileSync(path.join(process.cwd(), '/resources/db.json'), JSON.stringify(str), error => {
-        if (error) return console.log('写入文件失败,原因是' + error.message)
-        // console.log("写入成功");
-      })
+      // fs.writeFileSync(path.join(process.cwd(), '/resources/db.json'), JSON.stringify(str), error => {
+      //   if (error) return console.log('写入文件失败,原因是' + error.message)
+      //   // console.log("写入成功");
+      // })
+      this.$db.update('path', _this.gamePath).write()
       const _this = this
       const oldName = path.join(_this.gamePath, '/game.sii')
       this.fullscreenLoading = true

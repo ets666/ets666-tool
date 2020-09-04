@@ -130,8 +130,6 @@
 import moment from 'moment'
 import { hex2utf8 } from '../../../../utils/byte'
 const fileEdit = require('../../../../utils/fileEdit')
-const fs = require('fs')
-const path = require('path')
 
 export default {
   data () {
@@ -169,8 +167,7 @@ export default {
   },
   created () {
     try {
-      let data = fs.readFileSync(path.join(process.cwd(), '/resources/db.json'))
-      this.savePath = JSON.parse(data.toString()).path
+      this.savePath = this.$db.read().get('path').value()
     } catch (error) {
       this.savePath = ''
     }

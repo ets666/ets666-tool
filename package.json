@@ -67,6 +67,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.13.2",
+    "lowdb": "^1.0.0",
     "moment": "^2.27.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

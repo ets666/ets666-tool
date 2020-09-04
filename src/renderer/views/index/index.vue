@@ -8,8 +8,6 @@
 <script>
 import SelectEuroPath from './components/select-euro-path'
 import Setting from './components/setting'
-const fs = require('fs')
-const path = require('path')
 
 export default {
   components: {
@@ -24,9 +22,7 @@ export default {
   },
   created () {
     try {
-      let data = fs.readFileSync(path.join(process.cwd(), '/resources/db.json'))
-      this.fileInfo = data.toString()
-      this.savePath = JSON.parse(this.fileInfo).path
+      this.savePath = this.$db.read().get('path').value()
     } catch (error) {
       this.savePath = ''
     }

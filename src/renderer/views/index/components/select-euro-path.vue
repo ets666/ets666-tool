@@ -14,7 +14,6 @@
 
 <script>
 const fs = require('fs')
-const path = require('path')
 
 export default {
   data () {
@@ -25,9 +24,7 @@ export default {
   },
   mounted () {
     try {
-      let data = fs.readFileSync(path.join(process.cwd(), '/resources/db.json'))
-      this.fileInfo = data.toString()
-      this.gamePath = JSON.parse(this.fileInfo).path
+      this.gamePath = this.$db.read().get('path').value()
     } catch (error) {
       this.gamePath = ''
     }
@@ -50,13 +47,8 @@ export default {
           _this.$message.error('路径不存在！')
           return
         }
-        const str = { path: _this.gamePath }
-        fs.writeFile(path.join(process.cwd(), '/resources/db.json'), JSON.stringify(str), {flag: 'w'}, err => {
-          if (err) {
-            return _this.$message.error('文件读取失败')
-          }
-          _this.$emit('pathSave', _this.gamePath)
-        })
+        this.$db.update('path', n => _this.gamePath).write()
+        _this.$emit('pathSave', _this.gamePath)
       })
     }
   }
