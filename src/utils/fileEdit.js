@@ -121,23 +121,29 @@ export function SiiDecrypt (dir, callback, errorcallback) {
       errorcallback && errorcallback('没有找存档')
       return
     }
-    // backup
-    fs.copyFileSync(gameSiiPath, backSiiPath)
-
-    // 解码
-    const cmdStr = siiPath + ' "' + gameSiiPath + '"'
-    // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-    const workerProcess = exec(cmdStr, {})
-
-    // 打印错误的后台可执行程序输出
-    workerProcess.stderr.on('data', function (data) {
-      errorcallback && errorcallback('解码失败')
-    })
-
-    // 退出之后的输出
-    workerProcess.on('close', function (code) {
+    const statInfo = fs.statSync(gameSiiPath)
+    // 判断是否解码
+    if (statInfo.size > 517912) {
+      const code = 1
       callback && callback(code)
-    })
+    } else {
+      // backup
+      fs.copyFileSync(gameSiiPath, backSiiPath)
+      // 解码
+      const cmdStr = siiPath + ' "' + gameSiiPath + '"'
+      // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
+      const workerProcess = exec(cmdStr, {})
+
+      // 打印错误的后台可执行程序输出
+      workerProcess.stderr.on('data', function (data) {
+        errorcallback && errorcallback('解码失败')
+      })
+
+      // 退出之后的输出
+      workerProcess.on('close', function (code) {
+        callback && callback(code)
+      })
+    }
   })
 }
 
@@ -168,10 +174,19 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       const subStr = new RegExp(/experience_points: [^,\n]+/)
       gameInfo = gameInfo.replace(subStr, 'experience_points: 582499')
     }
-
     if (setting.skills) {
-      // const subStr = new RegExp(/money_account: [^,\n]+/)
-      // gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
+      const subAdr = new RegExp(/adr: [^,\n]+/)
+      gameInfo = gameInfo.replace(subAdr, 'adr: 63')
+      const subDist = new RegExp(/long_dist: [^,\n]+/)
+      gameInfo = gameInfo.replace(subDist, 'long_dist: 6')
+      const subHeavy = new RegExp(/heavy: [^,\n]+/)
+      gameInfo = gameInfo.replace(subHeavy, 'heavy: 6')
+      const subFragile = new RegExp(/fragile: [^,\n]+/)
+      gameInfo = gameInfo.replace(subFragile, 'fragile: 6')
+      const subUrgent = new RegExp(/urgent: [^,\n]+/)
+      gameInfo = gameInfo.replace(subUrgent, 'urgent: 6')
+      const subMechanical = new RegExp(/mechanical: [^,\n]+/)
+      gameInfo = gameInfo.replace(subMechanical, 'mechanical: 6')
     }
 
     if (setting.city) {
