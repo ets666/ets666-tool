@@ -51,8 +51,8 @@ export default {
       //   if (error) return console.log('写入文件失败,原因是' + error.message)
       //   // console.log("写入成功");
       // })
-      this.$db.update('path', _this.gamePath).write()
       const _this = this
+      this.$db.update('path', _this.gamePath).write()
       const oldName = path.join(_this.gamePath, '/game.sii')
       this.fullscreenLoading = true
       fs.access(oldName, fs.F_OK, (err) => {
