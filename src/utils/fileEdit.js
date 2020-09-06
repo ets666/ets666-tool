@@ -1,6 +1,7 @@
 import { exec } from 'child_process'
 const fs = require('fs')
 const path = require('path')
+const readline = require('readline')
 
 /**
  * @description: 遍历文件夹及文件内容
@@ -155,60 +156,166 @@ export function SiiDecrypt (dir, callback, errorcallback) {
  * @param {function} errorcallback 失败返回函数
  */
 export function editGameSii (dir, filedirname, info, callback, errorcallback) {
-  const {setting, jobInfo, job} = info
-  console.log(setting)
-  console.log(jobInfo)
-  console.log(job)
+  const { setting } = info
   const gameSiiPath = path.join(dir, filedirname)
-  fs.readFile(gameSiiPath, (err, data) => {
-    if (err) {
-      errorcallback && errorcallback('读取存档失败')
-      return
+  const fRead = fs.createReadStream(gameSiiPath)
+  const arrFile = []
+  const skills = []
+  const garage = []
+  let hqCity = ''
+  const visitedCity = []
+  const visitedIndex = {
+    city: 0,
+    count: 0
+  }
+  const cityName = new Set()
+
+  fRead.on('end', () => {
+    console.log('end')
+  })
+  const rl = readline.createInterface({
+    input: fRead,
+    terminal: true
+  })
+
+  let index = 0
+  rl.on('line', (input) => {
+    if (input.startsWith(' hq_city: ')) {
+      hqCity = input.split(': ')[1]
     }
-    let gameInfo = data.toString()
-    if (setting.money) {
-      const subStr = new RegExp(/money_account: [^,\n]+/)
-      gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
+    if (setting.money && input.startsWith(' money_account')) {
+      input = input.replace(/money_account: [^,\n]+/, 'money_account: 100000000') + '\r\n'
+    } else if (setting.level && input.startsWith(' experience_points')) {
+      input = input.replace(/experience_points: [^,\n]+/, 'experience_points: 582499') + '\r\n'
+    } else if (setting.skills && input.startsWith(' adr:')) {
+      skills.push(index)
+    } else if (setting.damage && input.startsWith(' wear')) {
+      input = input.replace(/wear: [^,\n]+/, 'wear: 0') + '\r\n'
+    } else if (setting.oil && input.startsWith(' fuel_relative')) {
+      input = input.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1') + '\r\n'
+    } else if (setting.city && input.startsWith(' companies[')) {
+      cityName.add(input.split('.')[3])
+    } else if (setting.city && input.startsWith(' visited_cities[')) {
+      visitedCity.push(input.split(': ')[1])
+    } else if (setting.city && input.startsWith(' visited_cities: ')) {
+      visitedIndex.city = index
+    } else if (setting.city && input.startsWith(' visited_cities_count: ')) {
+      visitedIndex.count = index
+    } else if (setting.garage && input.startsWith('garage : garage.')) {
+      if (!input.startsWith('garage : garage.' + hqCity)) {
+        garage.push(index)
+      }
     }
-    if (setting.level) {
-      const subStr = new RegExp(/experience_points: [^,\n]+/)
-      gameInfo = gameInfo.replace(subStr, 'experience_points: 582499')
+    arrFile.push(input)
+    index++
+  })
+
+  rl.on('close', () => {
+    if (skills.length > 0) {
+      const flag = skills[0]
+      arrFile[flag] = arrFile[flag].replace(/adr: [^,\n]+/, 'adr: 63')
+      arrFile[flag + 1] = arrFile[flag + 1].replace(/long_dist: [^,\n]+/, 'long_dist: 6')
+      arrFile[flag + 2] = arrFile[flag + 2].replace(/heavy: [^,\n]+/, 'heavy: 6')
+      arrFile[flag + 3] = arrFile[flag + 3].replace(/fragile: [^,\n]+/, 'fragile: 6')
+      arrFile[flag + 4] = arrFile[flag + 4].replace(/urgent: [^,\n]+/, 'urgent: 6')
+      arrFile[flag + 5] = arrFile[flag + 5].replace(/mechanical: [^,\n]+/, 'mechanical: 6')
     }
-    if (setting.skills) {
-      const subAdr = new RegExp(/adr: [^,\n]+/)
-      gameInfo = gameInfo.replace(subAdr, 'adr: 63')
-      const subDist = new RegExp(/long_dist: [^,\n]+/)
-      gameInfo = gameInfo.replace(subDist, 'long_dist: 6')
-      const subHeavy = new RegExp(/heavy: [^,\n]+/)
-      gameInfo = gameInfo.replace(subHeavy, 'heavy: 6')
-      const subFragile = new RegExp(/fragile: [^,\n]+/)
-      gameInfo = gameInfo.replace(subFragile, 'fragile: 6')
-      const subUrgent = new RegExp(/urgent: [^,\n]+/)
-      gameInfo = gameInfo.replace(subUrgent, 'urgent: 6')
-      const subMechanical = new RegExp(/mechanical: [^,\n]+/)
-      gameInfo = gameInfo.replace(subMechanical, 'mechanical: 6')
+    if (cityName.size > 0) {
+      // console.log([...cityName])
+      visitedCity.forEach(element => {
+        cityName.delete(element)
+      })
+      const cityNum = Number(arrFile[visitedIndex.city].split(': ')[1])
+      const num = cityNum + cityName.size
+      const arrCityName = [...cityName]
+
+      if (cityNum === 0) {
+        let str = '\r\n'
+        let strCount = '\r\n'
+        for (let j = 0; j < arrCityName.length; j++) {
+          if (j === arrCityName.length - 1) {
+            str += ` visited_cities[${j}]: ${arrCityName[j]}`
+            strCount += ` visited_cities_count[${j}]: 1`
+          } else {
+            str += ` visited_cities[${j}]: ${arrCityName[j]}\r\n`
+            strCount += ` visited_cities_count[${j}]: 1\r\n`
+          }
+        }
+        arrFile[visitedIndex.city] = ' visited_cities: ' + num + str
+        arrFile[visitedIndex.count] = ' visited_cities_count: ' + num + strCount
+      } else {
+        let str = '\r\n'
+        let strCount = '\r\n'
+        for (let j = cityNum; j < arrCityName.length; j++) {
+          if (j === arrCityName.length - 1) {
+            str += ` visited_cities[${j}]: ${arrCityName[j]}`
+            strCount += ` visited_cities_count[${j}]: 1`
+          } else {
+            str += ` visited_cities[${j}]: ${arrCityName[j]}\r\n`
+            strCount += ` visited_cities_count[${j}]: 1\r\n`
+          }
+        }
+        arrFile[visitedIndex.city] = ' visited_cities: ' + num
+        arrFile[visitedIndex.count] = ' visited_cities_count: ' + num
+
+        arrFile[visitedIndex.city + cityNum] += str
+        arrFile[visitedIndex.count + cityNum] += strCount
+      }
     }
 
-    if (setting.city) {
-      // const subStr = new RegExp(/money_account: [^,\n]+/)
-      // gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
+    if (garage.length > 0) {
+      for (let i = 0; i < garage.length; i++) {
+        const vehiclesNum = Number(arrFile[garage[i] + 1].split(': ')[1])
+        if (vehiclesNum === 0) {
+          let str = '\r\n'
+          for (let j = 0; j < 5; j++) {
+            if (j === 4) {
+              str += ` vehicles[${j}]: null`
+            } else {
+              str += ` vehicles[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 1] = ' vehicles: 5' + str
+        } else if (vehiclesNum < 5) {
+          let str = '\r\n'
+          for (let j = vehiclesNum; j < 5; j++) {
+            if (j === 4) {
+              str += ` vehicles[${j}]: null`
+            } else {
+              str += ` vehicles[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 1 + vehiclesNum] += str
+        }
+        const driversNum = Number(arrFile[garage[i] + 2].split(': ')[1])
+        if (driversNum === 0) {
+          let str = '\r\n'
+          for (let j = 0; j < 5; j++) {
+            if (j === 4) {
+              str += ` drivers[${j}]: null`
+            } else {
+              str += ` drivers[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 2 + vehiclesNum] = ' drivers: 5' + str
+        } else if (driversNum < 5) {
+          let str = '\r\n'
+          for (let j = driversNum; j < 5; j++) {
+            if (j === 4) {
+              str += ` drivers[${j}]: null`
+            } else {
+              str += ` drivers[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 2 + vehiclesNum + driversNum] += str
+        }
+        arrFile[garage[i] + 4] = ' status: 3'
+      }
     }
 
-    if (setting.garage) {
-      // const subStr = new RegExp(/money_account: [^,\n]+/)
-      // gameInfo = gameInfo.replace(subStr, 'money_account: 100000000')
-    }
-    if (setting.damage) {
-      const subStr = new RegExp(/wear: [^,\n]+/g)
-      gameInfo = gameInfo.replace(subStr, 'wear: 0')
-    }
-    if (setting.oil) {
-      const subStr = new RegExp(/fuel_relative: [^,\n]+/g)
-      gameInfo = gameInfo.replace(subStr, 'fuel_relative: 1')
-    }
-    const buf = Buffer.from(gameInfo)
-    buf.toString('utf8')
-    fs.writeFile(gameSiiPath, gameInfo, function (err) {
+    const buf = Buffer.from(arrFile.join('\r\n'))
+
+    fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
       if (err) {
         console.error('写入失败')
       }

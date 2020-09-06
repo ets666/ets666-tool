@@ -34,10 +34,10 @@
         <div class="mb10">
           货物同步:
         </div>
-        <el-checkbox v-model="job.synTody" class="mb10">
+        <el-checkbox v-model="job.synTody" :disabled="!(profile && save)" class="mb10">
           同步今日联运任务
         </el-checkbox>
-        <el-checkbox v-model="job.moveToCargo">
+        <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save)">
           移动车辆至起点货场
         </el-checkbox>
       </div>
@@ -48,25 +48,25 @@
         <div class="mb10">
           存档修改:
         </div>
-        <el-checkbox v-model="setting.money" class="mb10">
+        <el-checkbox v-model="setting.money" :disabled="!(profile && save)" class="mb10">
           修改金钱为1亿
         </el-checkbox>
-        <el-checkbox v-model="setting.level" class="mb10">
+        <el-checkbox v-model="setting.level" :disabled="!(profile && save)" class="mb10">
           修改玩家级别为100级
         </el-checkbox>
-        <el-checkbox v-model="setting.skills" class="mb10">
+        <el-checkbox v-model="setting.skills" :disabled="!(profile && save)" class="mb10">
           解锁全部技能
         </el-checkbox>
-        <el-checkbox v-model="setting.city" class="mb10">
+        <el-checkbox v-model="setting.city" :disabled="!(profile && save)" class="mb10">
           解锁全部城市
         </el-checkbox>
-        <el-checkbox v-model="setting.garage" class="mb10">
+        <el-checkbox v-model="setting.garage" :disabled="!(profile && save)" class="mb10">
           解锁全部车库
         </el-checkbox>
-        <el-checkbox v-model="setting.damage" class="mb10">
+        <el-checkbox v-model="setting.damage" :disabled="!(profile && save)" class="mb10">
           修复全部车损
         </el-checkbox>
-        <el-checkbox v-model="setting.oil" class="mb10">
+        <el-checkbox v-model="setting.oil" :disabled="!(profile && save)" class="mb10">
           全部车辆满油
         </el-checkbox>
       </div>
