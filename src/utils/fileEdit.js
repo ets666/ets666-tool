@@ -156,12 +156,13 @@ export function SiiDecrypt (dir, callback, errorcallback) {
  * @param {function} errorcallback 失败返回函数
  */
 export function editGameSii (dir, filedirname, info, callback, errorcallback) {
-  const { setting } = info
+  const { setting, job } = info
   const gameSiiPath = path.join(dir, filedirname)
   const fRead = fs.createReadStream(gameSiiPath)
   const arrFile = []
   const skills = []
   const garage = []
+  const exper = []
   let hqCity = ''
   const visitedCity = []
   const visitedIndex = {
@@ -184,15 +185,15 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       hqCity = input.split(': ')[1]
     }
     if (setting.money && input.startsWith(' money_account')) {
-      input = input.replace(/money_account: [^,\n]+/, 'money_account: 100000000') + '\r\n'
+      input = input.replace(/money_account: [^,\n]+/, 'money_account: 100000000')
     } else if (setting.level && input.startsWith(' experience_points')) {
-      input = input.replace(/experience_points: [^,\n]+/, 'experience_points: 582499') + '\r\n'
+      exper.push(index)
     } else if (setting.skills && input.startsWith(' adr:')) {
       skills.push(index)
     } else if (setting.damage && input.startsWith(' wear')) {
-      input = input.replace(/wear: [^,\n]+/, 'wear: 0') + '\r\n'
+      input = input.replace(/wear: [^,\n]+/, 'wear: 0')
     } else if (setting.oil && input.startsWith(' fuel_relative')) {
-      input = input.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1') + '\r\n'
+      input = input.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')
     } else if (setting.city && input.startsWith(' companies[')) {
       cityName.add(input.split('.')[3])
     } else if (setting.city && input.startsWith(' visited_cities[')) {
@@ -205,12 +206,17 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       if (!input.startsWith('garage : garage.' + hqCity)) {
         garage.push(index)
       }
+    } else if (job.moveToCargo && input.startsWith(' truck_placement: ')) {
+
     }
     arrFile.push(input)
     index++
   })
 
   rl.on('close', () => {
+    if (exper.length > 0) {
+      arrFile[exper[0]] = arrFile[exper[0]].replace(/experience_points: [^,\n]+/, 'experience_points: 582499')
+    }
     if (skills.length > 0) {
       const flag = skills[0]
       arrFile[flag] = arrFile[flag].replace(/adr: [^,\n]+/, 'adr: 63')

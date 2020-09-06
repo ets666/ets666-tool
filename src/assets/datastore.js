@@ -9,8 +9,8 @@ const STORE_PATH = APP.getPath('userData')
 const EURO_PATH = path.join(APP.getPath('documents'), '/Euro Truck Simulator 2')
 
 if (process.type !== 'renderer') {
-  if (!fs.pathExistsSync(STORE_PATH)) {
-    fs.mkdirpSync(STORE_PATH)
+  if (!fs.existsSync(STORE_PATH)) {
+    fs.mkdirSync(STORE_PATH)
   }
 }
 
