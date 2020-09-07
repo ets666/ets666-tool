@@ -167,7 +167,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
   const visitedCity = []
   const visitedIndex = {
     city: 0,
-    count: 0
+    count: 0,
+    company: []
   }
   const cityName = new Set()
 
@@ -202,6 +203,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       visitedIndex.city = index
     } else if (setting.city && input.startsWith(' visited_cities_count: ')) {
       visitedIndex.count = index
+    } else if (setting.city && input.startsWith(' reserved_trailer_slot: ')) {
+      visitedIndex.company.push(index - 1)
     } else if (setting.garage && input.startsWith('garage : garage.')) {
       if (!input.startsWith('garage : garage.' + hqCity)) {
         garage.push(index)
@@ -252,8 +255,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       } else {
         let str = '\r\n'
         let strCount = '\r\n'
-        for (let j = cityNum; j < arrCityName.length; j++) {
-          if (j === arrCityName.length - 1) {
+        for (let j = cityNum; j < arrCityName.length + cityNum; j++) {
+          if (j === arrCityName.length + cityNum - 1) {
             str += ` visited_cities[${j}]: ${arrCityName[j]}`
             strCount += ` visited_cities_count[${j}]: 1`
           } else {
@@ -266,6 +269,10 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
 
         arrFile[visitedIndex.city + cityNum] += str
         arrFile[visitedIndex.count + cityNum] += strCount
+      }
+
+      for (let i = 0; i < visitedIndex.company.length; i++) {
+        arrFile[visitedIndex.company[i]] = arrFile[visitedIndex.company[i]].replace(/discovered: [^,\n]+/, 'discovered: true')
       }
     }
 
@@ -291,9 +298,10 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
               str += ` vehicles[${j}]: null\r\n`
             }
           }
+          arrFile[garage[i] + 1] = ' vehicles: 5'
           arrFile[garage[i] + 1 + vehiclesNum] += str
         }
-        const driversNum = Number(arrFile[garage[i] + 2].split(': ')[1])
+        const driversNum = Number(arrFile[garage[i] + 2 + vehiclesNum].split(': ')[1])
         if (driversNum === 0) {
           let str = '\r\n'
           for (let j = 0; j < 5; j++) {
@@ -315,7 +323,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
           }
           arrFile[garage[i] + 2 + vehiclesNum + driversNum] += str
         }
-        arrFile[garage[i] + 4] = ' status: 3'
+        arrFile[garage[i] + 4 + vehiclesNum + driversNum] = ' status: 3'
       }
     }
 
