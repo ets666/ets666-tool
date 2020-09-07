@@ -255,13 +255,13 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       } else {
         let str = '\r\n'
         let strCount = '\r\n'
-        for (let j = cityNum; j < arrCityName.length + cityNum; j++) {
-          if (j === arrCityName.length + cityNum - 1) {
-            str += ` visited_cities[${j}]: ${arrCityName[j]}`
-            strCount += ` visited_cities_count[${j}]: 1`
-          } else {
-            str += ` visited_cities[${j}]: ${arrCityName[j]}\r\n`
-            strCount += ` visited_cities_count[${j}]: 1\r\n`
+        for (let j = 0; j < arrCityName.length; j++) {
+          const num = j + cityNum
+          str += ` visited_cities[${num}]: ${arrCityName[j]}`
+          strCount += ` visited_cities_count[${num}]: 1`
+          if (j < arrCityName.length - 1) {
+            str += '\r\n'
+            strCount += '\r\n'
           }
         }
         arrFile[visitedIndex.city] = ' visited_cities: ' + num
@@ -321,6 +321,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
               str += ` drivers[${j}]: null\r\n`
             }
           }
+          arrFile[garage[i] + 2 + vehiclesNum] = ' drivers: 5'
           arrFile[garage[i] + 2 + vehiclesNum + driversNum] += str
         }
         arrFile[garage[i] + 4 + vehiclesNum + driversNum] = ' status: 3'
