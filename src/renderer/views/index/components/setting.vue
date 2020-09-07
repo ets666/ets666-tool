@@ -4,7 +4,7 @@
       <div class="path_box">
         路径:
         <el-input placeholder="服务器" style="width: 80%;" size="mini" disabled v-model="savePath" />
-        <el-button type="text" style="font-size: 12px;" @click="changePath">修改</el-button>
+        <!-- <el-button type="text" style="font-size: 12px;" @click="changePath">修改</el-button> -->
       </div>
     </div>
     <div class="menu_box">
@@ -34,9 +34,6 @@
         <div class="mb10">
           货物同步:
         </div>
-        <el-checkbox v-model="job.synTody" :disabled="!(profile && save)" class="mb10">
-          同步今日联运任务
-        </el-checkbox>
         <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save)">
           移动车辆至起点货场
         </el-checkbox>
@@ -77,31 +74,31 @@
         </div>
         <div class="text_box mb10">
           <span class="text">服务器:</span>
-          <el-input placeholder="服务器" size="mini" disabled v-model="jobInfo.server" />
+          {{ jobInfo.server }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].server}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">起点城市:</span>
-          <el-input placeholder="服务器" size="mini" disabled v-model="jobInfo.startCity" />
+          {{ jobInfo.departure_city }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].departure_city}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">起点货场:</span>
-          <el-input placeholder="服务器" size="mini" disabled v-model="jobInfo.startCargo" />
+          {{ jobInfo.departure_company }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].departure_company}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">终点城市:</span>
-          <el-input placeholder="服务器" size="mini" disabled v-model="jobInfo.endCity" />
+          {{ jobInfo.destination_city }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].destination_city}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">终点货场:</span>
-          <el-input placeholder="服务器" size="mini" disabled v-model="jobInfo.endCargo" />
+          {{ jobInfo.destination_company }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].destination_company}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">货物:</span>
-          <el-input placeholder="服务器" size="mini" disabled v-model="jobInfo.cargo" />
+          {{ jobInfo.cargo }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].cargo}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">预估里程:</span>
-          <el-input placeholder="服务器" size="mini" disabled v-model="jobInfo.mileage" />
+          {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">(含轮渡{{ jobInfo.ferry_distance_km }} km)</span>
         </div>
 
 
@@ -130,6 +127,7 @@
 import moment from 'moment'
 import { hex2utf8 } from '../../../../utils/byte'
 const fileEdit = require('../../../../utils/fileEdit')
+const axios = require('axios')
 
 export default {
   data () {
@@ -150,18 +148,10 @@ export default {
         oil: false
       },
       job: {
-        synTody: false,
         moveToCargo: false
       },
-      jobInfo: {
-        server: '',
-        startCity: '',
-        startCargo: '',
-        endCity: '',
-        endCargo: '',
-        cargo: '',
-        mileage: ''
-      },
+      severJobInfo: {},
+      jobInfo: {},
       fullscreenLoading: false
     }
   },
@@ -192,12 +182,19 @@ export default {
           _this.$message.error(err)
         })
       })
+
+      axios.get('https://api.ets666.com/jobsync/')
+        .then(res => {
+          this.jobInfo = res.data
+          console.log(this.jobInfo)
+        })
     },
     changePath () {
       this.$emit('changePath')
     },
     changeProfile (path) {
       const _this = this
+      _this.save = ''
       _this.saveOptions = []
       console.log(this.savePath, '/profiles/' + path)
       fileEdit.mapDirName(this.savePath, '/profiles/' + path + '/save', (file) => {
