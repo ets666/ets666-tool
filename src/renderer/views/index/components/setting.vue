@@ -294,6 +294,52 @@ export default {
         })
       })
     }
+    // saveJob () {
+    //   const _this = this
+    //   _this.fullscreenLoading = true
+    //   const obj = {
+    //     setting: _this.setting,
+    //     jobInfo: _this.jobInfo,
+    //     job: _this.job
+    //   }
+    //   const gameSiiPath = this.savePath + '/profiles/' + this.profile + '/save/' + this.save
+    //   fileEdit.SiiDecrypt(gameSiiPath, (code) => {
+    //     switch (code) {
+    //       case 0:
+    //       case 1:
+    //         fileEdit.addJob(gameSiiPath, '/game.sii', obj, (file) => {
+    //           _this.$alert('保存成功', '成功', {
+    //             confirmButtonText: '确定',
+    //             callback: action => {
+    //               _this.fullscreenLoading = false
+    //             }
+    //           })
+    //         }, (err) => {
+    //           _this.$alert(err, '错误', {
+    //             confirmButtonText: '确定',
+    //             callback: action => {
+    //               _this.fullscreenLoading = false
+    //             }
+    //           })
+    //         })
+    //         break
+
+    //       default:
+    //         _this.$notify({ title: '失败', message: '解码失败', type: 'success' })
+    //         _this.error = '解码失败'
+    //         _this.fullscreenLoading = false
+    //         break
+    //     }
+    //   }, (err) => {
+    //     _this.$alert(err, '错误', {
+    //       confirmButtonText: '确定',
+    //       callback: action => {
+    //         _this.fullscreenLoading = false
+    //       }
+    //     })
+    //   })
+
+    // }
   }
 }
 </script>
