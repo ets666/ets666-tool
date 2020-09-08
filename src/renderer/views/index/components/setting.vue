@@ -1,12 +1,12 @@
 <template>
   <div class="w h" v-loading.fullscreen.lock="fullscreenLoading">
-    <div class="menu_box">
+    <!-- <div class="menu_box">
       <div class="path_box">
         路径:
         <el-input placeholder="服务器" style="width: 80%;" size="mini" disabled v-model="savePath" />
-        <!-- <el-button type="text" style="font-size: 12px;" @click="changePath">修改</el-button> -->
+        <el-button type="text" style="font-size: 12px;" @click="changePath">修改</el-button>
       </div>
-    </div>
+    </div> -->
     <div class="menu_box">
       <div class="box">
         <div class="mb10">
@@ -34,9 +34,17 @@
         <div class="mb10">
           货物同步:
         </div>
-        <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save)">
-          移动车辆至起点货场
-        </el-checkbox>
+        <div class="text_box mb10">
+          <span class="text">集合时间:</span>
+          <el-select v-model="tody" size="mini" class="mb10" @change="changeTime">
+            <el-option
+              v-for="item in timeOption"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
       </div>
     </div>
 
@@ -69,39 +77,38 @@
       </div>
 
       <div class="box">
-        <div class="mb10">
-          {{ tody }}联运信息:
-        </div>
         <div class="text_box mb10">
           <span class="text">服务器:</span>
-          {{ jobInfo.server }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].server}})</span>
+          {{ jobInfo.server }} <span v-if="i18n">({{ i18n.server}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">起点城市:</span>
-          {{ jobInfo.departure_city }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].departure_city}})</span>
+          {{ jobInfo.departure_city }} <span v-if="i18n">({{ i18n.departure_city}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">起点货场:</span>
-          {{ jobInfo.departure_company }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].departure_company}})</span>
+          {{ jobInfo.departure_company }} <span v-if="i18n">({{ i18n.departure_company}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">终点城市:</span>
-          {{ jobInfo.destination_city }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].destination_city}})</span>
+          {{ jobInfo.destination_city }} <span v-if="i18n">({{ i18n.destination_city}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">终点货场:</span>
-          {{ jobInfo.destination_company }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].destination_company}})</span>
+          {{ jobInfo.destination_company }} <span v-if="i18n">({{ i18n.destination_company}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">货物:</span>
-          {{ jobInfo.cargo }} <span v-if="jobInfo.i18n">({{ jobInfo.i18n[0].cargo}})</span>
+          {{ jobInfo.cargo }} <span v-if="i18n">({{ i18n.cargo}})</span>
         </div>
         <div class="text_box mb10">
           <span class="text">预估里程:</span>
           {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">(含轮渡{{ jobInfo.ferry_distance_km }} km)</span>
         </div>
 
-
+        <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save)">
+          移动车辆至起点货场(实验性)
+        </el-checkbox>
       </div>
     </div>
 
@@ -117,14 +124,14 @@
 
     <div class="menu_box">
       <div class="err_box">
-        错误信息
+        {{error}}
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 import { hex2utf8 } from '../../../../utils/byte'
 const fileEdit = require('../../../../utils/fileEdit')
 const axios = require('axios')
@@ -133,7 +140,9 @@ export default {
   data () {
     return {
       savePath: '',
-      tody: moment().format('yyyy年MM月DD日'),
+      tody: '',
+      timeOption: [],
+      error: '',
       profile: '',
       save: '',
       profileOptions: [],
@@ -150,7 +159,8 @@ export default {
       job: {
         moveToCargo: false
       },
-      severJobInfo: {},
+      i18n: {},
+      severJobInfo: [],
       jobInfo: {},
       fullscreenLoading: false
     }
@@ -180,17 +190,43 @@ export default {
       }, (err) => {
         _this.$nextTick(() => {
           _this.$message.error(err)
+          _this.error = err
         })
       })
 
       axios.get('https://api.ets666.com/jobsync/')
         .then(res => {
-          this.jobInfo = res.data
-          console.log(this.jobInfo)
+          _this.severJobInfo = res.data
+          _this.jobInfo = res.data[0]
+          _this.tody = res.data[0].assembly_time
+          res.data.forEach((element) => {
+            const obj = {
+              value: element.assembly_time,
+              label: element.assembly_time
+            }
+            _this.timeOption.push(obj)
+          })
+          _this.setLanguage()
+          console.log(this.severJobInfo)
         })
+    },
+    setLanguage () {
+      for (let i = 0; i < this.jobInfo.i18n.length; i++) {
+        if (this.jobInfo.i18n[i].language === 'zh-CN') {
+          this.i18n = this.jobInfo.i18n[i]
+          break
+        }
+      }
     },
     changePath () {
       this.$emit('changePath')
+    },
+    changeTime (val) {
+      this.severJobInfo.forEach(element => {
+        if (element.assembly_time === val) {
+          this.jobInfo = element
+        }
+      })
     },
     changeProfile (path) {
       const _this = this
@@ -208,6 +244,7 @@ export default {
       }, (err) => {
         _this.$nextTick(() => {
           _this.$message.error(err)
+          _this.error = err
         })
       })
     },
@@ -244,6 +281,7 @@ export default {
 
           default:
             _this.$notify({ title: '失败', message: '解码失败', type: 'success' })
+            _this.error = '解码失败'
             _this.fullscreenLoading = false
             break
         }
