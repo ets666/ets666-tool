@@ -339,63 +339,63 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
   })
 }
 
-// export function addJob (dir, filedirname, info, callback, errorcallback) {
-//   const { jobInfo } = info
-//   const gameSiiPath = path.join(dir, filedirname)
-//   const fRead = fs.createReadStream(gameSiiPath)
-//   const arrFile = []
-//   const companyJobData = []
-//   let company = 0
-//   companyJobData.push(' target: "' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
-//   companyJobData.push('expiration_time: 4927')
-//   companyJobData.push('urgency: 0')
-//   companyJobData.push('shortest_distance_km: ' + jobInfo.trailer_place)
-//   companyJobData.push('ferry_time: 0')
-//   companyJobData.push('ferry_price: 0')
-//   companyJobData.push('cargo: cargo.' + jobInfo.cargo)
-//   companyJobData.push('company_truck: volvo_2012_6x4_c')
-//   companyJobData.push('trailer_variant: ' + jobInfo.trailer_variant)
-//   companyJobData.push('trailer_definition: ' + jobInfo.trailer_definition)
-//   companyJobData.push('units_count: ' + jobInfo.units_count)
-//   companyJobData.push('fill_ratio: 1')
-//   companyJobData.push('trailer_place: 0')
+export function addJob (dir, filedirname, info, callback, errorcallback) {
+  const { jobInfo } = info
+  const gameSiiPath = path.join(dir, filedirname)
+  const fRead = fs.createReadStream(gameSiiPath)
+  const arrFile = []
+  const companyJobData = []
+  let company = 0
+  companyJobData.push(' target: "' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
+  companyJobData.push(' expiration_time: 4927')
+  companyJobData.push(' urgency: 0')
+  companyJobData.push(' shortest_distance_km: ' + jobInfo.shortest_distance_km)
+  companyJobData.push(' ferry_time: 0')
+  companyJobData.push(' ferry_price: 0')
+  companyJobData.push(' cargo: cargo.' + jobInfo.cargo)
+  companyJobData.push(' company_truck: scania_s_6x4_730')
+  companyJobData.push(' trailer_variant: ' + jobInfo.trailer_variant)
+  companyJobData.push(' trailer_definition: ' + jobInfo.trailer_definition)
+  companyJobData.push(' units_count: ' + jobInfo.units_count)
+  companyJobData.push(' fill_ratio: 1')
+  companyJobData.push(' trailer_place: 0')
 
-//   fRead.on('end', () => {
-//     console.log('end')
-//   })
-//   const rl = readline.createInterface({
-//     input: fRead,
-//     terminal: true
-//   })
+  fRead.on('end', () => {
+    console.log('end')
+  })
+  const rl = readline.createInterface({
+    input: fRead,
+    terminal: true
+  })
 
-//   let index = 0
-//   rl.on('line', (input) => {
-//     if (input.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
-//       company = index
-//     }
-//     arrFile.push(input)
-//     index++
-//   })
+  let index = 0
+  rl.on('line', (input) => {
+    if (input.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
+      company = index
+    }
+    arrFile.push(input)
+    index++
+  })
 
-//   rl.on('close', () => {
-//     let index = company
-//     while (!arrFile[index].startsWith('job_offer[')) {
-//       index++
-//     }
-//     const nameless = arrFile[index].split(' ')[2]
-//     while (!arrFile[index].startsWith('job_offer_data : ' + nameless)) {
-//       index++
-//     }
-//     arrFile[index + 1] = companyJobData[0]
-//     companyJobData.forEach((val, index) => {
-//       arrFile[index + 1 + index] = val
-//     })
-//     const buf = Buffer.from(arrFile.join('\r\n'))
-//     fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
-//       if (err) {
-//         console.error('写入失败')
-//       }
-//       callback && callback()
-//     })
-//   })
-// }
+  rl.on('close', () => {
+    let jobIndex = company
+    while (!arrFile[jobIndex].startsWith(' job_offer[')) {
+      jobIndex++
+    }
+    const nameless = arrFile[jobIndex].split(' ')[2]
+    while (!arrFile[jobIndex].startsWith('job_offer_data : ' + nameless)) {
+      jobIndex++
+    }
+    // arrFile[jobIndex + 1] = companyJobData[0]
+    for (let i = 0; i < companyJobData.length; i++) {
+      arrFile[jobIndex + 1 + i] = companyJobData[i]
+    }
+    const buf = Buffer.from(arrFile.join('\r\n'))
+    fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
+      if (err) {
+        console.error('写入失败')
+      }
+      callback && callback()
+    })
+  })
+}
