@@ -156,7 +156,7 @@ export function SiiDecrypt (dir, callback, errorcallback) {
  * @param {function} errorcallback 失败返回函数
  */
 export function editGameSii (dir, filedirname, info, callback, errorcallback) {
-  const { setting, job } = info
+  const { setting } = info
   const gameSiiPath = path.join(dir, filedirname)
   const fRead = fs.createReadStream(gameSiiPath)
   const arrFile = []
@@ -209,8 +209,6 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       if (!input.startsWith('garage : garage.' + hqCity)) {
         garage.push(index)
       }
-    } else if (job.moveToCargo && input.startsWith(' truck_placement: ')) {
-
     }
     arrFile.push(input)
     index++
@@ -340,7 +338,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
 }
 
 export function addJob (dir, filedirname, info, callback, errorcallback) {
-  const { jobInfo } = info
+  const { jobInfo, job } = info
   const gameSiiPath = path.join(dir, filedirname)
   const fRead = fs.createReadStream(gameSiiPath)
   const arrFile = []
@@ -367,6 +365,8 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       economyEventIndex.push(index)
     } else if (input.startsWith('economy_event_queue :')) {
       economyEventQueueIndex = index
+    } else if (job.moveToCargo && input.startsWith(' truck_placement: ')) {
+      input = ' truck_placement: ' + jobInfo.departure_coordinates
     }
     arrFile.push(input)
     index++
@@ -459,7 +459,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
     const buf = Buffer.from(arrFile.join('\r\n'))
     fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
       if (err) {
-        console.error('写入失败')
+        errorcallback && errorcallback('写入失败')
       }
       callback && callback()
     })
