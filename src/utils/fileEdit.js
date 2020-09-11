@@ -330,7 +330,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
 
     fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
       if (err) {
-        console.error('写入失败')
+        errorcallback && errorcallback('写入失败')
       }
       callback && callback()
     })
