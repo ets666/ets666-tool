@@ -207,7 +207,6 @@ export default {
             _this.timeOption.push(obj)
           })
           _this.setLanguage()
-          console.log(this.severJobInfo)
         })
     },
     setLanguage () {
@@ -232,7 +231,6 @@ export default {
       const _this = this
       _this.save = ''
       _this.saveOptions = []
-      console.log(this.savePath, '/profiles/' + path)
       fileEdit.mapDirName(this.savePath, '/profiles/' + path + '/save', (file) => {
         file.forEach((element) => {
           const obj = {

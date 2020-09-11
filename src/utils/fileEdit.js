@@ -344,21 +344,10 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
   const gameSiiPath = path.join(dir, filedirname)
   const fRead = fs.createReadStream(gameSiiPath)
   const arrFile = []
-  const companyJobData = []
   let company = 0
-  companyJobData.push(' target: "' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
-  companyJobData.push(' expiration_time: 4927')
-  companyJobData.push(' urgency: 0')
-  companyJobData.push(' shortest_distance_km: ' + jobInfo.shortest_distance_km)
-  companyJobData.push(' ferry_time: 0')
-  companyJobData.push(' ferry_price: 0')
-  companyJobData.push(' cargo: cargo.' + jobInfo.cargo)
-  companyJobData.push(' company_truck: scania_s_6x4_730')
-  companyJobData.push(' trailer_variant: ' + jobInfo.trailer_variant)
-  companyJobData.push(' trailer_definition: ' + jobInfo.trailer_definition)
-  companyJobData.push(' units_count: ' + jobInfo.units_count)
-  companyJobData.push(' fill_ratio: 1')
-  companyJobData.push(' trailer_place: 0')
+  let inGameTime = 0
+  const economyEventIndex = []
+  let economyEventQueueIndex = 0
 
   fRead.on('end', () => {
     console.log('end')
@@ -372,6 +361,12 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
   rl.on('line', (input) => {
     if (input.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
       company = index
+    } else if (input.startsWith(' game_time: ')) {
+      inGameTime = Number(input.split(' ')[2])
+    } else if (input.startsWith('economy_event : ')) {
+      economyEventIndex.push(index)
+    } else if (input.startsWith('economy_event_queue :')) {
+      economyEventQueueIndex = index
     }
     arrFile.push(input)
     index++
@@ -379,6 +374,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
 
   rl.on('close', () => {
     let jobIndex = company
+    const companyJobData = addJobOffer(jobInfo, inGameTime)
     while (!arrFile[jobIndex].startsWith(' job_offer[')) {
       jobIndex++
     }
@@ -386,10 +382,80 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
     while (!arrFile[jobIndex].startsWith('job_offer_data : ' + nameless)) {
       jobIndex++
     }
-    // arrFile[jobIndex + 1] = companyJobData[0]
     for (let i = 0; i < companyJobData.length; i++) {
       arrFile[jobIndex + 1 + i] = companyJobData[i]
     }
+
+    const time = []
+    let target = 0
+    let to = 0
+    let orgignNameLess = {}
+    // 时间和定位economy_event company位置
+    const str = 'company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city
+    economyEventIndex.map((val, index) => {
+      const temp = []
+      // eslint-disable-next-line eqeqeq
+      if (arrFile[economyEventIndex[index] + 2].split(': ')[1] == str) {
+        if (arrFile[economyEventIndex[index] + 3] === ' param: 0') {
+          orgignNameLess = {
+            name: arrFile[val].split(': ')[1].split(' {')[0],
+            index: index
+          }
+          target = val
+          arrFile[economyEventIndex[index] + 1] = ' time: 4927'
+        }
+      }
+      temp.push(val) // 下标
+      temp.push(Number(arrFile[economyEventIndex[index] + 1].split(': ')[1])) // time
+      time.push(temp)
+    })
+    time.sort((val1, val2) => {
+      return val1[1] - val2[1]
+    })
+    for (let j = 0; j < time.length; j++) {
+      if (target === time[j][0]) {
+        if (j !== time.length - 1) {
+          to = time[j + 1][0] - 1
+        } else {
+          to = time[j - 1][0] + 5
+        }
+      }
+    }
+    // 移动economy_event
+    arraymove(arrFile, target, to)
+    // orgignNameLess
+    const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
+    let findNamelessData = '' // 移动到这个名称下放
+    if (arrFile[to - 10].startsWith('economy_event : ')) {
+      findNamelessData = arrFile[to - 10].split(': ')[1].split(' {')[0]
+    }
+
+    // data 位置变更
+    if (findNamelessData) {
+      let findNamelessIndex = 0
+      let findOriginNamelessIndex = 0
+      for (let n = 0; n < dataStartNum; n++) {
+        // eslint-disable-next-line eqeqeq
+        if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == findNamelessData) {
+          findNamelessIndex = economyEventQueueIndex + 2 + n
+        // eslint-disable-next-line eqeqeq
+        } else if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == orgignNameLess.name) {
+          findOriginNamelessIndex = economyEventQueueIndex + 2 + n
+        }
+      }
+      if (findNamelessIndex && findOriginNamelessIndex) {
+        arrayDatamove(arrFile, findOriginNamelessIndex, findNamelessIndex)
+      }
+    } else {
+      arrFile.splice(economyEventQueueIndex + 2, 0, ' data[0]: ' + orgignNameLess.name)
+      arrFile.splice(orgignNameLess.index + 1, 1)
+    }
+
+    // sort data
+    for (let d = 0; d < dataStartNum; d++) {
+      arrFile[economyEventQueueIndex + 2 + d] = ` data[${d}]: ` + arrFile[economyEventQueueIndex + 2 + d].split(': ')[1]
+    }
+
     const buf = Buffer.from(arrFile.join('\r\n'))
     fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
       if (err) {
@@ -398,4 +464,54 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       callback && callback()
     })
   })
+}
+
+function addJobOffer (jobInfo, inGameTime) {
+  const companyJobData = []
+  companyJobData.push(' target: "' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
+  const exp = Number(inGameTime) + RandomNumBoth(180, 1800) + (72 * 60)
+  companyJobData.push(' expiration_time: ' + exp)
+  companyJobData.push(' urgency: 0')
+  companyJobData.push(' shortest_distance_km: ' + jobInfo.shortest_distance_km)
+  companyJobData.push(' ferry_time: 0')
+  companyJobData.push(' ferry_price: 0')
+  companyJobData.push(' cargo: cargo.' + jobInfo.cargo)
+  companyJobData.push(' company_truck: scania_s_6x4_730')
+  companyJobData.push(' trailer_variant: ' + jobInfo.trailer_variant)
+  companyJobData.push(' trailer_definition: ' + jobInfo.trailer_definition)
+  companyJobData.push(' units_count: ' + jobInfo.units_count)
+  companyJobData.push(' fill_ratio: 1')
+  companyJobData.push(' trailer_place: 0')
+  return companyJobData
+}
+
+export function RandomNumBoth (Min, Max) {
+  var Range = Max - Min
+  var Rand = Math.random()
+  var num = Min + Math.round(Rand * Range) // 四舍五入
+  return num
+}
+
+function arraymove (arr, index, tindex) {
+  // 如果当前元素在拖动目标位置的下方，先将当前元素从数组拿出，数组长度-1，我们直接给数组拖动目标位置的地方新增一个和当前元素值一样的元素，
+  // 我们再把数组之前的那个拖动的元素删除掉，所以要len+1
+  if (index > tindex) {
+    arr.splice(tindex, 0, arr[index], arr[index + 1], arr[index + 2], arr[index + 3], arr[index + 4], arr[index + 5])
+    arr.splice(index + 1, 5)
+  } else {
+  // 如果当前元素在拖动目标位置的上方，先将当前元素从数组拿出，数组长度-1，我们直接给数组拖动目标位置+1的地方新增一个和当前元素值一样的元素，
+  // 这时，数组len不变，我们再把数组之前的那个拖动的元素删除掉，下标还是index
+    arr.splice(tindex + 1, 0, arr[index], arr[index + 1], arr[index + 2], arr[index + 3], arr[index + 4], arr[index + 5])
+    arr.splice(index, 5)
+  }
+}
+
+function arrayDatamove (arr, index, tindex) {
+  if (index > tindex) {
+    arr.splice(tindex, 0, arr[index])
+    arr.splice(index + 1, 1)
+  } else {
+    arr.splice(tindex + 1, 0, arr[index])
+    arr.splice(index, 1)
+  }
 }
