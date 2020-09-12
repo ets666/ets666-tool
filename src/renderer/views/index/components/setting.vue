@@ -131,7 +131,7 @@
 </template>
 
 <script>
-// import moment from 'moment'
+import moment from 'moment'
 import { hex2utf8 } from '../../../../utils/byte'
 const fileEdit = require('../../../../utils/fileEdit')
 const axios = require('axios')
@@ -198,11 +198,11 @@ export default {
         .then(res => {
           _this.severJobInfo = res.data
           _this.jobInfo = res.data[0]
-          _this.tody = res.data[0].assembly_time
+          _this.tody = moment.utc(res.data[0].assembly_time).local().format('YYYY-MM-DD HH:mm')
           res.data.forEach((element) => {
             const obj = {
               value: element.assembly_time,
-              label: element.assembly_time
+              label: moment.utc(element.assembly_time).local().format('YYYY-MM-DD HH:mm')
             }
             _this.timeOption.push(obj)
           })
@@ -212,7 +212,7 @@ export default {
     setLanguage () {
       for (let i = 0; i < this.jobInfo.i18n.length; i++) {
         if (this.jobInfo.i18n[i].language === 'zh-CN') {
-          this.i18n = this.jobInfo.i18n[i]
+          this.$set(this, 'i18n', this.jobInfo.i18n[i])
           break
         }
       }
@@ -224,6 +224,7 @@ export default {
       this.severJobInfo.forEach(element => {
         if (element.assembly_time === val) {
           this.jobInfo = element
+          this.setLanguage()
         }
       })
     },
