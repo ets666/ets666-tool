@@ -399,10 +399,11 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
           if (arrFile[economyEventIndex[index] + 3] === ' param: 0') {
             orgignNameLess = {
               name: arrFile[val].split(': ')[1].split(' {')[0],
-              index: index
+              index: val
             }
             target = val
-            arrFile[economyEventIndex[index] + 1] = ' time: 4927'
+            const time = Number(inGameTime) + 7200
+            arrFile[economyEventIndex[index] + 1] = ' time: ' + time
           }
         }
         temp.push(val) // 下标
@@ -414,11 +415,13 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       })
       for (let j = 0; j < time.length; j++) {
         if (target === time[j][0]) {
+          // TODO 临界值为0的时候处理不正确
           if (j !== time.length - 1) {
-            to = time[j + 1][0] - 1
+            to = time[j + 1][0] - 6
           } else {
-            to = time[j - 1][0] + 5
+            to = time[j - 1][0]
           }
+          break
         }
       }
       // 移动economy_event
@@ -426,8 +429,11 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       // orgignNameLess
       const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
       let findNamelessData = '' // 移动到这个名称下放
-      if (arrFile[to - 10].startsWith('economy_event : ')) {
-        findNamelessData = arrFile[to - 10].split(': ')[1].split(' {')[0]
+      for (let x = 1; x < 20; x++) {
+        if (arrFile[to - x].startsWith('economy_event : ')) {
+          findNamelessData = arrFile[to - x].split(': ')[1].split(' {')[0]
+          break
+        }
       }
 
       // data 位置变更
@@ -495,26 +501,23 @@ export function RandomNumBoth (Min, Max) {
   return num
 }
 
-function arraymove (arr, index, tindex) {
-  // 如果当前元素在拖动目标位置的下方，先将当前元素从数组拿出，数组长度-1，我们直接给数组拖动目标位置的地方新增一个和当前元素值一样的元素，
-  // 我们再把数组之前的那个拖动的元素删除掉，所以要len+1
-  if (index > tindex) {
-    arr.splice(tindex, 0, arr[index], arr[index + 1], arr[index + 2], arr[index + 3], arr[index + 4], arr[index + 5])
-    arr.splice(index + 1, 5)
-  } else {
-  // 如果当前元素在拖动目标位置的上方，先将当前元素从数组拿出，数组长度-1，我们直接给数组拖动目标位置+1的地方新增一个和当前元素值一样的元素，
-  // 这时，数组len不变，我们再把数组之前的那个拖动的元素删除掉，下标还是index
-    arr.splice(tindex + 1, 0, arr[index], arr[index + 1], arr[index + 2], arr[index + 3], arr[index + 4], arr[index + 5])
-    arr.splice(index, 5)
+function arraymove (arr, oldIndex, newIndex) {
+  if (newIndex >= arr.length) {
+    var k = newIndex - arr.length + 6
+    while (k--) {
+      arr.push(undefined)
+    }
   }
+  const temp = arr.splice(oldIndex, 6)
+  arr.splice(newIndex, 0, temp[0], temp[1], temp[2], temp[3], temp[4], temp[5])
 }
 
-function arrayDatamove (arr, index, tindex) {
-  if (index > tindex) {
-    arr.splice(tindex, 0, arr[index])
-    arr.splice(index + 1, 1)
-  } else {
-    arr.splice(tindex + 1, 0, arr[index])
-    arr.splice(index, 1)
+function arrayDatamove (arr, oldIndex, newIndex) {
+  if (newIndex >= arr.length) {
+    var k = newIndex - arr.length + 1
+    while (k--) {
+      arr.push(undefined)
+    }
   }
+  arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0])
 }
