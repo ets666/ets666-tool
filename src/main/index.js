@@ -21,10 +21,10 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 720, // 设置窗口的高
+    height: 520, // 设置窗口的高
     useContentSize: true,
     width: 900, // 设置窗口的宽
-    minHeight: 720,
+    minHeight: 520,
     minWidth: 900,
     webPreferences: {
       webSecurity: false, // 是否禁用浏览器的跨域安全特性
@@ -52,6 +52,10 @@ function createTray () {
           detail: `Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666`
         })
       }
+    },
+    {
+      label: '退出',
+      click: app.quit
     }
     // { label: 'Item3', type: 'radio', checked: true }
   ])

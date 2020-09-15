@@ -106,6 +106,9 @@
           {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">(含轮渡{{ jobInfo.ferry_distance_km }} km)</span>
         </div>
 
+        <el-checkbox v-model="job.syncJob" :disabled="!(profile && save)">
+          同步今日联运任务
+        </el-checkbox>
         <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save)">
           移动车辆至起点货场(实验性)
         </el-checkbox>
@@ -113,19 +116,7 @@
     </div>
 
     <div class="menu_box">
-      <div class="box" style="margin-right: 10px;">
         <el-button type="primary" class="btn" :disabled="!(profile && save)" @click="saveSetting">一键修改存档</el-button>
-      </div>
-
-      <div class="box">
-        <el-button type="primary" class="btn" :disabled="!(profile && save)" @click="saveJob">保存联运任务</el-button>
-      </div>
-    </div>
-
-    <div class="menu_box">
-      <div class="err_box">
-        {{error}}
-      </div>
     </div>
   </div>
 </template>
@@ -157,7 +148,8 @@ export default {
         oil: false
       },
       job: {
-        moveToCargo: false
+        moveToCargo: false,
+        syncJob: false
       },
       i18n: {},
       severJobInfo: [],
@@ -262,51 +254,6 @@ export default {
           case 1:
             // _this.$notify({ title: '成功', message: '解码成功', type: 'success' })
             fileEdit.editGameSii(gameSiiPath, '/game.sii', obj, (file) => {
-              _this.$alert('保存成功', '成功', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  _this.fullscreenLoading = false
-                }
-              })
-            }, (err) => {
-              _this.$alert(err, '错误', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  _this.fullscreenLoading = false
-                }
-              })
-            })
-            break
-
-          default:
-            _this.$notify({ title: '失败', message: '解码失败', type: 'success' })
-            _this.error = '解码失败'
-            _this.fullscreenLoading = false
-            break
-        }
-      }, (err) => {
-        _this.$alert(err, '错误', {
-          confirmButtonText: '确定',
-          callback: action => {
-            _this.fullscreenLoading = false
-          }
-        })
-      })
-    },
-    saveJob () {
-      const _this = this
-      _this.fullscreenLoading = true
-      const obj = {
-        setting: _this.setting,
-        jobInfo: _this.jobInfo,
-        job: _this.job
-      }
-      const gameSiiPath = this.savePath + '/profiles/' + this.profile + '/save/' + this.save
-      fileEdit.SiiDecrypt(gameSiiPath, (code) => {
-        switch (code) {
-          case 0:
-          case 1:
-            fileEdit.addJob(gameSiiPath, '/game.sii', obj, (file) => {
               _this.$alert('保存成功', '成功', {
                 confirmButtonText: '确定',
                 callback: action => {
