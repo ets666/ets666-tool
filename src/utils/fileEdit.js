@@ -373,8 +373,20 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
     })
 
     rl.on('close', () => {
+      if (company === 0) {
+        errorcallback && errorcallback('没有该货场，可能是缺少DLC导致')
+        return
+      }
       let jobIndex = company
       const companyJobData = addJobOffer(jobInfo, inGameTime)
+      while (!arrFile[jobIndex].startsWith(' job_offer: ')) {
+        jobIndex++
+      }
+      const jobOfferNum = Number(arrFile[jobIndex].split(': ')[1])
+      if (jobOfferNum === 0) {
+        errorcallback && errorcallback('该货场无法接货')
+        return
+      }
       while (!arrFile[jobIndex].startsWith(' job_offer[')) {
         jobIndex++
       }
@@ -389,7 +401,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       const time = []
       let target = 0
       let to = 0
-      let orgignNameLess = {}
+      let originNameless = {}
       // 时间和定位economy_event company位置
       const str = 'company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city
       economyEventIndex.map((val, index) => {
@@ -397,7 +409,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
         // eslint-disable-next-line eqeqeq
         if (arrFile[economyEventIndex[index] + 2].split(': ')[1] == str) {
           if (arrFile[economyEventIndex[index] + 3] === ' param: 0') {
-            orgignNameLess = {
+            originNameless = {
               name: arrFile[val].split(': ')[1].split(' {')[0],
               index: val
             }
@@ -426,7 +438,6 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       }
       // 移动economy_event
       arraymove(arrFile, target, to)
-      // orgignNameLess
       const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
       let findNamelessData = '' // 移动到这个名称下放
       for (let x = 1; x < 20; x++) {
@@ -445,7 +456,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
           if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == findNamelessData) {
             findNamelessIndex = economyEventQueueIndex + 2 + n
             // eslint-disable-next-line eqeqeq
-          } else if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == orgignNameLess.name) {
+          } else if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == originNameless.name) {
             findOriginNamelessIndex = economyEventQueueIndex + 2 + n
           }
         }
@@ -453,8 +464,8 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
           arrayDatamove(arrFile, findOriginNamelessIndex, findNamelessIndex)
         }
       } else {
-        arrFile.splice(economyEventQueueIndex + 2, 0, ' data[0]: ' + orgignNameLess.name)
-        arrFile.splice(orgignNameLess.index + 1, 1)
+        arrFile.splice(economyEventQueueIndex + 2, 0, ' data[0]: ' + originNameless.name)
+        arrFile.splice(originNameless.index + 1, 1)
       }
 
       // sort data
