@@ -398,51 +398,51 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
         arrFile[jobIndex + 1 + i] = companyJobData[i]
       }
 
-      const time = []
-      let target = 0
-      let to = 0
+      const arrTimeEconomyEventIndex = []
+      let targetIndex = 0
+      let toIndex = 0
       let originNameless = {}
       // 时间和定位economy_event company位置
       const str = 'company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city
       economyEventIndex.map((val, index) => {
         const temp = []
         // eslint-disable-next-line eqeqeq
-        if (arrFile[economyEventIndex[index] + 2].split(': ')[1] == str) {
-          if (arrFile[economyEventIndex[index] + 3] === ' param: 0') {
+        if (arrFile[val + 2].split(': ')[1] == str) {
+          if (arrFile[val + 3] === ' param: 0') {
             originNameless = {
               name: arrFile[val].split(': ')[1].split(' {')[0],
               index: val
             }
-            target = val
+            targetIndex = val
             const time = Number(inGameTime) + 7200
-            arrFile[economyEventIndex[index] + 1] = ' time: ' + time
+            arrFile[val + 1] = ' time: ' + time
           }
         }
         temp.push(val) // 下标
-        temp.push(Number(arrFile[economyEventIndex[index] + 1].split(': ')[1])) // time
-        time.push(temp)
+        temp.push(Number(arrFile[val + 1].split(': ')[1])) // time
+        arrTimeEconomyEventIndex.push(temp)
       })
-      time.sort((val1, val2) => {
+      arrTimeEconomyEventIndex.sort((val1, val2) => {
         return val1[1] - val2[1]
       })
-      for (let j = 0; j < time.length; j++) {
-        if (target === time[j][0]) {
+      for (let j = 0; j < arrTimeEconomyEventIndex.length; j++) {
+        if (targetIndex === arrTimeEconomyEventIndex[j][0]) {
           // TODO 临界值为0的时候处理不正确
-          if (j !== time.length - 1) {
-            to = time[j + 1][0] - 6
+          if (j !== arrTimeEconomyEventIndex.length - 1) {
+            toIndex = arrTimeEconomyEventIndex[j + 1][0] - 6
           } else {
-            to = time[j - 1][0]
+            toIndex = arrTimeEconomyEventIndex[j - 1][0]
           }
           break
         }
       }
       // 移动economy_event
-      arraymove(arrFile, target, to)
+      arraymove(arrFile, targetIndex, toIndex)
       const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
       let findNamelessData = '' // 移动到这个名称下放
       for (let x = 1; x < 20; x++) {
-        if (arrFile[to - x].startsWith('economy_event : ')) {
-          findNamelessData = arrFile[to - x].split(': ')[1].split(' {')[0]
+        if (arrFile[toIndex - x].startsWith('economy_event : ')) {
+          findNamelessData = arrFile[toIndex - x].split(': ')[1].split(' {')[0]
           break
         }
       }
