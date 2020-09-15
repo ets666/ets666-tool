@@ -422,13 +422,18 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
         temp.push(Number(arrFile[val + 1].split(': ')[1])) // time
         arrTimeEconomyEventIndex.push(temp)
       })
+
       arrTimeEconomyEventIndex.sort((val1, val2) => {
         return val1[1] - val2[1]
       })
+
+      let isFist = false
       for (let j = 0; j < arrTimeEconomyEventIndex.length; j++) {
         if (targetIndex === arrTimeEconomyEventIndex[j][0]) {
-          // TODO 临界值为0的时候处理不正确
-          if (j !== arrTimeEconomyEventIndex.length - 1) {
+          if (j === 0) {
+            isFist = true
+            toIndex = arrTimeEconomyEventIndex[j + 1][0]
+          } else if (j !== arrTimeEconomyEventIndex.length - 1) {
             toIndex = arrTimeEconomyEventIndex[j + 1][0] - 6
           } else {
             toIndex = arrTimeEconomyEventIndex[j - 1][0]
@@ -439,10 +444,12 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       // 移动economy_event
       arraymove(arrFile, targetIndex, toIndex)
       const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
-      let findNamelessData = '' // 移动到这个名称下放
+      let findNamelessData = '' // 移动到这个名称下
+
       for (let x = 1; x < 20; x++) {
-        if (arrFile[toIndex - x].startsWith('economy_event : ')) {
-          findNamelessData = arrFile[toIndex - x].split(': ')[1].split(' {')[0]
+        const tempIndex = isFist ? toIndex + x : toIndex - x
+        if (arrFile[tempIndex].startsWith('economy_event : ')) {
+          findNamelessData = arrFile[tempIndex].split(': ')[1].split(' {')[0]
           break
         }
       }
@@ -463,9 +470,6 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
         if (findNamelessIndex && findOriginNamelessIndex) {
           arrayDatamove(arrFile, findOriginNamelessIndex, findNamelessIndex)
         }
-      } else {
-        arrFile.splice(economyEventQueueIndex + 2, 0, ' data[0]: ' + originNameless.name)
-        arrFile.splice(originNameless.index + 1, 1)
       }
 
       // sort data
