@@ -79,27 +79,33 @@
       <div class="box">
         <div class="text_box mb10">
           <span class="text">服务器:</span>
-          {{ jobInfo.server }} <span v-if="i18n">({{ i18n.server}})</span>
+          <!-- {{ jobInfo.server }} -->
+          <span v-if="i18n">{{ i18n.server}}</span>
         </div>
         <div class="text_box mb10">
           <span class="text">起点城市:</span>
-          {{ jobInfo.departure_city }} <span v-if="i18n">({{ i18n.departure_city}})</span>
+          <!-- {{ jobInfo.departure_city }} -->
+          <span v-if="i18n">{{ i18n.departure_city}}</span>
         </div>
         <div class="text_box mb10">
           <span class="text">起点货场:</span>
-          {{ jobInfo.departure_company }} <span v-if="i18n">({{ i18n.departure_company}})</span>
+          <!-- {{ jobInfo.departure_company }} -->
+          <span v-if="i18n">{{ i18n.departure_company}}</span>
         </div>
         <div class="text_box mb10">
           <span class="text">终点城市:</span>
-          {{ jobInfo.destination_city }} <span v-if="i18n">({{ i18n.destination_city}})</span>
+          <!-- {{ jobInfo.destination_city }} -->
+          <span v-if="i18n">{{ i18n.destination_city}}</span>
         </div>
         <div class="text_box mb10">
           <span class="text">终点货场:</span>
-          {{ jobInfo.destination_company }} <span v-if="i18n">({{ i18n.destination_company}})</span>
+          <!-- {{ jobInfo.destination_company }} -->
+          <span v-if="i18n">{{ i18n.destination_company}}</span>
         </div>
         <div class="text_box mb10">
           <span class="text">货物:</span>
-          {{ jobInfo.cargo }} <span v-if="i18n">({{ i18n.cargo}})</span>
+          <!-- {{ jobInfo.cargo }} -->
+          <span v-if="i18n">{{ i18n.cargo}}</span>
         </div>
         <div class="text_box mb10">
           <span class="text">预估里程:</span>
