@@ -115,7 +115,7 @@
         <el-checkbox v-model="job.syncJob" :disabled="!(profile && save)">
           同步今日联运任务
         </el-checkbox>
-        <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save)">
+        <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save && job.syncJob)">
           移动车辆至起点货场(实验性)
         </el-checkbox>
       </div>

@@ -125,7 +125,7 @@ export function SiiDecrypt (dir, callback, errorcallback) {
     // backup
     fs.copyFileSync(gameSiiPath, backSiiPath)
     // 解码
-    const cmdStr = siiPath + ' "' + gameSiiPath + '"'
+    const cmdStr = `${siiPath} "${gameSiiPath}"`
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
     const workerProcess = exec(cmdStr, {})
 
@@ -240,7 +240,6 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         arrFile[flag + 5] = arrFile[flag + 5].replace(/mechanical: [^,\n]+/, 'mechanical: 6')
       }
       if (cityName.size > 0) {
-      // console.log([...cityName])
         visitedCity.forEach(element => {
           cityName.delete(element)
         })
