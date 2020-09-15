@@ -340,7 +340,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
     const gameSiiPath = path.join(dir, filedirname)
     const fRead = fs.createReadStream(gameSiiPath)
     const arrFile = []
-    let company = 0
+    let companyIndex = 0
     let inGameTime = 0
     const economyEventIndex = []
     let economyEventQueueIndex = 0
@@ -356,7 +356,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
     let index = 0
     rl.on('line', (input) => {
       if (input.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
-        company = index
+        companyIndex = index
       } else if (input.startsWith(' game_time: ')) {
         inGameTime = Number(input.split(' ')[2])
       } else if (input.startsWith('economy_event : ')) {
@@ -373,11 +373,11 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
     })
 
     rl.on('close', () => {
-      if (company === 0) {
+      if (companyIndex === 0) {
         errorcallback && errorcallback('没有该货场，可能是缺少DLC导致')
         return
       }
-      let jobIndex = company
+      let jobIndex = companyIndex
       const companyJobData = addJobOffer(jobInfo, inGameTime)
       while (!arrFile[jobIndex].startsWith(' job_offer: ')) {
         jobIndex++
