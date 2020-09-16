@@ -5,6 +5,7 @@ process.env.BABEL_ENV = 'renderer'
 const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const MinifyPlugin = require("babel-minify-webpack-plugin")
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -182,7 +183,8 @@ if (process.env.NODE_ENV === 'production') {
       'process.env.NODE_ENV': '"production"'
     }),
     new webpack.LoaderOptionsPlugin({
-      minimize: true
+      minimize: true,
+      minimizer: [new UglifyJsPlugin()]
     })
   )
 }
