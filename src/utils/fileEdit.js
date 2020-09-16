@@ -333,7 +333,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
             arrFile[garage[i] + 2 + vehiclesNum] = ' drivers: 5'
             arrFile[garage[i] + 2 + vehiclesNum + driversNum] += str
           }
-          for (let t = 0; t < 5; t++) {
+          for (let t = 1; t < 6; t++) {
             const statusIndex = garage[i] + 2 + vehiclesNum + driversNum + t
             if (arrFile[statusIndex].startsWith(' status: ')) {
               arrFile[statusIndex] = ' status: 3'
