@@ -112,14 +112,14 @@
             <span class="text">预估里程:</span>
             {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">(含轮渡{{ jobInfo.ferry_distance_km }} km)</span>
           </div>
-        </template>
 
-        <el-checkbox v-model="job.syncJob" :disabled="!(profile && save)">
-          同步今日联运任务
-        </el-checkbox>
-        <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save && job.syncJob)">
-          移动车辆至起点货场(实验性)
-        </el-checkbox>
+          <el-checkbox v-model="job.syncJob" :disabled="!(profile && save)">
+            同步今日联运任务
+          </el-checkbox>
+          <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save && job.syncJob)">
+            移动车辆至起点货场(实验性)
+          </el-checkbox>
+        </template>
       </div>
     </div>
 
