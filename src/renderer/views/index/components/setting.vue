@@ -20,7 +20,7 @@
             :value="item.value">
           </el-option>
         </el-select>
-        <el-select v-model="save" size="mini" placeholder="请选择存档" class="mb10">
+        <el-select v-model="save" size="mini" placeholder="请选择存档" class="mb10" @change="reSet">
           <el-option
             v-for="item in saveOptions"
             :key="item.value"
@@ -110,10 +110,12 @@
           </div>
           <div class="text_box mb10">
             <span class="text">预估里程:</span>
-            {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">(含轮渡{{ jobInfo.ferry_distance_km }} km)</span>
+            <template v-if="jobInfo && jobInfo.shortest_distance_km">
+              {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">(含轮渡{{ jobInfo.ferry_distance_km }} km)</span>
+            </template>
           </div>
 
-          <el-checkbox v-model="job.syncJob" :disabled="!(profile && save)">
+          <el-checkbox v-model="job.syncJob" :disabled="!(profile && save)" @change="syncJobChange">
             同步今日联运任务
           </el-checkbox>
           <el-checkbox v-model="job.moveToCargo" :disabled="!(profile && save && job.syncJob)">
@@ -124,7 +126,7 @@
     </div>
 
     <div class="menu_box">
-        <el-button type="primary" class="btn" :disabled="!(profile && save)" @click="saveSetting">一键修改存档</el-button>
+        <el-button type="primary" class="btn" :disabled="disabledSaveBtn" @click="saveSetting">一键修改存档</el-button>
     </div>
   </div>
 </template>
@@ -172,6 +174,16 @@ export default {
       this.savePath = ''
     }
   },
+  computed: {
+    disabledSaveBtn () {
+      const {money, level, skills, city, garage, damage, oil} = this.setting
+      const {moveToCargo, syncJob} = this.job
+      if (money || level || skills || city || garage || damage || oil || moveToCargo || syncJob) {
+        return false
+      }
+      return true
+    }
+  },
   mounted () {
     this.init()
   },
@@ -196,17 +208,19 @@ export default {
 
       axios.get('https://api.ets666.com/jobsync/')
         .then(res => {
-          _this.severJobInfo = res.data
-          _this.jobInfo = res.data[0]
-          _this.tody = moment.utc(res.data[0].assembly_time).local().format('YYYY-MM-DD HH:mm')
-          res.data.forEach((element) => {
-            const obj = {
-              value: element.assembly_time,
-              label: moment.utc(element.assembly_time).local().format('YYYY-MM-DD HH:mm')
-            }
-            _this.timeOption.push(obj)
-          })
-          _this.setLanguage()
+          if (res.data) {
+            _this.severJobInfo = res.data
+            _this.jobInfo = res.data[0]
+            _this.tody = moment.utc(res.data[0].assembly_time).local().format('YYYY-MM-DD HH:mm')
+            res.data.forEach((element) => {
+              const obj = {
+                value: element.assembly_time,
+                label: moment.utc(element.assembly_time).local().format('YYYY-MM-DD HH:mm')
+              }
+              _this.timeOption.push(obj)
+            })
+            _this.setLanguage()
+          }
         })
     },
     setLanguage () {
@@ -246,6 +260,27 @@ export default {
           _this.error = err
         })
       })
+      this.reSet()
+    },
+    syncJobChange (val) {
+      if (!val) {
+        this.job.moveToCargo = false
+      }
+    },
+    reSet () {
+      this.setting = {
+        money: false,
+        level: false,
+        skills: false,
+        city: false,
+        garage: false,
+        damage: false,
+        oil: false
+      }
+      this.job = {
+        moveToCargo: false,
+        syncJob: false
+      }
     },
     saveSetting () {
       const _this = this
