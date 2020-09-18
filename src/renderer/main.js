@@ -3,6 +3,8 @@ import axios from 'axios'
 import ElementUI from 'element-ui'
 import db from '../assets/datastore'
 import 'element-ui/lib/theme-chalk/index.css'
+import './assets/icon/iconfont.css'
+import './assets/style/reset.css'
 
 import App from './App'
 import router from './router'
