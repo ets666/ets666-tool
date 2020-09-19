@@ -23,6 +23,6 @@ npm run lint
 ### TODOList
 - [ ] 通过web提交联运日程
 - [ ] 小时随机联运
-- [ ] 通过info.sii获取存档名
+- [X] 通过info.sii获取存档名
 ---
 

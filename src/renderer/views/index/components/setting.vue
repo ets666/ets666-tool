@@ -1,5 +1,5 @@
 <template>
-  <el-container class="h">
+  <el-container class="h" v-loading="fullscreenLoading">
     <el-aside width="320px" class="aside">
       <div class="icon_box">
         <i class="iconfont icon00000 ets666_icon"></i>
@@ -31,7 +31,7 @@
             </el-option>
           </el-select>
         </div>
-        <div class="btn mb10 cursor_pointer">
+        <div class="btn mb10 cursor_pointer" @click="saveSetting">
           <i class="iconfont iconbaocun"></i>
           保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存
         </div>
@@ -81,54 +81,6 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title bgf8d2af" style="padding: 10px 0;">
-                    出发城市
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px;" class="bgf8d2af">
-                    <span v-if="i18n">{{ i18n.departure_city}}</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="title" style="padding: 10px 0;">
-                    出发货场
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px;">
-                    <span v-if="i18n">{{ i18n.departure_company}}</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="title bgf8d2af" style="padding: 10px 0;">
-                    终点城市
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px;" class="bgf8d2af">
-                    <span v-if="i18n">{{ i18n.destination_city}}</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="title" style="padding: 10px 0;">
-                    终点货场
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px;">
-                    <span v-if="i18n">{{ i18n.destination_company}}</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="title bgf8d2af" style="padding: 10px 0;">
                     服&nbsp;&nbsp;务&nbsp;&nbsp;器
                   </div>
                 </el-col>
@@ -138,6 +90,57 @@
                   </div>
                 </el-col>
               </el-row>
+
+              <el-row>
+                <el-col :span="8">
+                  <div class="title" style="padding: 10px 0;">
+                    出发城市
+                  </div>
+                </el-col>
+                <el-col :span="16">
+                  <div style="padding: 10px 0 10px 20px;">
+                    <span v-if="i18n">{{ i18n.departure_city}}</span>
+                  </div>
+                </el-col>
+              </el-row>
+
+              <el-row>
+                <el-col :span="8">
+                  <div class="title bgf8d2af" style="padding: 10px 0;">
+                    出发货场
+                  </div>
+                </el-col>
+                <el-col :span="16">
+                  <div style="padding: 10px 0 10px 20px;" class="bgf8d2af">
+                    <span v-if="i18n">{{ i18n.departure_company}}</span>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <div class="title" style="padding: 10px 0;">
+                    终点城市
+                  </div>
+                </el-col>
+                <el-col :span="16">
+                  <div style="padding: 10px 0 10px 20px;">
+                    <span v-if="i18n">{{ i18n.destination_city}}</span>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8">
+                  <div class="title bgf8d2af" style="padding: 10px 0;">
+                    终点货场
+                  </div>
+                </el-col>
+                <el-col :span="16">
+                  <div style="padding: 10px 0 10px 20px;" class="bgf8d2af">
+                    <span v-if="i18n">{{ i18n.destination_company}}</span>
+                  </div>
+                </el-col>
+              </el-row>
+
               <el-row>
                 <el-col :span="8">
                   <div class="title" style="padding: 10px 0;">
@@ -254,6 +257,8 @@ import moment from 'moment'
 import { hex2utf8 } from '../../../../utils/byte'
 const fileEdit = require('../../../../utils/fileEdit')
 const axios = require('axios')
+const fs = require('fs')
+const paths = require('path')
 
 export default {
   data () {
@@ -290,16 +295,6 @@ export default {
       this.savePath = this.$db.read().get('path').value()
     } catch (error) {
       this.savePath = ''
-    }
-  },
-  computed: {
-    disabledSaveBtn () {
-      const {money, level, skills, city, garage, damage, oil} = this.setting
-      const {moveToCargo, syncJob} = this.job
-      if (money || level || skills || city || garage || damage || oil || moveToCargo || syncJob) {
-        return false
-      }
-      return true
     }
   },
   watch: {
@@ -373,10 +368,24 @@ export default {
       _this.saveOptions = []
       fileEdit.mapDirName(this.savePath, '/profiles/' + path + '/save', (file) => {
         file.forEach((element) => {
+          let data = ''
           const obj = {
             value: element,
             label: element
           }
+          fileEdit.SiiDecryptInfo(_this.savePath + '/profiles/' + path + '/save/' + element, (code) => {
+            let infoPath = paths.join(_this.savePath, '/profiles/' + path + '/save/', element + '/info.sii')
+            switch (code) {
+              case 0:
+              case 1:
+                data = fs.readFileSync(infoPath)
+                const name = JSON.parse(data.toString().slice(data.toString().indexOf(' name: ') + 7, data.toString().indexOf(' time: ') - 1))
+                if (name !== '') {
+                  obj.label = name
+                }
+                break
+            }
+          })
           _this.saveOptions.push(obj)
         })
       }, (err) => {
@@ -445,49 +454,55 @@ export default {
     },
     saveSetting () {
       const _this = this
-      _this.fullscreenLoading = true
-      const obj = {
-        setting: _this.setting,
-        jobInfo: _this.jobInfo,
-        job: _this.job
-      }
-      const gameSiiPath = this.savePath + '/profiles/' + this.profile + '/save/' + this.save
-      fileEdit.SiiDecrypt(gameSiiPath, (code) => {
-        switch (code) {
-          case 0:
-          case 1:
-            // _this.$notify({ title: '成功', message: '解码成功', type: 'success' })
-            fileEdit.editGameSii(gameSiiPath, '/game.sii', obj, (file) => {
-              _this.$alert('保存成功', '成功', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  _this.fullscreenLoading = false
-                }
-              })
-            }, (err) => {
-              _this.$alert(err, '错误', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  _this.fullscreenLoading = false
-                }
-              })
-            })
-            break
-
-          default:
-            _this.$notify({ title: '失败', message: '解码失败', type: 'success' })
-            _this.error = '解码失败'
-            _this.fullscreenLoading = false
-            break
+      const {money, level, skills, city, garage, damage, oil} = this.setting
+      const {moveToCargo, syncJob} = this.job
+      if (money || level || skills || city || garage || damage || oil || moveToCargo || syncJob) {
+        _this.fullscreenLoading = true
+        const obj = {
+          setting: _this.setting,
+          jobInfo: _this.jobInfo,
+          job: _this.job
         }
-      }, (err) => {
-        _this.$alert(err, '错误', {
-          confirmButtonText: '确定',
-          callback: action => {
-            _this.fullscreenLoading = false
+        const gameSiiPath = this.savePath + '/profiles/' + this.profile + '/save/' + this.save
+        fileEdit.SiiDecrypt(gameSiiPath, (code) => {
+          switch (code) {
+            case 0:
+            case 1:
+            // _this.$notify({ title: '成功', message: '解码成功', type: 'success' })
+              fileEdit.editGameSii(gameSiiPath, '/game.sii', obj, (file) => {
+                _this.$alert('保存成功', '成功', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    _this.fullscreenLoading = false
+                  }
+                })
+              }, (err) => {
+                _this.$alert(err, '错误', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    _this.fullscreenLoading = false
+                  }
+                })
+              })
+              break
+
+            default:
+              _this.$notify({ title: '失败', message: '解码失败', type: 'success' })
+              _this.error = '解码失败'
+              _this.fullscreenLoading = false
+              break
           }
+        }, (err) => {
+          _this.$alert(err, '错误', {
+            confirmButtonText: '确定',
+            callback: action => {
+              _this.fullscreenLoading = false
+            }
+          })
         })
-      })
+      } else {
+        _this.$message.error('没有勾选项')
+      }
     }
   }
 }

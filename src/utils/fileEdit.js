@@ -141,6 +141,31 @@ export function SiiDecrypt (dir, callback, errorcallback) {
   })
 }
 
+export function SiiDecryptInfo (dir, callback, errorcallback) {
+  const siiPath = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+  const infoSiiPath = path.join(dir, '/info.sii')
+  fs.access(infoSiiPath, fs.F_OK, (err) => {
+    if (err) {
+      errorcallback && errorcallback('没有找存档')
+      return
+    }
+    // 解码
+    const cmdStr = `${siiPath} "${infoSiiPath}"`
+    // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
+    const workerProcess = exec(cmdStr, {})
+
+    // 打印错误的后台可执行程序输出
+    workerProcess.stderr.on('data', function (data) {
+      errorcallback && errorcallback('info.sii解码失败')
+    })
+
+    // 退出之后的输出
+    workerProcess.on('close', function (code) {
+      callback && callback(code)
+    })
+  })
+}
+
 /**
  * @description: 修改存档信息
  * @param {String} dir 文件路径
