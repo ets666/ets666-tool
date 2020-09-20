@@ -378,10 +378,25 @@ export default {
             switch (code) {
               case 0:
               case 1:
-                data = fs.readFileSync(infoPath)
-                const name = JSON.parse(data.toString().slice(data.toString().indexOf(' name: ') + 7, data.toString().indexOf(' time: ') - 1))
-                if (name !== '') {
-                  obj.label = name
+                data = fs.readFileSync(infoPath, 'utf8')
+                const reg = / name: (.*)/
+                let name = reg.exec(data)[1].trim()
+
+                if (name.indexOf('""') === -1) {
+                  if (name.startsWith('"')) {
+                    // console.log(name.substring(1, name.length - 2))
+                    // eslint-disable-next-line no-useless-escape
+                    const temp = data.replace(/\"/g, '')
+                    // eslint-disable-next-line no-eval
+                    const reg = / name: (.*)/
+                    let name = reg.exec(temp)[1].trim()
+                    // console.log(eval("'" + name.substring(1, name.length - 2) + "'"))
+                    console.log(decodeURIComponent(escape(name)))
+
+                    obj.label = decodeURIComponent(escape(name))
+                  } else {
+                    obj.label = name
+                  }
                 }
                 break
             }
