@@ -2,8 +2,8 @@
   <el-container class="h" v-loading="fullscreenLoading">
     <el-aside width="320px" class="aside">
       <div class="icon_box">
-        <i class="iconfont icon00000 ets666_icon"></i>
-        <div class="websize">
+        <i class="iconfont iconlogo-640 ets666_icon"></i>
+        <div class="websize cursor_pointer" @click="goToWeb">
           ETS666.COM
         </div>
         <div class="line"></div>
@@ -34,6 +34,9 @@
         <div class="btn mb10 cursor_pointer" @click="saveSetting">
           <i class="iconfont iconbaocun"></i>
           保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存
+        </div>
+        <div class="copyright cursor_pointer" @click="about">
+          &copy; ETS666
         </div>
       </div>
     </el-aside>
@@ -144,7 +147,7 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title" style="padding: 10px 0;">
-                    货&nbsp;&nbsp;&nbsp;&nbsp;物
+                    货&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物
                   </div>
                 </el-col>
                 <el-col :span="16">
@@ -193,7 +196,7 @@
                     <i v-show="setting.level" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    修改玩家级别为100级
+                    修改级别为100级
                   </div>
                 </div>
 
@@ -259,6 +262,7 @@ const fileEdit = require('../../../../utils/fileEdit')
 const axios = require('axios')
 const fs = require('fs')
 const paths = require('path')
+const { ipcRenderer } = require('electron')
 
 export default {
   data () {
@@ -426,6 +430,12 @@ export default {
         syncJob: false
       }
     },
+    goToWeb () {
+      ipcRenderer.send('open-url', 'https://www.ets666.com/')
+    },
+    about () {
+      ipcRenderer.send('about')
+    },
     clickBtn (val) {
       if (this.profile && this.save) {
         switch (val) {
@@ -549,6 +559,12 @@ export default {
   font-weight: bold;
 }
 
+.copyright {
+  color: #fff;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
 @font-face{
   font-family: Regular;
   src:url('../../../assets/font/LeagueGothic-Regular.ttf');
@@ -582,6 +598,7 @@ export default {
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+  min-width: 150px;
 }
 
 .aside {
@@ -598,30 +615,23 @@ export default {
   position: relative;
 
   .websize {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 20px;
     color: #fff;
     font-size: 20px;
     font-family: Regular;
     font-style: normal;
     font-weight: 400;
+    margin: 20px 0;
   }
 
   .line {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 10px;
-    width: 65%;
+    width: 100%;
     height: 1px;
     background: #fff;
     margin: 0 auto;
   }
 
   .ets666_icon {
-    font-size: 200px;
+    font-size: 80px;
     color: #fff;
   }
 }

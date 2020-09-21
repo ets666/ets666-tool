@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, Tray, Menu, dialog } from 'electron'
+import { app, BrowserWindow, Tray, Menu, dialog, shell, ipcMain } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -47,8 +47,8 @@ function createTray () {
       label: '关于',
       click () {
         dialog.showMessageBox({
-          title: 'ets666',
-          message: 'ets666',
+          title: 'ETS666 货物同步工具',
+          message: 'ETS666 货物同步工具',
           detail: `Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666`
         })
       }
@@ -57,112 +57,27 @@ function createTray () {
       label: '退出',
       click: app.quit
     }
-    // { label: 'Item3', type: 'radio', checked: true }
   ])
-  tray.setToolTip('ets666')
+  tray.setToolTip('ETS666 货物同步工具')
   tray.setContextMenu(contextMenu)
 }
 
-function createMenu () {
-  // darwin表示macOS，针对macOS的设置
-  if (process.platform === 'darwin') {
-    const template = [
-      {
-        label: '&菜单',
-        submenu: [
-          {
-            label: '退出',
-            accelerator: 'Command+Q',
-            click: app.quit
-          }
-        ]
-      },
-      {
-        label: '&视窗',
-        submenu: [
-          {
-            label: '全屏',
-            accelerator: 'F11',
-            click: () => {
-              let focusedWindow = BrowserWindow.getFocusedWindow()
-              let isFullScreen = focusedWindow.isFullScreen()
-              focusedWindow.setFullScreen(!isFullScreen)
-            }
-          }
-        ]
-      },
-      {
-        label: '&帮助',
-        submenu: [
-          {
-            label: '关于ets666',
-            click: () => {
-              dialog.showMessageBox({
-                title: 'ets666',
-                type: 'info',
-                message: 'Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666',
-                buttons: ['Close']
-              })
-            }
-          }
-        ]
-      }
-    ]
-    const menu = Menu.buildFromTemplate(template)
-    Menu.setApplicationMenu(menu)
-  } else {
-    // windows及linux系统
-    const template = [
-      {
-        label: '&菜单',
-        submenu: [
-          {
-            label: '退出',
-            accelerator: 'Command+Q',
-            click: app.quit
-          }
-        ]
-      },
-      {
-        label: '&视窗',
-        submenu: [
-          {
-            label: '全屏',
-            accelerator: 'F11',
-            click: () => {
-              let focusedWindow = BrowserWindow.getFocusedWindow()
-              let isFullScreen = focusedWindow.isFullScreen()
-              focusedWindow.setFullScreen(!isFullScreen)
-            }
-          }
-        ]
-      },
-      {
-        label: '&帮助',
-        submenu: [
-          {
-            label: '关于ets666',
-            click: () => {
-              dialog.showMessageBox({
-                title: 'ets666',
-                type: 'info',
-                message: 'Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666',
-                buttons: ['Close']
-              })
-            }
-          }
-        ]
-      }
-    ]
-    const menu = Menu.buildFromTemplate(template)
-    Menu.setApplicationMenu(menu)
-  }
-}
+ipcMain.on('open-url', (event, url) => {
+  shell.openExternal(url)
+})
+
+ipcMain.on('about', (event) => {
+  dialog.showMessageBox({
+    title: 'ETS666 货物同步工具',
+    message: 'ETS666 货物同步工具',
+    detail: `Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666`
+  })
+})
 
 app.on('ready', () => {
   createWindow()
   createTray()
-  createMenu()
+  // createMenu()
 })
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') { // 当操作系统不是darwin（macOS）的话
