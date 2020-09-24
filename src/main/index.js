@@ -1,17 +1,8 @@
 'use strict'
 
-import { app, BrowserWindow, Tray, Menu, dialog, shell, ipcMain } from 'electron'
-
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
-}
+import { app, BrowserWindow, dialog, shell, ipcMain } from 'electron'
 
 let mainWindow
-let tray
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
@@ -38,29 +29,6 @@ function createWindow () {
     mainWindow = null
   })
 }
-// 创建图标
-function createTray () {
-  const truckPic = process.platform === 'darwin' ? `${__static}/truck.png` : `${__static}/truck-nodarwin.png`
-  tray = new Tray(truckPic) // 指定图片的路径
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: '关于',
-      click () {
-        dialog.showMessageBox({
-          title: 'ETS666 货物同步工具',
-          message: 'ETS666 货物同步工具',
-          detail: `Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666`
-        })
-      }
-    },
-    {
-      label: '退出',
-      click: app.quit
-    }
-  ])
-  tray.setToolTip('ETS666 货物同步工具')
-  tray.setContextMenu(contextMenu)
-}
 
 ipcMain.on('open-url', (event, url) => {
   shell.openExternal(url)
@@ -68,15 +36,14 @@ ipcMain.on('open-url', (event, url) => {
 
 ipcMain.on('about', (event) => {
   dialog.showMessageBox({
-    title: 'ETS666 货物同步工具',
-    message: 'ETS666 货物同步工具',
-    detail: `Version: 0.0.1\nAuthor: xiaosi\nGithub: https://github.com/fe-test-group/ets666`
+    title: 'ETS666 联运工具',
+    message: 'ETS666 联运工具',
+    detail: `Version: 0.0.1\nAuthor: xiaosi\nContributor: sunwinbus`
   })
 })
 
 app.on('ready', () => {
   createWindow()
-  createTray()
   // createMenu()
 })
 app.on('window-all-closed', () => {

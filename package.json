@@ -2,7 +2,7 @@
   "name": "ets666",
   "version": "0.0.1",
   "author": "rsl140 <rsl140@qq.com>",
-  "description": "An electron-vue project",
+  "description": "ETS666 SaveEdit & JobSync Tool",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -21,9 +21,9 @@
     "dist": "npm run build && electron-builder"
   },
   "build": {
-    "productName": "ets666",
+    "productName": "ETS666 联运工具",
     "appId": "com.electron.app",
-    "copyright": "Copyright xiaosi",
+    "copyright": "Copyright © ETS666",
     "directories": {
       "output": "build"
     },
