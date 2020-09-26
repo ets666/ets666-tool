@@ -38,7 +38,7 @@ ipcMain.on('about', (event) => {
   dialog.showMessageBox({
     title: 'ETS666 联运工具',
     message: 'ETS666 联运工具',
-    detail: `Version: 0.0.1\nAuthor: xiaosi\nContributor: sunwinbus`
+    detail: `Version: 0.0.1\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nFeedback: feedback@ets666.com`
   })
 })
 

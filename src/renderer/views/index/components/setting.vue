@@ -386,21 +386,13 @@ export default {
                 const reg = / name: (.*)/
                 let name = reg.exec(data)[1].trim()
 
-                if (name.indexOf('""') === -1) {
-                  if (name.startsWith('"')) {
-                    // console.log(name.substring(1, name.length - 2))
-                    // eslint-disable-next-line no-useless-escape
-                    const temp = data.replace(/\"/g, '')
-                    // eslint-disable-next-line no-eval
-                    const reg = / name: (.*)/
-                    let name = reg.exec(temp)[1].trim()
-                    // console.log(eval("'" + name.substring(1, name.length - 2) + "'"))
-                    console.log(decodeURIComponent(escape(name)))
-
-                    obj.label = decodeURIComponent(escape(name))
-                  } else {
-                    obj.label = name
-                  }
+                if (name.startsWith('"')) {
+                  name = escape(name.substring(1, name.length - 1))
+                  name = name.replace(/%5Cx/gm, '%')
+                  name = name.replace(/%5C/gm, '')
+                  obj.label = decodeURIComponent(name)
+                } else {
+                  obj.label = name
                 }
                 break
             }
