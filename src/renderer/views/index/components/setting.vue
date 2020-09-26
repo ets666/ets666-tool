@@ -61,12 +61,12 @@
                 </el-select>
               </div>
               <div class="job_check_box">
-                <div class="check_btn job_bg" @click="clickBtn('syncJob')">
+                <div class="check_btn job_bg" style="min-width: 100px;" @click="clickBtn('syncJob')">
                   <div class="check">
                     <i v-show="job.syncJob" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    同步今日联运任务
+                    同步联运任务
                   </div>
                 </div>
                 <div class="check_btn job_bg ml10" @click="clickBtn('moveToCargo')">
