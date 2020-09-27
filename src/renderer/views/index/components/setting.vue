@@ -347,10 +347,14 @@ export default {
             _this.severJobInfo = res.data
             _this.jobInfo = res.data[0]
             _this.tody = moment.utc(res.data[0].assembly_time).local().format('YYYY-MM-DD HH:mm')
+            let diff = moment(_this.tody).diff(moment(res.data[0].assembly_time), 'hours')
+            if (diff > 0) {
+              diff = '+' + diff
+            }
             res.data.forEach((element) => {
               const obj = {
                 value: element.assembly_time,
-                label: moment.utc(element.assembly_time).local().format('YYYY-MM-DD HH:mm')
+                label: moment.utc(element.assembly_time).local().format('YYYY-MM-DD HH:mm') + ' (UTC' + diff + ')'
               }
               _this.timeOption.push(obj)
             })
