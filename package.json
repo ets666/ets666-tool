@@ -1,6 +1,6 @@
 {
   "name": "ets666",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "author": "rsl140 <rsl140@qq.com>",
   "description": "ETS666 SaveEdit & JobSync Tool",
   "license": null,
@@ -18,7 +18,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "npm run lint:fix",
     "electron": "electron .",
-    "dist": "npm run build && electron-builder"
+    "version": "npm version patch -m 'Upgrade to %s for reasons'"
   },
   "build": {
     "productName": "ETS666 联运工具",
