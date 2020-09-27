@@ -1,6 +1,7 @@
 export default {
   select: '选择存档',
   selectProfile: '选择档案',
+  selectSave: '选择存档',
   save: '保　　存',
   job: '联运任务',
   syncJob: '同步联运任务',
@@ -20,5 +21,6 @@ export default {
   city: '解锁全部城市',
   garage: '解锁全部车库',
   damage: '修复全部车损',
-  oil: '全部车辆满油'
+  oil: '全部车辆满油',
+  selectSaveFirst: '请先选择一个存档'
 }

@@ -22,7 +22,7 @@
               :value="item.value">
             </el-option>
           </el-select>
-          <el-select v-model="save" size="mini" :placeholder="$t('select')" class="mb10 w select_shadow" @change="reSet">
+          <el-select v-model="save" size="mini" :placeholder="$t('selectSave')" class="mb10 w select_shadow" @change="reSet">
             <el-option
               v-for="item in saveOptions"
               :key="item.value"
@@ -165,7 +165,7 @@
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px;" class="bgf8d2af">
                     <template v-if="jobInfo && jobInfo.shortest_distance_km">
-                      {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">({{ $t('ferry') }}{{ jobInfo.ferry_distance_km }} km)</span>
+                      {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">({{ jobInfo.ferry_distance_km }} km {{ $t('ferry') }})</span>
                     </template>
                   </div>
                 </el-col>
@@ -179,7 +179,7 @@
             <div class="setting_title">
               <i class="iconfont iconico-share" style="font-size: 18px;"></i>
               <span class="f21 fb ml10">
-              {{ $t('server') }}
+              {{ $t('change') }}
               </span>
             </div>
             <div class="setting_table">
@@ -481,7 +481,7 @@ export default {
         }
       } else {
         this.$message({
-          message: '请先选择存档',
+          message: '请先选择一个存档',
           type: 'warning',
           center: 'center'
         })
