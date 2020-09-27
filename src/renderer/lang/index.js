@@ -3,15 +3,10 @@ import VueI18n from 'vue-i18n'
 import elementEnLocale from 'element-ui/lib/locale/lang/en' // element-ui lang
 import elementZhLocale from 'element-ui/lib/locale/lang/zh-CN' // element-ui lang
 import enLocale from './en'
-import zhLocale from './zh'
+import zhLocale from './zh-CN'
 
 Vue.use(VueI18n)
-const { ipcRenderer } = require('electron')
-let language = ''
-ipcRenderer.send('get-local')
-ipcRenderer.on('local', (event, info) => {
-  language = info
-})
+let language = navigator.language
 
 const messages = {
   en: {

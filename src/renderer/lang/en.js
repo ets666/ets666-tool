@@ -22,5 +22,24 @@ export default {
   garage: 'Unlock All Garages',
   damage: 'Fix All Vehicles',
   oil: 'Fill Up Fuel Tanks',
-  selectSaveFirst: 'Please select a save first.'
+  ok: '确定',
+  error: {
+    selectSaveFirst: '请先选择一个存档',
+    fetchFileStatsFailed: '获取文件stats失败',
+    invalidPath: '无效的路径',
+    fileNotExist: '文件不存在',
+    saveNotFound: '没有找到存档',
+    decryptFailed: '解码失败',
+    companyNotFound: '没有该货场，可能是缺少DLC导致',
+    companyNotSupported: '该货场无法接货',
+    writeFileFailed: '写入失败',
+    error: '错误',
+    failed: '失败',
+    nothingSelected: '没有勾选项'
+  },
+  success: {
+    success: '成功',
+    decryptSuccess: '解码成功',
+    fileSaved: '保存成功'
+  }
 }

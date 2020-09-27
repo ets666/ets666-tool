@@ -48,10 +48,6 @@ ipcMain.on('about', (event) => {
   })
 })
 
-ipcMain.on('get-local', (event, url) => {
-  event.sender.send('local', app.getLocale())
-})
-
 app.on('ready', () => {
   createWindow()
 })

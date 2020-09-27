@@ -320,10 +320,7 @@ export default {
   methods: {
     init () {
       const _this = this
-      ipcRenderer.send('get-local')
-      ipcRenderer.on('local', (event, language) => {
-        _this.localLanguage = language
-      })
+      this.localLanguage = navigator.language
       _this.profileOptions = []
       fileEdit.mapDirName(this.savePath, '/profiles', (file) => {
         file.forEach((element) => {
@@ -360,7 +357,7 @@ export default {
     utcDiff (serverTime) {
       const localTime = moment.utc(serverTime).local().format('YYYY-MM-DD HH:mm')
       let diff = moment(localTime).diff(moment(serverTime), 'hours')
-      if (diff > 0) {
+      if (diff >= 0) {
         diff = '+' + diff
       }
       return localTime + ' (UTC' + diff + ')'
@@ -481,7 +478,7 @@ export default {
         }
       } else {
         this.$message({
-          message: '请先选择一个存档',
+          message: this.$t('error.selectSaveFirst'),
           type: 'warning',
           center: 'center'
         })
@@ -503,17 +500,16 @@ export default {
           switch (code) {
             case 0:
             case 1:
-            // _this.$notify({ title: '成功', message: '解码成功', type: 'success' })
               fileEdit.editGameSii(gameSiiPath, '/game.sii', obj, (file) => {
-                _this.$alert('保存成功', '成功', {
-                  confirmButtonText: '确定',
+                _this.$alert(_this.$t('success.fileSaved'), _this.$t('success.success'), {
+                  confirmButtonText: _this.$t('ok'),
                   callback: action => {
                     _this.fullscreenLoading = false
                   }
                 })
               }, (err) => {
-                _this.$alert(err, '错误', {
-                  confirmButtonText: '确定',
+                _this.$alert(err, _this.$t('error.error'), {
+                  confirmButtonText: _this.$t('ok'),
                   callback: action => {
                     _this.fullscreenLoading = false
                   }
@@ -522,21 +518,21 @@ export default {
               break
 
             default:
-              _this.$notify({ title: '失败', message: '解码失败', type: 'success' })
-              _this.error = '解码失败'
+              _this.$notify({ title: _this.$t('error.failed'), message: _this.$t('error.decryptFailed'), type: 'success' })
+              _this.error = _this.$t('error.decryptFailed')
               _this.fullscreenLoading = false
               break
           }
         }, (err) => {
-          _this.$alert(err, '错误', {
-            confirmButtonText: '确定',
+          _this.$alert(err, _this.$t('error.error'), {
+            confirmButtonText: _this.$t('ok'),
             callback: action => {
               _this.fullscreenLoading = false
             }
           })
         })
       } else {
-        _this.$message.error('没有勾选项')
+        _this.$message.error(_this.$t('error.nothingSelected'))
       }
     }
   }

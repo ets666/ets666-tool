@@ -13,7 +13,7 @@ export default {
   destinationCompany: '终点货场',
   cargo: '货　　物',
   mileage: '预估里程',
-  ferry: '含轮渡',
+  ferry: '轮渡',
   change: '存档修改',
   money: '修改金钱为1亿',
   level: '修改级别为100级',
@@ -22,5 +22,24 @@ export default {
   garage: '解锁全部车库',
   damage: '修复全部车损',
   oil: '全部车辆满油',
-  selectSaveFirst: '请先选择一个存档'
+  ok: '确定',
+  error: {
+    selectSaveFirst: '请先选择一个存档',
+    fetchFileStatsFailed: '获取文件stats失败',
+    invalidPath: '无效的路径',
+    fileNotExist: '文件不存在',
+    saveNotFound: '没有找到存档',
+    decryptFailed: '解码失败',
+    companyNotFound: '没有该货场，可能是缺少DLC导致',
+    companyNotSupported: '该货场无法接货',
+    writeFileFailed: '写入失败',
+    error: '错误',
+    failed: '失败',
+    nothingSelected: '没有勾选项'
+  },
+  success: {
+    success: '成功',
+    decryptSuccess: '解码成功',
+    fileSaved: '保存成功'
+  }
 }

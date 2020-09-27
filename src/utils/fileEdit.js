@@ -1,4 +1,5 @@
 import { exec } from 'child_process'
+import i18n from '../renderer/lang'
 const fs = require('fs')
 const path = require('path')
 const readline = require('readline')
@@ -30,7 +31,7 @@ export function mapDir (dir, callback, finish) {
       let pathname = path.join(dir, filename)
       fs.stat(pathname, (err, stats) => { // 读取文件信息
         if (err) {
-          console.log('获取文件stats失败')
+          console.log(i18n.t('error.fetchFileStatsFailed'))
           return
         }
         if (stats.isDirectory()) {
@@ -66,12 +67,12 @@ export function mapDirName (dir, filedirname, callback, errorcallback) {
   const dirurl = path.join(dir, filedirname)
   fs.access(dirurl, fs.F_OK, (err) => {
     if (err) {
-      errorcallback && errorcallback('无效的路径')
+      errorcallback && errorcallback(i18n.t('error.invalidPath'))
       return
     }
     fs.readdir(dirurl, function (err, files) {
       if (err) {
-        errorcallback && errorcallback('文件不存在')
+        errorcallback && errorcallback(i18n.t('error.fileNotExist'))
         return
       }
       // 只读取文件夹
@@ -99,7 +100,7 @@ export function isExists (dir, filedirname, callback, errorcallback) {
   const dirurl = path.join(dir, filedirname)
   fs.access(dirurl, fs.F_OK, (err) => {
     if (err) {
-      errorcallback && errorcallback('无效的路径')
+      errorcallback && errorcallback(i18n.t('error.invalidPath'))
       return
     }
     const flag = true
@@ -119,7 +120,7 @@ export function SiiDecrypt (dir, callback, errorcallback) {
   const backSiiPath = path.join(dir, '/game_bak.sii')
   fs.access(gameSiiPath, fs.F_OK, (err) => {
     if (err) {
-      errorcallback && errorcallback('没有找存档')
+      errorcallback && errorcallback(i18n.t('error.saveNotFound'))
       return
     }
     // backup
@@ -131,7 +132,7 @@ export function SiiDecrypt (dir, callback, errorcallback) {
 
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
-      errorcallback && errorcallback('解码失败')
+      errorcallback && errorcallback(i18n.t('error.decryptFailed'))
     })
 
     // 退出之后的输出
@@ -152,7 +153,7 @@ export function SiiDecryptInfo (dir, callback, errorcallback) {
   const infoSiiPath = path.join(dir, '/info.sii')
   fs.access(infoSiiPath, fs.F_OK, (err) => {
     if (err) {
-      errorcallback && errorcallback('没有找存档')
+      errorcallback && errorcallback(i18n.t('error.saveNotFound'))
       return
     }
     // 解码
@@ -162,7 +163,7 @@ export function SiiDecryptInfo (dir, callback, errorcallback) {
 
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
-      errorcallback && errorcallback('info.sii解码失败')
+      errorcallback && errorcallback('info.sii' + i18n.t('error.decryptFailed'))
     })
 
     // 退出之后的输出
@@ -377,7 +378,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       // 做货
       if (job.syncJob) {
         if (companyIndex === 0) {
-          errorcallback && errorcallback('没有该货场，可能是缺少DLC导致')
+          errorcallback && errorcallback(i18n.t('error.companyNotFound'))
           return
         }
         let jobIndex = companyIndex
@@ -387,7 +388,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         }
         const jobOfferNum = Number(arrFile[jobIndex].split(': ')[1])
         if (jobOfferNum === 0) {
-          errorcallback && errorcallback('该货场无法接货')
+          errorcallback && errorcallback(i18n.t('error.companyNotSupported'))
           return
         }
         while (!arrFile[jobIndex].startsWith(' job_offer[')) {
@@ -484,13 +485,13 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       const buf = Buffer.from(arrFile.join('\r\n'))
       fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
         if (err) {
-          errorcallback && errorcallback('写入失败')
+          errorcallback && errorcallback(i18n.t('error.writeFileFailed'))
         }
         callback && callback()
       })
     })
   } catch (error) {
-    errorcallback && errorcallback('失败')
+    errorcallback && errorcallback(i18n.t('error.failed'))
   }
 }
 
@@ -534,7 +535,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
 
     rl.on('close', () => {
       if (companyIndex === 0) {
-        errorcallback && errorcallback('没有该货场，可能是缺少DLC导致')
+        errorcallback && errorcallback(i18n.t('error.companyNotFound'))
         return
       }
       let jobIndex = companyIndex
@@ -544,7 +545,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       }
       const jobOfferNum = Number(arrFile[jobIndex].split(': ')[1])
       if (jobOfferNum === 0) {
-        errorcallback && errorcallback('该货场无法接货')
+        errorcallback && errorcallback(i18n.t('error.companyNotSupported'))
         return
       }
       while (!arrFile[jobIndex].startsWith(' job_offer[')) {
@@ -640,13 +641,13 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       const buf = Buffer.from(arrFile.join('\r\n'))
       fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
         if (err) {
-          errorcallback && errorcallback('写入失败')
+          errorcallback && errorcallback(i18n.t('error.writeFileFailed'))
         }
         callback && callback()
       })
     })
   } catch (error) {
-    errorcallback && errorcallback('失败')
+    errorcallback && errorcallback(i18n.t('error.failed'))
   }
 }
 
