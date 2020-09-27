@@ -11,10 +11,11 @@
       <div class="btn_box">
         <div class="btn mb10">
         <i class="iconfont iconsucai" style="font-size: 18px;"></i>
-          选择存档
+          <!-- 选择存档 -->
+          {{ $t('select') }}
         </div>
         <div>
-          <el-select v-model="profile" size="mini" placeholder="请选择档案" class="mb10 w select_shadow" @change="changeProfile">
+          <el-select v-model="profile" size="mini" :placeholder="$t('selectProfile')" class="mb10 w select_shadow" @change="changeProfile">
             <el-option
               v-for="item in profileOptions"
               :key="item.value"
@@ -22,7 +23,7 @@
               :value="item.value">
             </el-option>
           </el-select>
-          <el-select v-model="save" size="mini" placeholder="请选择存档" class="mb10 w select_shadow" @change="reSet">
+          <el-select v-model="save" size="mini" :placeholder="$t('select')" class="mb10 w select_shadow" @change="reSet">
             <el-option
               v-for="item in saveOptions"
               :key="item.value"
@@ -33,7 +34,7 @@
         </div>
         <div class="btn mb10 cursor_pointer" @click="saveSetting">
           <i class="iconfont iconbaocun"></i>
-          保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存
+          {{ $t('save') }}
         </div>
         <div class="copyright cursor_pointer" @click="about">
           &copy; ETS666
@@ -47,7 +48,7 @@
             <div class="job_offer">
               <div class="job_info">
                 <i class="iconfont iconhb-addrss f21"></i>
-                <div class="f21 fb ml10">联运任务</div>
+                <div class="f21 fb ml10">{{ $t('job') }}</div>
                 <div class="line2">
                   &nbsp;
                 </div>
@@ -66,7 +67,7 @@
                     <i v-show="job.syncJob" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    同步联运任务
+                    {{ $t('syncJob') }}
                   </div>
                 </div>
                 <div class="check_btn job_bg ml10" @click="clickBtn('moveToCargo')">
@@ -74,7 +75,7 @@
                     <i v-show="job.moveToCargo" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    移动车辆至起点货场(实验性)
+                    {{ $t('moveCar') }}
                   </div>
                 </div>
               </div>
@@ -84,7 +85,7 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title bgf8d2af" style="padding: 10px 0;">
-                    服&nbsp;&nbsp;务&nbsp;&nbsp;器
+                    {{ $t('server') }}
                   </div>
                 </el-col>
                 <el-col :span="16">
@@ -97,7 +98,7 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title" style="padding: 10px 0;">
-                    出发城市
+                    {{ $t('departureCity') }}
                   </div>
                 </el-col>
                 <el-col :span="16">
@@ -110,7 +111,7 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title bgf8d2af" style="padding: 10px 0;">
-                    出发货场
+                    {{ $t('departureCompany') }}
                   </div>
                 </el-col>
                 <el-col :span="16">
@@ -122,7 +123,7 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title" style="padding: 10px 0;">
-                    终点城市
+                    {{ $t('destinationCity') }}
                   </div>
                 </el-col>
                 <el-col :span="16">
@@ -134,7 +135,7 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title bgf8d2af" style="padding: 10px 0;">
-                    终点货场
+                    {{ $t('destinationCompany') }}
                   </div>
                 </el-col>
                 <el-col :span="16">
@@ -147,7 +148,7 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title" style="padding: 10px 0;">
-                    货&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;物
+                    {{ $t('cargo') }}
                   </div>
                 </el-col>
                 <el-col :span="16">
@@ -159,13 +160,13 @@
               <el-row>
                 <el-col :span="8">
                   <div class="title bgf8d2af" style="padding: 10px 0;">
-                    预估里程
+                    {{ $t('mileage') }}
                   </div>
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px;" class="bgf8d2af">
                     <template v-if="jobInfo && jobInfo.shortest_distance_km">
-                      {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">(含轮渡{{ jobInfo.ferry_distance_km }} km)</span>
+                      {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }} km <span v-if="jobInfo.ferry_distance_km">({{ $t('ferry') }}{{ jobInfo.ferry_distance_km }} km)</span>
                     </template>
                   </div>
                 </el-col>
@@ -178,7 +179,9 @@
           <div class="shadow_box">
             <div class="setting_title">
               <i class="iconfont iconico-share" style="font-size: 18px;"></i>
-              <span class="f21 fb ml10">存档修改</span>
+              <span class="f21 fb ml10">
+              {{ $t('server') }}
+              </span>
             </div>
             <div class="setting_table">
               <div class="setting_check_box">
@@ -187,7 +190,7 @@
                     <i v-show="setting.money" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    修改金钱为1亿
+                    {{ $t('money') }}
                   </div>
                 </div>
 
@@ -196,7 +199,7 @@
                     <i v-show="setting.level" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    修改级别为100级
+                    {{ $t('level') }}
                   </div>
                 </div>
 
@@ -205,7 +208,7 @@
                     <i v-show="setting.skills" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    解锁全部技能
+                    {{ $t('skills') }}
                   </div>
                 </div>
 
@@ -214,7 +217,7 @@
                     <i v-show="setting.city" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    解锁全部城市
+                    {{ $t('city') }}
                   </div>
                 </div>
               </div>
@@ -225,7 +228,7 @@
                     <i v-show="setting.garage" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    解锁全部车库
+                    {{ $t('garage') }}
                   </div>
                 </div>
 
@@ -234,7 +237,7 @@
                     <i v-show="setting.damage" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    修复全部车损
+                    {{ $t('damage') }}
                   </div>
                 </div>
 
@@ -243,7 +246,7 @@
                     <i v-show="setting.oil" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    全部车辆满油
+                    {{ $t('oil') }}
                   </div>
                 </div>
               </div>
@@ -288,10 +291,11 @@ export default {
         moveToCargo: false,
         syncJob: false
       },
-      i18n: {},
+      i18n: null,
       severJobInfo: [],
       jobInfo: {},
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      localLanguage: 'zh-CN'
     }
   },
   created () {
@@ -317,6 +321,10 @@ export default {
   methods: {
     init () {
       const _this = this
+      ipcRenderer.send('get-local')
+      ipcRenderer.on('local', (event, language) => {
+        _this.localLanguage = language
+      })
       _this.profileOptions = []
       fileEdit.mapDirName(this.savePath, '/profiles', (file) => {
         file.forEach((element) => {
@@ -352,10 +360,13 @@ export default {
     },
     setLanguage () {
       for (let i = 0; i < this.jobInfo.i18n.length; i++) {
-        if (this.jobInfo.i18n[i].language === 'zh-CN') {
+        if (this.jobInfo.i18n[i].language === this.localLanguage) {
           this.$set(this, 'i18n', this.jobInfo.i18n[i])
           break
         }
+      }
+      if (this.i18n === null) {
+        this.$set(this, 'i18n', this.jobInfo.i18n[0])
       }
     },
     changeTime (val) {

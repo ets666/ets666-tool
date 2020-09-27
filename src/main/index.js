@@ -7,6 +7,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+const version = process.env.npm_package_version
 function createWindow () {
   /**
    * Initial window options
@@ -38,18 +39,20 @@ ipcMain.on('about', (event) => {
   dialog.showMessageBox({
     title: 'ETS666 联运工具',
     message: 'ETS666 联运工具',
-    detail: `Version: 0.0.1\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nFeedback: feedback@ets666.com`
+    detail: `Version: ${version}\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nFeedback: feedback@ets666.com`
   })
+})
+
+ipcMain.on('get-local', (event, url) => {
+  event.sender.send('local', app.getLocale())
 })
 
 app.on('ready', () => {
   createWindow()
-  // createMenu()
 })
+
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') { // 当操作系统不是darwin（macOS）的话
-    app.quit() // 退出应用
-  }
+  app.quit()
 })
 
 app.on('activate', () => {

@@ -5,9 +5,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'ets666'
-  }
+export default {
+  name: 'ets666'
+}
 </script>
 
 <style>

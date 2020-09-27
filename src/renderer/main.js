@@ -5,6 +5,7 @@ import db from '../assets/datastore'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/icon/iconfont.css'
 import './assets/style/reset.css'
+import i18n from './lang'
 
 import App from './App'
 import router from './router'
@@ -19,6 +20,7 @@ Vue.prototype.$db = db
 /* eslint-disable no-new */
 new Vue({
   components: { App },
+  i18n,
   router,
   store,
   template: '<App/>'
