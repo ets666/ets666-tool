@@ -25,7 +25,7 @@ const messages = {
 }
 
 const i18n = new VueI18n({
-  locale: language || 'zh-CN', // set locale
+  locale: language || 'en', // set locale
   messages // set locale messages
 })
 

@@ -1,13 +1,16 @@
 'use strict'
 
-import { app, BrowserWindow, dialog, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, shell, ipcMain, nativeImage } from 'electron'
+const path = require('path')
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+const iconImage = nativeImage.createFromPath(path.join(__dirname, '../assets/256x256.png'))
 const version = process.env.npm_package_version
+
 function createWindow () {
   /**
    * Initial window options
@@ -21,7 +24,8 @@ function createWindow () {
     webPreferences: {
       webSecurity: false, // 是否禁用浏览器的跨域安全特性
       nodeIntegration: true // 是否完整支持node
-    }
+    },
+    icon: iconImage
   })
 
   mainWindow.loadURL(winURL)
@@ -39,7 +43,8 @@ ipcMain.on('about', (event) => {
   dialog.showMessageBox({
     title: 'ETS666 联运工具',
     message: 'ETS666 联运工具',
-    detail: `Version: ${version}\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nFeedback: feedback@ets666.com`
+    detail: `Version: ${version}\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nFeedback: feedback@ets666.com`,
+    icon: iconImage
   })
 })
 
