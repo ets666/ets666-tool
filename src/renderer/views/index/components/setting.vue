@@ -11,7 +11,6 @@
       <div class="btn_box">
         <div class="btn mb10">
         <i class="iconfont iconsucai" style="font-size: 18px;"></i>
-          <!-- 选择存档 -->
           {{ $t('select') }}
         </div>
         <div>
@@ -52,7 +51,7 @@
                 <div class="line2">
                   &nbsp;
                 </div>
-                <el-select v-model="tody" size="mini" style="width: 150px;" @change="changeTime">
+                <el-select v-model="tody" size="mini" style="width: 200px;" @change="changeTime">
                   <el-option
                     v-for="item in timeOption"
                     :key="item.value"
@@ -346,21 +345,25 @@ export default {
           if (res.data) {
             _this.severJobInfo = res.data
             _this.jobInfo = res.data[0]
-            _this.tody = moment.utc(res.data[0].assembly_time).local().format('YYYY-MM-DD HH:mm')
-            let diff = moment(_this.tody).diff(moment(res.data[0].assembly_time), 'hours')
-            if (diff > 0) {
-              diff = '+' + diff
-            }
+            _this.tody = this.utcDiff(res.data[0].assembly_time)
             res.data.forEach((element) => {
               const obj = {
                 value: element.assembly_time,
-                label: moment.utc(element.assembly_time).local().format('YYYY-MM-DD HH:mm') + ' (UTC' + diff + ')'
+                label: this.utcDiff(element.assembly_time)
               }
               _this.timeOption.push(obj)
             })
             _this.setLanguage()
           }
         })
+    },
+    utcDiff (serverTime) {
+      const localTime = moment.utc(serverTime).local().format('YYYY-MM-DD HH:mm')
+      let diff = moment(localTime).diff(moment(serverTime), 'hours')
+      if (diff > 0) {
+        diff = '+' + diff
+      }
+      return localTime + ' (UTC' + diff + ')'
     },
     setLanguage () {
       for (let i = 0; i < this.jobInfo.i18n.length; i++) {
