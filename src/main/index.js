@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow, dialog, shell, ipcMain, nativeImage } from 'electron'
+// import uploader from '../utils/uploader.js'
 const path = require('path')
 
 let mainWindow
@@ -50,6 +51,7 @@ ipcMain.on('about', (event) => {
 
 app.on('ready', () => {
   createWindow()
+  // uploader()
 })
 
 app.on('window-all-closed', () => {
