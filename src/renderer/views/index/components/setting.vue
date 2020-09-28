@@ -363,14 +363,14 @@ export default {
       return localTime + ' (UTC' + diff + ')'
     },
     setLanguage () {
-      const obj = {}
+      const obj = new Map()
       this.jobInfo.i18n.map(element => {
-        obj[element.language] = element
+        obj.set(element.language, element)
       })
-      if (obj.hasOwnProperty(this.localLanguage)) {
-        this.$set(this, 'i18n', obj[this.localLanguage])
+      if (obj.has(this.localLanguage)) {
+        this.$set(this, 'i18n', obj.get(this.localLanguage))
       } else {
-        this.$set(this, 'i18n', obj['Default'])
+        this.$set(this, 'i18n', obj.get('Default'))
       }
     },
     changeTime (val) {
