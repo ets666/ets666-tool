@@ -528,6 +528,8 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
         input = ' truck_placement: ' + jobInfo.departure_coordinates
       } else if (job.moveToCargo && input.startsWith(' trailer_placement: ')) {
         input = ' trailer_placement: (0, 0, 0) (1; 0, 0, 0)'
+      } else if (job.moveToCargo && input.startsWith(' slave_trailer_placements[')) {
+        input = ' slave_trailer_placements[' + input.split('[')[1].split(']')[0] + ']: (0, 0, 0) (1; 0, 0, 0)'
       }
       arrFile.push(input)
       index++
@@ -575,7 +577,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
               index: val
             }
             targetIndex = val
-            const time = Number(inGameTime) + 7200
+            const time = Number(inGameTime) + 6120
             arrFile[val + 1] = ' time: ' + time
           }
         }
@@ -654,7 +656,7 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
 function addJobOffer (jobInfo, inGameTime) {
   const companyJobData = []
   companyJobData.push(' target: "' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
-  const exp = Number(inGameTime) + RandomNumBoth(180, 1800) + (72 * 60)
+  const exp = Number(inGameTime) + 6120
   companyJobData.push(' expiration_time: ' + exp)
   companyJobData.push(' urgency: 0')
   companyJobData.push(' shortest_distance_km: ' + jobInfo.shortest_distance_km)
@@ -668,13 +670,6 @@ function addJobOffer (jobInfo, inGameTime) {
   companyJobData.push(' fill_ratio: 1')
   companyJobData.push(' trailer_place: 0')
   return companyJobData
-}
-
-export function RandomNumBoth (Min, Max) {
-  var Range = Max - Min
-  var Rand = Math.random()
-  var num = Min + Math.round(Rand * Range) // 四舍五入
-  return num
 }
 
 function arraymove (arr, oldIndex, newIndex) {
