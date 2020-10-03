@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "rsl140 <rsl140@qq.com>",
   "description": "ETS666 SaveEdit & JobSync Tool",
-  "license": null,
+  "license": "GPL-3.0-or-later",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -23,8 +23,8 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "ETS666 联运工具",
-    "appId": "com.electron.app",
+    "productName": "ETS666 SaveEdit & JobSync Tool",
+    "appId": "com.ets666.app",
     "copyright": "Copyright © ETS666",
     "directories": {
       "output": "build"

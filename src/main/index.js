@@ -42,8 +42,8 @@ ipcMain.on('open-url', (event, url) => {
 
 ipcMain.on('about', (event) => {
   dialog.showMessageBox({
-    title: 'ETS666 联运工具',
-    message: 'ETS666 联运工具',
+    title: 'ETS666 SaveEdit & JobSync Tool',
+    message: 'ETS666 SaveEdit & JobSync Tool',
     detail: `Version: ${version}\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nFeedback: feedback@ets666.com`,
     icon: iconImage
   })
