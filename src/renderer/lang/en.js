@@ -3,7 +3,7 @@ export default {
   selectProfile: 'Select a Profile',
   selectSave: 'Select a Save',
   save: 'Save',
-  job: 'CONVOY JOB',
+  job: 'JOB SYNC',
   syncJob: 'Sync Job',
   moveCar: 'Move to Starting Point (Expt.)',
   server: 'Server',

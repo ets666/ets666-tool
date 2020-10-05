@@ -337,7 +337,7 @@ export default {
         })
       })
 
-      axios.get('https://api.ets666.com/jobsync/')
+      axios.get('https://ets666.com/api/random_jobs/')
         .then(res => {
           if (res.data) {
             _this.severJobInfo = res.data

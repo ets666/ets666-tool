@@ -5,7 +5,7 @@ A tool for editing save files and syncing jobs on Euro Truck Simulator 2.
 Windows x64
 
 ## Download
-<https://github.com/fe-test-group/ets666/releases>
+<https://github.com/ets666/ets666-tool/releases/latest>
 
 ## Features
 * Edit money
