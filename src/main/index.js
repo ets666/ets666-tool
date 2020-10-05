@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow, dialog, shell, ipcMain, nativeImage } from 'electron'
+import packageInfo from '../../package'
 // import uploader from '../utils/uploader.js'
 const path = require('path')
 
@@ -10,7 +11,7 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 const iconImage = nativeImage.createFromPath(path.join(__dirname, '../assets/256x256.png'))
-const version = process.env.npm_package_version
+const version = packageInfo.version
 
 function createWindow () {
   /**
