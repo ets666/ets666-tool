@@ -2,7 +2,7 @@
 
 import { app, BrowserWindow, dialog, shell, ipcMain, nativeImage } from 'electron'
 import packageInfo from '../../package'
-// import uploader from '../utils/uploader.js'
+import uploader from '../utils/uploader.js'
 const path = require('path')
 
 let mainWindow
@@ -52,7 +52,7 @@ ipcMain.on('about', (event) => {
 
 app.on('ready', () => {
   createWindow()
-  // uploader()
+  uploader()
 })
 
 app.on('window-all-closed', () => {

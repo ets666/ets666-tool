@@ -1,9 +1,10 @@
 import { dialog, shell } from 'electron'
 import db from '../assets/datastore.js'
 import axios from 'axios'
-const version = process.env.npm_package_version
-const release = ''
-const downloadUrl = ''
+import packageInfo from '../../package'
+const version = packageInfo.version
+const release = 'https://api.github.com/repos/ets666/ets666-tool/releases/latest'
+const downloadUrl = 'https://github.com/ets666/ets666-tool/releases/latest'
 
 const checkVersion = async () => {
   let showTip = db.read().get('showUpdate').value()
