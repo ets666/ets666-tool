@@ -21,10 +21,10 @@ const checkVersion = async () => {
       if (result) {
         dialog.showMessageBox({
           type: 'info',
-          title: '发现新版本',
+          title: 'New Version Available',
           buttons: ['Yes', 'No'],
-          message: '发现新版本，更新了很多功能，是否去下载最新的版本？',
-          checkboxLabel: '以后不再提醒',
+          message: 'A new version has been released. Do you want to download it?',
+          checkboxLabel: 'Don\'t remind me again',
           checkboxChecked: false
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
