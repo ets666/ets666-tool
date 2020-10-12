@@ -115,7 +115,8 @@ export function isExists (dir, filedirname, callback, errorcallback) {
  * @param {function} errorcallback 失败返回函数
  */
 export function SiiDecrypt (dir, callback, errorcallback) {
-  const siiPath = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+  const cwd = path.join(process.cwd(), '/resources/')
+  const siiPath = path.join('SII_Decrypt.exe')
   const gameSiiPath = path.join(dir, '/game.sii')
   const backSiiPath = path.join(dir, '/game_bak.sii')
   fs.access(gameSiiPath, fs.F_OK, (err) => {
@@ -128,7 +129,7 @@ export function SiiDecrypt (dir, callback, errorcallback) {
     // 解码
     const cmdStr = `${siiPath} "${gameSiiPath}"`
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-    const workerProcess = exec(cmdStr, {})
+    const workerProcess = exec(cmdStr, {cwd: cwd})
 
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
@@ -149,7 +150,8 @@ export function SiiDecrypt (dir, callback, errorcallback) {
  * @param {function} errorcallback 失败返回函数
  */
 export function SiiDecryptInfo (dir, callback, errorcallback) {
-  const siiPath = path.join(process.cwd(), '/resources/SII_Decrypt.exe')
+  const cwd = path.join(process.cwd(), '/resources/')
+  const siiPath = path.join('SII_Decrypt.exe')
   const infoSiiPath = path.join(dir, '/info.sii')
   fs.access(infoSiiPath, fs.F_OK, (err) => {
     if (err) {
@@ -159,7 +161,7 @@ export function SiiDecryptInfo (dir, callback, errorcallback) {
     // 解码
     const cmdStr = `${siiPath} "${infoSiiPath}"`
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-    const workerProcess = exec(cmdStr, {})
+    const workerProcess = exec(cmdStr, {cwd: cwd})
 
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
