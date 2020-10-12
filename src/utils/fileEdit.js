@@ -184,8 +184,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
   try {
     const { setting, jobInfo, job } = info
     const gameSiiPath = path.join(dir, filedirname)
-    const fRead = fs.createReadStream(gameSiiPath)
-    const arrFile = []
+    const fRead = fs.readFileSync(gameSiiPath, 'utf8')
+    const arrFile = fRead.split('\r\n')
     const skills = []
     const garage = []
     const exper = []
@@ -204,291 +204,280 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     const economyEventIndex = []
     let economyEventQueueIndex = 0
 
-    fRead.on('end', () => {
-      console.log('end')
-    })
-    const rl = readline.createInterface({
-      input: fRead,
-      terminal: true
-    })
-
     let index = 0
-    rl.on('line', (input) => {
-      if (input.startsWith(' hq_city: ')) {
-        hqCity = input.split(': ')[1]
+    arrFile.forEach((element, flieIndex) => {
+      if (element.startsWith(' hq_city: ')) {
+        hqCity = element.split(': ')[1]
       }
-      if (setting.money && input.startsWith(' money_account')) {
-        input = input.replace(/money_account: [^,\n]+/, 'money_account: 100000000')
-      } else if (setting.level && input.startsWith(' experience_points')) {
+      if (setting.money && element.startsWith(' money_account')) {
+        arrFile[flieIndex] = element.replace(/money_account: [^,\n]+/, 'money_account: 100000000')
+      } else if (setting.level && element.startsWith(' experience_points')) {
         exper.push(index)
-      } else if (setting.skills && input.startsWith(' adr:')) {
+      } else if (setting.skills && element.startsWith(' adr:')) {
         skills.push(index)
-      } else if (setting.damage && input.startsWith(' wear')) {
-        input = input.replace(/wear: [^,\n]+/, 'wear: 0')
-      } else if (setting.oil && input.startsWith(' fuel_relative')) {
-        input = input.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')
-      } else if (setting.city && input.startsWith(' companies[')) {
-        cityName.add(input.split('.')[3])
-      } else if (setting.city && input.startsWith(' visited_cities[')) {
-        visitedCity.push(input.split(': ')[1])
-      } else if (setting.city && input.startsWith(' visited_cities: ')) {
+      } else if (setting.damage && element.startsWith(' wear')) {
+        arrFile[flieIndex] = element.replace(/wear: [^,\n]+/, 'wear: 0')
+      } else if (setting.oil && element.startsWith(' fuel_relative')) {
+        arrFile[flieIndex] = element.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')
+      } else if (setting.city && element.startsWith(' companies[')) {
+        cityName.add(element.split('.')[3])
+      } else if (setting.city && element.startsWith(' visited_cities[')) {
+        visitedCity.push(element.split(': ')[1])
+      } else if (setting.city && element.startsWith(' visited_cities: ')) {
         visitedIndex.city = index
-      } else if (setting.city && input.startsWith(' visited_cities_count: ')) {
+      } else if (setting.city && element.startsWith(' visited_cities_count: ')) {
         visitedIndex.count = index
-      } else if (setting.city && input.startsWith(' reserved_trailer_slot: ')) {
+      } else if (setting.city && element.startsWith(' reserved_trailer_slot: ')) {
         visitedIndex.company.push(index - 1)
-      } else if (setting.garage && input.startsWith('garage : garage.')) {
-        if (!input.startsWith('garage : garage.' + hqCity)) {
+      } else if (setting.garage && element.startsWith('garage : garage.')) {
+        if (!element.startsWith('garage : garage.' + hqCity)) {
           garage.push(index)
         }
-      } else if (input.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
+      } else if (element.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
         companyIndex = index
-      } else if (input.startsWith(' game_time: ')) {
-        inGameTime = Number(input.split(' ')[2])
-      } else if (input.startsWith('economy_event : ')) {
+      } else if (element.startsWith(' game_time: ')) {
+        inGameTime = Number(element.split(' ')[2])
+      } else if (element.startsWith('economy_event : ')) {
         economyEventIndex.push(index)
-      } else if (input.startsWith('economy_event_queue :')) {
+      } else if (element.startsWith('economy_event_queue :')) {
         economyEventQueueIndex = index
-      } else if (job.moveToCargo && input.startsWith(' truck_placement: ')) {
-        input = ' truck_placement: ' + jobInfo.departure_coordinates
-      } else if (job.moveToCargo && input.startsWith(' trailer_placement: ')) {
-        input = ' trailer_placement: (0, 0, 0) (1; 0, 0, 0)'
+      } else if (job.moveToCargo && element.startsWith(' truck_placement: ')) {
+        arrFile[flieIndex] = ' truck_placement: ' + jobInfo.departure_coordinates
+      } else if (job.moveToCargo && element.startsWith(' trailer_placement: ')) {
+        arrFile[flieIndex] = ' trailer_placement: (0, 0, 0) (1; 0, 0, 0)'
       }
-      arrFile.push(input)
       index++
     })
 
-    rl.on('close', () => {
-      if (exper.length > 0) {
-        arrFile[exper[0]] = arrFile[exper[0]].replace(/experience_points: [^,\n]+/, 'experience_points: 582499')
-      }
-      if (skills.length > 0) {
-        const flag = skills[0]
-        arrFile[flag] = arrFile[flag].replace(/adr: [^,\n]+/, 'adr: 63')
-        arrFile[flag + 1] = arrFile[flag + 1].replace(/long_dist: [^,\n]+/, 'long_dist: 6')
-        arrFile[flag + 2] = arrFile[flag + 2].replace(/heavy: [^,\n]+/, 'heavy: 6')
-        arrFile[flag + 3] = arrFile[flag + 3].replace(/fragile: [^,\n]+/, 'fragile: 6')
-        arrFile[flag + 4] = arrFile[flag + 4].replace(/urgent: [^,\n]+/, 'urgent: 6')
-        arrFile[flag + 5] = arrFile[flag + 5].replace(/mechanical: [^,\n]+/, 'mechanical: 6')
-      }
-      if (cityName.size > 0) {
-        visitedCity.forEach(element => {
-          cityName.delete(element)
-        })
-        const cityNum = Number(arrFile[visitedIndex.city].split(': ')[1])
-        const num = cityNum + cityName.size
-        const arrCityName = [...cityName]
-
-        if (cityNum === 0) {
-          let str = '\r\n'
-          let strCount = '\r\n'
-          for (let j = 0; j < arrCityName.length; j++) {
-            if (j === arrCityName.length - 1) {
-              str += ` visited_cities[${j}]: ${arrCityName[j]}`
-              strCount += ` visited_cities_count[${j}]: 1`
-            } else {
-              str += ` visited_cities[${j}]: ${arrCityName[j]}\r\n`
-              strCount += ` visited_cities_count[${j}]: 1\r\n`
-            }
-          }
-          arrFile[visitedIndex.city] = ' visited_cities: ' + num + str
-          arrFile[visitedIndex.count] = ' visited_cities_count: ' + num + strCount
-        } else {
-          let str = '\r\n'
-          let strCount = '\r\n'
-          for (let j = 0; j < arrCityName.length; j++) {
-            const num = j + cityNum
-            str += ` visited_cities[${num}]: ${arrCityName[j]}`
-            strCount += ` visited_cities_count[${num}]: 1`
-            if (j < arrCityName.length - 1) {
-              str += '\r\n'
-              strCount += '\r\n'
-            }
-          }
-          arrFile[visitedIndex.city] = ' visited_cities: ' + num
-          arrFile[visitedIndex.count] = ' visited_cities_count: ' + num
-
-          arrFile[visitedIndex.city + cityNum] += str
-          arrFile[visitedIndex.count + cityNum] += strCount
-        }
-
-        for (let i = 0; i < visitedIndex.company.length; i++) {
-          arrFile[visitedIndex.company[i]] = arrFile[visitedIndex.company[i]].replace(/discovered: [^,\n]+/, 'discovered: true')
-        }
-      }
-
-      if (garage.length > 0) {
-        for (let i = 0; i < garage.length; i++) {
-          const vehiclesNum = Number(arrFile[garage[i] + 1].split(': ')[1])
-          if (vehiclesNum === 0) {
-            let str = '\r\n'
-            for (let j = 0; j < 5; j++) {
-              if (j === 4) {
-                str += ` vehicles[${j}]: null`
-              } else {
-                str += ` vehicles[${j}]: null\r\n`
-              }
-            }
-            arrFile[garage[i] + 1] = ' vehicles: 5' + str
-          } else if (vehiclesNum < 5) {
-            let str = '\r\n'
-            for (let j = vehiclesNum; j < 5; j++) {
-              if (j === 4) {
-                str += ` vehicles[${j}]: null`
-              } else {
-                str += ` vehicles[${j}]: null\r\n`
-              }
-            }
-            arrFile[garage[i] + 1] = ' vehicles: 5'
-            arrFile[garage[i] + 1 + vehiclesNum] += str
-          }
-          const driversNum = Number(arrFile[garage[i] + 2 + vehiclesNum].split(': ')[1])
-          if (driversNum === 0) {
-            let str = '\r\n'
-            for (let j = 0; j < 5; j++) {
-              if (j === 4) {
-                str += ` drivers[${j}]: null`
-              } else {
-                str += ` drivers[${j}]: null\r\n`
-              }
-            }
-            arrFile[garage[i] + 2 + vehiclesNum] = ' drivers: 5' + str
-          } else if (driversNum < 5) {
-            let str = '\r\n'
-            for (let j = driversNum; j < 5; j++) {
-              if (j === 4) {
-                str += ` drivers[${j}]: null`
-              } else {
-                str += ` drivers[${j}]: null\r\n`
-              }
-            }
-            arrFile[garage[i] + 2 + vehiclesNum] = ' drivers: 5'
-            arrFile[garage[i] + 2 + vehiclesNum + driversNum] += str
-          }
-          for (let t = 1; t < 6; t++) {
-            const statusIndex = garage[i] + 2 + vehiclesNum + driversNum + t
-            if (arrFile[statusIndex].startsWith(' status: ')) {
-              arrFile[statusIndex] = ' status: 3'
-              break
-            }
-          }
-        }
-      }
-
-      // 做货
-      if (job.syncJob) {
-        if (companyIndex === 0) {
-          errorcallback && errorcallback(i18n.t('error.companyNotFound'))
-          return
-        }
-        let jobIndex = companyIndex
-        const companyJobData = addJobOffer(jobInfo, inGameTime)
-        while (!arrFile[jobIndex].startsWith(' job_offer: ')) {
-          jobIndex++
-        }
-        const jobOfferNum = Number(arrFile[jobIndex].split(': ')[1])
-        if (jobOfferNum === 0) {
-          errorcallback && errorcallback(i18n.t('error.companyNotSupported'))
-          return
-        }
-        while (!arrFile[jobIndex].startsWith(' job_offer[')) {
-          jobIndex++
-        }
-        const nameless = arrFile[jobIndex].split(' ')[2]
-        while (!arrFile[jobIndex].startsWith('job_offer_data : ' + nameless)) {
-          jobIndex++
-        }
-        for (let i = 0; i < companyJobData.length; i++) {
-          arrFile[jobIndex + 1 + i] = companyJobData[i]
-        }
-
-        const arrTimeEconomyEventIndex = []
-        let targetIndex = 0
-        let toIndex = 0
-        let originNameless = {}
-        // 时间和定位economy_event company位置
-        const str = 'company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city
-        economyEventIndex.map((val, index) => {
-          const temp = []
-          // eslint-disable-next-line eqeqeq
-          if (arrFile[val + 2].split(': ')[1] == str) {
-            if (arrFile[val + 3] === ' param: 0') {
-              originNameless = {
-                name: arrFile[val].split(': ')[1].split(' {')[0],
-                index: val
-              }
-              targetIndex = val
-              const time = Number(inGameTime) + 7200
-              arrFile[val + 1] = ' time: ' + time
-            }
-          }
-          temp.push(val) // 下标
-          temp.push(Number(arrFile[val + 1].split(': ')[1])) // time
-          arrTimeEconomyEventIndex.push(temp)
-        })
-
-        arrTimeEconomyEventIndex.sort((val1, val2) => {
-          return val1[1] - val2[1]
-        })
-
-        let isFirst = false
-        for (let j = 0; j < arrTimeEconomyEventIndex.length; j++) {
-          if (targetIndex === arrTimeEconomyEventIndex[j][0]) {
-            if (j === 0) {
-              isFirst = true
-              toIndex = arrTimeEconomyEventIndex[j + 1][0]
-            } else if (j !== arrTimeEconomyEventIndex.length - 1) {
-              toIndex = arrTimeEconomyEventIndex[j + 1][0] - 6
-            } else {
-              toIndex = arrTimeEconomyEventIndex[j - 1][0]
-            }
-            break
-          }
-        }
-        // 移动economy_event
-        arraymove(arrFile, targetIndex, toIndex)
-        const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
-        let findNamelessData = '' // 移动到这个名称下
-
-        for (let x = 1; x < 20; x++) {
-          const tempIndex = isFirst ? toIndex + x : toIndex - x
-          if (arrFile[tempIndex].startsWith('economy_event : ')) {
-            findNamelessData = arrFile[tempIndex].split(': ')[1].split(' {')[0]
-            break
-          }
-        }
-
-        // data 位置变更
-        if (findNamelessData) {
-          let findNamelessIndex = 0
-          let findOriginNamelessIndex = 0
-          for (let n = 0; n < dataStartNum; n++) {
-          // eslint-disable-next-line eqeqeq
-            if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == findNamelessData) {
-              findNamelessIndex = economyEventQueueIndex + 2 + n
-              // eslint-disable-next-line eqeqeq
-            } else if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == originNameless.name) {
-              findOriginNamelessIndex = economyEventQueueIndex + 2 + n
-            }
-          }
-          if (findNamelessIndex && findOriginNamelessIndex) {
-            arrayDatamove(arrFile, findOriginNamelessIndex, findNamelessIndex)
-          }
-        }
-
-        // sort data
-        for (let d = 0; d < dataStartNum; d++) {
-          arrFile[economyEventQueueIndex + 2 + d] = ` data[${d}]: ` + arrFile[economyEventQueueIndex + 2 + d].split(': ')[1]
-        }
-      }
-
-      const buf = Buffer.from(arrFile.join('\r\n'))
-      fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
-        if (err) {
-          errorcallback && errorcallback(i18n.t('error.writeFileFailed'))
-        }
-        callback && callback()
+    if (exper.length > 0) {
+      arrFile[exper[0]] = arrFile[exper[0]].replace(/experience_points: [^,\n]+/, 'experience_points: 582499')
+    }
+    if (skills.length > 0) {
+      const flag = skills[0]
+      arrFile[flag] = arrFile[flag].replace(/adr: [^,\n]+/, 'adr: 63')
+      arrFile[flag + 1] = arrFile[flag + 1].replace(/long_dist: [^,\n]+/, 'long_dist: 6')
+      arrFile[flag + 2] = arrFile[flag + 2].replace(/heavy: [^,\n]+/, 'heavy: 6')
+      arrFile[flag + 3] = arrFile[flag + 3].replace(/fragile: [^,\n]+/, 'fragile: 6')
+      arrFile[flag + 4] = arrFile[flag + 4].replace(/urgent: [^,\n]+/, 'urgent: 6')
+      arrFile[flag + 5] = arrFile[flag + 5].replace(/mechanical: [^,\n]+/, 'mechanical: 6')
+    }
+    if (cityName.size > 0) {
+      visitedCity.forEach(element => {
+        cityName.delete(element)
       })
+      const cityNum = Number(arrFile[visitedIndex.city].split(': ')[1])
+      const num = cityNum + cityName.size
+      const arrCityName = [...cityName]
+
+      if (cityNum === 0) {
+        let str = '\r\n'
+        let strCount = '\r\n'
+        for (let j = 0; j < arrCityName.length; j++) {
+          if (j === arrCityName.length - 1) {
+            str += ` visited_cities[${j}]: ${arrCityName[j]}`
+            strCount += ` visited_cities_count[${j}]: 1`
+          } else {
+            str += ` visited_cities[${j}]: ${arrCityName[j]}\r\n`
+            strCount += ` visited_cities_count[${j}]: 1\r\n`
+          }
+        }
+        arrFile[visitedIndex.city] = ' visited_cities: ' + num + str
+        arrFile[visitedIndex.count] = ' visited_cities_count: ' + num + strCount
+      } else {
+        let str = '\r\n'
+        let strCount = '\r\n'
+        for (let j = 0; j < arrCityName.length; j++) {
+          const num = j + cityNum
+          str += ` visited_cities[${num}]: ${arrCityName[j]}`
+          strCount += ` visited_cities_count[${num}]: 1`
+          if (j < arrCityName.length - 1) {
+            str += '\r\n'
+            strCount += '\r\n'
+          }
+        }
+        arrFile[visitedIndex.city] = ' visited_cities: ' + num
+        arrFile[visitedIndex.count] = ' visited_cities_count: ' + num
+
+        arrFile[visitedIndex.city + cityNum] += str
+        arrFile[visitedIndex.count + cityNum] += strCount
+      }
+
+      for (let i = 0; i < visitedIndex.company.length; i++) {
+        arrFile[visitedIndex.company[i]] = arrFile[visitedIndex.company[i]].replace(/discovered: [^,\n]+/, 'discovered: true')
+      }
+    }
+
+    if (garage.length > 0) {
+      for (let i = 0; i < garage.length; i++) {
+        const vehiclesNum = Number(arrFile[garage[i] + 1].split(': ')[1])
+        if (vehiclesNum === 0) {
+          let str = '\r\n'
+          for (let j = 0; j < 5; j++) {
+            if (j === 4) {
+              str += ` vehicles[${j}]: null`
+            } else {
+              str += ` vehicles[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 1] = ' vehicles: 5' + str
+        } else if (vehiclesNum < 5) {
+          let str = '\r\n'
+          for (let j = vehiclesNum; j < 5; j++) {
+            if (j === 4) {
+              str += ` vehicles[${j}]: null`
+            } else {
+              str += ` vehicles[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 1] = ' vehicles: 5'
+          arrFile[garage[i] + 1 + vehiclesNum] += str
+        }
+        const driversNum = Number(arrFile[garage[i] + 2 + vehiclesNum].split(': ')[1])
+        if (driversNum === 0) {
+          let str = '\r\n'
+          for (let j = 0; j < 5; j++) {
+            if (j === 4) {
+              str += ` drivers[${j}]: null`
+            } else {
+              str += ` drivers[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 2 + vehiclesNum] = ' drivers: 5' + str
+        } else if (driversNum < 5) {
+          let str = '\r\n'
+          for (let j = driversNum; j < 5; j++) {
+            if (j === 4) {
+              str += ` drivers[${j}]: null`
+            } else {
+              str += ` drivers[${j}]: null\r\n`
+            }
+          }
+          arrFile[garage[i] + 2 + vehiclesNum] = ' drivers: 5'
+          arrFile[garage[i] + 2 + vehiclesNum + driversNum] += str
+        }
+        for (let t = 1; t < 6; t++) {
+          const statusIndex = garage[i] + 2 + vehiclesNum + driversNum + t
+          if (arrFile[statusIndex].startsWith(' status: ')) {
+            arrFile[statusIndex] = ' status: 3'
+            break
+          }
+        }
+      }
+    }
+
+    // 做货
+    if (job.syncJob) {
+      if (companyIndex === 0) {
+        errorcallback && errorcallback(i18n.t('error.companyNotFound'))
+        return
+      }
+      let jobIndex = companyIndex
+      const companyJobData = addJobOffer(jobInfo, inGameTime)
+      while (!arrFile[jobIndex].startsWith(' job_offer: ')) {
+        jobIndex++
+      }
+      const jobOfferNum = Number(arrFile[jobIndex].split(': ')[1])
+      if (jobOfferNum === 0) {
+        errorcallback && errorcallback(i18n.t('error.companyNotSupported'))
+        return
+      }
+      while (!arrFile[jobIndex].startsWith(' job_offer[')) {
+        jobIndex++
+      }
+      const nameless = arrFile[jobIndex].split(' ')[2]
+      while (!arrFile[jobIndex].startsWith('job_offer_data : ' + nameless)) {
+        jobIndex++
+      }
+      for (let i = 0; i < companyJobData.length; i++) {
+        arrFile[jobIndex + 1 + i] = companyJobData[i]
+      }
+
+      const arrTimeEconomyEventIndex = []
+      let targetIndex = 0
+      let toIndex = 0
+      let originNameless = {}
+      // 时间和定位economy_event company位置
+      const str = 'company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city
+      economyEventIndex.map((val, index) => {
+        const temp = []
+        // eslint-disable-next-line eqeqeq
+        if (arrFile[val + 2].split(': ')[1] == str) {
+          if (arrFile[val + 3] === ' param: 0') {
+            originNameless = {
+              name: arrFile[val].split(': ')[1].split(' {')[0],
+              index: val
+            }
+            targetIndex = val
+            const time = Number(inGameTime) + 7200
+            arrFile[val + 1] = ' time: ' + time
+          }
+        }
+        temp.push(val) // 下标
+        temp.push(Number(arrFile[val + 1].split(': ')[1])) // time
+        arrTimeEconomyEventIndex.push(temp)
+      })
+
+      arrTimeEconomyEventIndex.sort((val1, val2) => {
+        return val1[1] - val2[1]
+      })
+
+      let isFirst = false
+      for (let j = 0; j < arrTimeEconomyEventIndex.length; j++) {
+        if (targetIndex === arrTimeEconomyEventIndex[j][0]) {
+          if (j === 0) {
+            isFirst = true
+            toIndex = arrTimeEconomyEventIndex[j + 1][0]
+          } else if (j !== arrTimeEconomyEventIndex.length - 1) {
+            toIndex = arrTimeEconomyEventIndex[j + 1][0] - 6
+          } else {
+            toIndex = arrTimeEconomyEventIndex[j - 1][0]
+          }
+          break
+        }
+      }
+      // 移动economy_event
+      arraymove(arrFile, targetIndex, toIndex)
+      const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
+      let findNamelessData = '' // 移动到这个名称下
+
+      for (let x = 1; x < 20; x++) {
+        const tempIndex = isFirst ? toIndex + x : toIndex - x
+        if (arrFile[tempIndex].startsWith('economy_event : ')) {
+          findNamelessData = arrFile[tempIndex].split(': ')[1].split(' {')[0]
+          break
+        }
+      }
+
+      // data 位置变更
+      if (findNamelessData) {
+        let findNamelessIndex = 0
+        let findOriginNamelessIndex = 0
+        for (let n = 0; n < dataStartNum; n++) {
+          // eslint-disable-next-line eqeqeq
+          if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == findNamelessData) {
+            findNamelessIndex = economyEventQueueIndex + 2 + n
+            // eslint-disable-next-line eqeqeq
+          } else if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == originNameless.name) {
+            findOriginNamelessIndex = economyEventQueueIndex + 2 + n
+          }
+        }
+        if (findNamelessIndex && findOriginNamelessIndex) {
+          arrayDatamove(arrFile, findOriginNamelessIndex, findNamelessIndex)
+        }
+      }
+
+      // sort data
+      for (let d = 0; d < dataStartNum; d++) {
+        arrFile[economyEventQueueIndex + 2 + d] = ` data[${d}]: ` + arrFile[economyEventQueueIndex + 2 + d].split(': ')[1]
+      }
+    }
+
+    const buf = Buffer.from(arrFile.join('\r\n'))
+    fs.writeFile(gameSiiPath, buf.toString('utf8'), function (err) {
+      if (err) {
+        errorcallback && errorcallback(i18n.t('error.writeFileFailed'))
+      }
+      callback && callback()
     })
   } catch (error) {
     errorcallback && errorcallback(i18n.t('error.failed'))
