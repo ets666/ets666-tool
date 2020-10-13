@@ -10,7 +10,9 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-const iconImage = nativeImage.createFromPath(path.join(__dirname, '../assets/256x256.png'))
+const iconImage = process.env.NODE_ENV === 'development'
+  ? nativeImage.createFromPath(path.join(__dirname, '../../resources/icons/icon.png'))
+  : nativeImage.createFromPath(path.join(process.resourcesPath, '/icons/icon.png'))
 const version = packageInfo.version
 
 function createWindow () {
@@ -45,7 +47,7 @@ ipcMain.on('about', (event) => {
   dialog.showMessageBox({
     title: 'ETS666 SaveEdit & JobSync Tool',
     message: 'ETS666 SaveEdit & JobSync Tool',
-    detail: `Version: ${version}\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nFeedback: feedback@ets666.com`,
+    detail: `Version: ${version}\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nhttps://github.com/ets666/ets666-tool`,
     icon: iconImage
   })
 })
