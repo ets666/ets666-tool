@@ -19,13 +19,13 @@ Windows x64
 * Move truck to the starting place (experimental)
 
 ## Compability
-Tested on 1.37-1.38
+1.39 is now supported
 
 ## How to Use
-* Preparation: Start the game --> choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
+* Preparation: Start the game --> Choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
 * Step 1: Save a savegame in the game
-* Step 2: Open ETS666 Tool --> select the profile and savegame you want to modify --> tick what you want
-* Step 3: Back to game --> load the modified savegame --> done, the convoy job could be found in the freight market
+* Step 2: Open ETS666 Tool --> Select the profile and savegame you want to modify --> Tick what you want --> Save
+* Step 3: Back to game --> Load the modified savegame --> Done, the convoy job could be found in the freight market
 
 ## License
 [LICENSE](LICENSE)
