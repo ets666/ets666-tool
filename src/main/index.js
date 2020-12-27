@@ -47,7 +47,7 @@ ipcMain.on('about', (event) => {
   dialog.showMessageBox({
     title: 'ETS666 SaveEdit & JobSync Tool',
     message: 'ETS666 SaveEdit & JobSync Tool',
-    detail: `Version: ${version}\nAuthor: xiaosi\nContributor: sunwinbus\nUI Design: Mingran7\nhttps://github.com/ets666/ets666-tool`,
+    detail: `Version: ${version}\nAuthor: xiaosi & sunwinbus\nUI Design: Mingran7\nhttps://github.com/ets666/ets666-tool`,
     icon: iconImage
   })
 })

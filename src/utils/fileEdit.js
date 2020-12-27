@@ -199,6 +199,9 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       company: []
     }
     const cityName = new Set()
+    const dealerCities = new Set()
+    const unlockedDealers = []
+    let unlockedDealersIndex = 0
 
     // 做货
     let companyIndex = 0
@@ -210,6 +213,13 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     arrFile.forEach((element, flieIndex) => {
       if (element.startsWith(' hq_city: ')) {
         hqCity = element.split(': ')[1]
+      } else if (element.startsWith(' companies[')) {
+        if (setting.city) {
+          cityName.add(element.split('.')[3])
+        }
+        if (setting.dealer) {
+          dealerCities.add(element.split('.')[3])
+        }
       }
       if (setting.money && element.startsWith(' money_account')) {
         arrFile[flieIndex] = element.replace(/money_account: [^,\n]+/, 'money_account: 100000000')
@@ -221,8 +231,6 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         arrFile[flieIndex] = element.replace(/wear: [^,\n]+/, 'wear: 0')
       } else if (setting.oil && element.startsWith(' fuel_relative')) {
         arrFile[flieIndex] = element.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')
-      } else if (setting.city && element.startsWith(' companies[')) {
-        cityName.add(element.split('.')[3])
       } else if (setting.city && element.startsWith(' visited_cities[')) {
         visitedCity.push(element.split(': ')[1])
       } else if (setting.city && element.startsWith(' visited_cities: ')) {
@@ -235,6 +243,10 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         if (!element.startsWith('garage : garage.' + hqCity)) {
           garage.push(index)
         }
+      } else if (setting.dealer && element.startsWith(' unlocked_dealers[')) {
+        unlockedDealers.push(element.split(': ')[1])
+      } else if (setting.dealer && element.startsWith(' unlocked_dealers: ')) {
+        unlockedDealersIndex = index
       } else if (element.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
         companyIndex = index
       } else if (element.startsWith(' game_time: ')) {
@@ -306,6 +318,38 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
 
       for (let i = 0; i < visitedIndex.company.length; i++) {
         arrFile[visitedIndex.company[i]] = arrFile[visitedIndex.company[i]].replace(/discovered: [^,\n]+/, 'discovered: true')
+      }
+    }
+
+    if (dealerCities.size > 0) {
+      unlockedDealers.forEach(element => {
+        dealerCities.delete(element)
+      })
+      const dealerNum = Number(arrFile[unlockedDealersIndex].split(': ')[1])
+      const num = dealerNum + dealerCities.size
+      const arrDealerCity = [...dealerCities]
+
+      if (dealerNum === 0) {
+        let str = '\r\n'
+        for (let j = 0; j < arrDealerCity.length; j++) {
+          if (j === arrDealerCity.length - 1) {
+            str += ` unlocked_dealers[${j}]: ${arrDealerCity[j]}`
+          } else {
+            str += ` unlocked_dealers[${j}]: ${arrDealerCity[j]}\r\n`
+          }
+        }
+        arrFile[unlockedDealersIndex] = ' unlocked_dealers: ' + num + str
+      } else {
+        let str = '\r\n'
+        for (let j = 0; j < arrDealerCity.length; j++) {
+          const num = j + dealerNum
+          str += ` unlocked_dealers[${num}]: ${arrDealerCity[j]}`
+          if (j < arrDealerCity.length - 1) {
+            str += '\r\n'
+          }
+        }
+        arrFile[unlockedDealersIndex] = ' unlocked_dealers: ' + num
+        arrFile[unlockedDealersIndex + dealerNum] += str
       }
     }
 

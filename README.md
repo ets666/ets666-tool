@@ -13,6 +13,7 @@ Windows x64
 * Unlock all player skills
 * Unlock all cities
 * Unlock and upgrade all garages
+* Unlock all truck dealers
 * Fix all vehicles and trailers
 * Fill up all fuel tanks
 * Choose a listed job to sync

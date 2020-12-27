@@ -20,6 +20,7 @@ export default {
   skills: 'Unlock All Skills',
   city: 'Unlock All Cities',
   garage: 'Unlock All Garages',
+  dealer: 'Unlock All Dealers',
   damage: 'Fix All Vehicles',
   oil: 'Fill Up Fuel Tanks',
   ok: 'OK',

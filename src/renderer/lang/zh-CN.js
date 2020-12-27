@@ -20,22 +20,23 @@ export default {
   skills: '解锁全部技能',
   city: '解锁全部城市',
   garage: '解锁全部车库',
+  dealer: '解锁卡车销售商',
   damage: '修复全部车损',
   oil: '全部车辆满油',
   ok: '确定',
   error: {
     selectSaveFirst: '请先选择一个存档',
-    fetchFileStatsFailed: '获取文件stats失败',
+    fetchFileStatsFailed: '获取文件信息失败',
     invalidPath: '无效的路径',
     fileNotExist: '文件不存在',
-    saveNotFound: '没有找到存档',
+    saveNotFound: '未找到存档',
     decryptFailed: '解码失败',
-    companyNotFound: '没有该货场，可能是缺少DLC导致',
+    companyNotFound: '无法在存档内找到起点货场！请确认地图DLC或MOD是否齐全。如确认齐全，则请先加载相应的DLC或MOD并存档，再运行本工具。',
     companyNotSupported: '该货场无法接货',
     writeFileFailed: '写入失败',
     error: '错误',
     failed: '失败',
-    nothingSelected: '没有勾选项'
+    nothingSelected: '请至少勾选一个选项'
   },
   success: {
     success: '成功',

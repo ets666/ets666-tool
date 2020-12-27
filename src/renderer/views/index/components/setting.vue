@@ -231,6 +231,15 @@
                   </div>
                 </div>
 
+                <div class="check_btn bgfab97d" @click="clickBtn('dealer')">
+                  <div class="check">
+                    <i v-show="setting.dealer" class="iconfont iconfuxuankuanggou check_active"></i>
+                  </div>
+                  <div class="ml10">
+                    {{ $t('dealer') }}
+                  </div>
+                </div>
+
                 <div class="check_btn bgfab97d" @click="clickBtn('damage')">
                   <div class="check">
                     <i v-show="setting.damage" class="iconfont iconfuxuankuanggou check_active"></i>
@@ -283,6 +292,7 @@ export default {
         skills: false,
         city: false,
         garage: false,
+        dealer: false,
         damage: false,
         oil: false
       },
@@ -429,6 +439,7 @@ export default {
         skills: false,
         city: false,
         garage: false,
+        dealer: false,
         damage: false,
         oil: false
       }
@@ -438,7 +449,7 @@ export default {
       }
     },
     goToWeb () {
-      ipcRenderer.send('open-url', 'https://www.ets666.com/')
+      ipcRenderer.send('open-url', 'https://ets666.com/')
     },
     about () {
       ipcRenderer.send('about')
@@ -460,6 +471,9 @@ export default {
             break
           case 'garage':
             this.setting.garage = !this.setting.garage
+            break
+          case 'dealer':
+            this.setting.dealer = !this.setting.dealer
             break
           case 'damage':
             this.setting.damage = !this.setting.damage
@@ -486,9 +500,9 @@ export default {
     },
     saveSetting () {
       const _this = this
-      const {money, level, skills, city, garage, damage, oil} = this.setting
+      const {money, level, skills, city, garage, dealer, damage, oil} = this.setting
       const {moveToCargo, syncJob} = this.job
-      if (money || level || skills || city || garage || damage || oil || moveToCargo || syncJob) {
+      if (money || level || skills || city || garage || dealer || damage || oil || moveToCargo || syncJob) {
         _this.fullscreenLoading = true
         const obj = {
           setting: _this.setting,
