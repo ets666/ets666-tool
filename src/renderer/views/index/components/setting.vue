@@ -9,8 +9,30 @@
         <div class="line"></div>
       </div>
       <div class="btn_box">
+        <template v-if="!isLogin">
+          <div class="half">
+            <div class="btn mb10">
+              登录
+            </div>
+          </div>
+          <div class="half">
+            <div class="btn mb10">
+              注册
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="mb10 color_fff tc">
+            xiaosi,欢迎你
+          </div>
+        </template>
+        <div class="mb10">
+          <el-input placeholder="请输入ID" v-model="idNumber">
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+        </div>
         <div class="btn mb10">
-        <i class="iconfont iconsucai" style="font-size: 18px;"></i>
+          <i class="iconfont iconsucai" style="font-size: 18px;"></i>
           {{ $t('select') }}
         </div>
         <div>
@@ -318,7 +340,9 @@ export default {
       severJobInfo: [],
       jobInfo: {},
       fullscreenLoading: false,
-      localLanguage: 'zh-CN'
+      localLanguage: 'zh-CN',
+      isLogin: false,
+      idNumber: ''
     }
   },
   created () {
@@ -605,6 +629,19 @@ export default {
   font-weight: bold;
 }
 
+.half {
+  width: 49%;
+  display: inline-block;
+}
+
+.tc {
+  text-align: center;
+}
+
+.color_fff {
+  color: #fff;
+}
+
 .copyright {
   color: #fff;
   font-size: 16px;
@@ -702,6 +739,16 @@ export default {
     }
 
     /deep/ .el-input__inner {
+      background: #f4c7c2;
+      border: none;
+      height: 40px;
+
+      &::-webkit-input-placeholder {
+        color: #606266;
+      }
+    }
+
+    /deep/ .el-input-group__append {
       background: #f4c7c2;
       border: none;
       height: 40px;
