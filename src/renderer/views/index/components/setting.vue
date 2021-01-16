@@ -16,8 +16,8 @@
         <div>
           <el-select v-model="profile" size="mini" :placeholder="$t('selectProfile')" class="mb10 w select_shadow" @change="changeProfile">
             <el-option
-              v-for="item in profileOptions"
-              :key="item.value"
+              v-for="item,index in profileOptions"
+              :key="index"
               :label="item.label"
               :value="item.value">
             </el-option>
@@ -321,13 +321,6 @@ export default {
       localLanguage: 'zh-CN'
     }
   },
-  created () {
-    try {
-      this.savePath = this.$db.read().get('path').value()
-    } catch (error) {
-      this.savePath = ''
-    }
-  },
   watch: {
     'job.syncJob': {
       handler (val) {
@@ -346,6 +339,11 @@ export default {
       const _this = this
       this.localLanguage = navigator.language
       _this.profileOptions = []
+      try {
+        this.savePath = this.$db.read().get('path').value()
+      } catch (error) {
+        this.savePath = ''
+      }
       fileEdit.mapDirName(this.savePath, '/profiles', (file) => {
         file.forEach((element) => {
           const obj = {
@@ -574,6 +572,7 @@ export default {
     pathSave () {
       this.$message.success(this.$t('success.success'))
       this.dialogTableVisible = false
+      this.init()
     }
   }
 }

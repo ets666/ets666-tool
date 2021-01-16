@@ -18,8 +18,13 @@ const adapter = new FileSync(path.join(STORE_PATH, '/data.json'))
 
 const db = Datastore(adapter)
 
-if (!db.has('path').value() || db.get('path').value() !== EURO_PATH) {
+if (!db.has('pathType').value() || !db.has('path').value()) {
+  db.set('pathType', 'documents').write()
   db.set('path', EURO_PATH).write()
+} else if (db.get('pathType').value() === 'documents' && db.get('path').value() !== EURO_PATH) {
+  db.update('path', n => 'EURO_PATH').write()
+} else if (db.get('pathType').value() !== 'documents' && db.get('path').value() === EURO_PATH) {
+  db.update('pathType', n => 'documents').write()
 }
 
 export default db

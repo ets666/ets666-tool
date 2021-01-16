@@ -42,6 +42,7 @@ export default {
       // 判断路径是否存在
       fileEdit.mapDirName(this.gamePath, '/profiles', (file) => {
         this.$db.update('path', n => _this.gamePath).write()
+        this.$db.update('pathType', n => 'custom').write()
         _this.disableSure = false
       }, () => {
         _this.$nextTick(() => {
