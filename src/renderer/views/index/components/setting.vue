@@ -262,6 +262,15 @@
           </div>
         </div>
       </div>
+      <el-dialog
+      :title="$t('selectPath')"
+      :visible.sync="dialogTableVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      >
+        <selectPath @pathSave="pathSave"></selectPath>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -269,6 +278,7 @@
 <script>
 import moment from 'moment'
 import { hex2utf8 } from '../../../../utils/byte'
+import selectPath from './select-euro-path'
 const fileEdit = require('../../../../utils/fileEdit')
 const axios = require('axios')
 const fs = require('fs')
@@ -276,8 +286,12 @@ const paths = require('path')
 const { ipcRenderer } = require('electron')
 
 export default {
+  components: {
+    selectPath
+  },
   data () {
     return {
+      dialogTableVisible: false,
       savePath: '',
       tody: '',
       timeOption: [],
@@ -342,8 +356,12 @@ export default {
         })
       }, (err) => {
         _this.$nextTick(() => {
-          _this.$message.error(err)
-          _this.error = err
+          if (err === _this.$t('error.invalidPath')) {
+            _this.dialogTableVisible = true
+          } else {
+            _this.$message.error(err)
+            _this.error = err
+          }
         })
       })
 
@@ -426,8 +444,12 @@ export default {
         })
       }, (err) => {
         _this.$nextTick(() => {
-          _this.$message.error(err)
-          _this.error = err
+          if (err === _this.$t('error.invalidPath')) {
+            _this.dialogTableVisible = true
+          } else {
+            _this.$message.error(err)
+            _this.error = err
+          }
         })
       })
       this.reSet()
@@ -548,6 +570,10 @@ export default {
       } else {
         _this.$message.error(_this.$t('error.nothingSelected'))
       }
+    },
+    pathSave () {
+      this.$message.success(this.$t('success.success'))
+      this.dialogTableVisible = false
     }
   }
 }
