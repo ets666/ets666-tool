@@ -9,7 +9,7 @@
         <div class="line"></div>
       </div>
       <div class="btn_box">
-        <template v-if="!isLogin">
+        <!-- <template v-if="!isLogin">
           <div class="half">
             <div class="btn mb10">
               登录
@@ -25,10 +25,10 @@
           <div class="mb10 color_fff tc">
             xiaosi,欢迎你
           </div>
-        </template>
+        </template> -->
         <div class="mb10">
-          <el-input placeholder="请输入ID" v-model="idNumber">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入ID" v-model="idNumber" @keyup.native.enter="idNumberSearch">
+            <el-button slot="append" icon="el-icon-search" @click="idNumberSearch"></el-button>
           </el-input>
         </div>
         <div class="btn mb10">
@@ -598,6 +598,14 @@ export default {
     pathSave () {
       this.$message.success(this.$t('success.success'))
       this.dialogTableVisible = false
+    },
+    idNumberSearch () {
+      const _this = this
+      axios.get('https://job.ets666.com/apiv1/job/' + _this.idNumber)
+        .then(res => {
+          _this.jobInfo = res.data
+          _this.setLanguage()
+        })
     }
   }
 }
