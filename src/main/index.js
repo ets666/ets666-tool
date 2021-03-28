@@ -22,9 +22,9 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 650, // 设置窗口的高
     useContentSize: true,
-    width: 1280, // 设置窗口的宽
+    width: 1180, // 设置窗口的宽
     minHeight: 650,
-    minWidth: 1280,
+    minWidth: 1180,
     webPreferences: {
       webSecurity: false, // 是否禁用浏览器的跨域安全特性
       nodeIntegration: true // 是否完整支持node

@@ -210,7 +210,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     let economyEventQueueIndex = 0
 
     let index = 0
-    arrFile.forEach((element, flieIndex) => {
+    arrFile.forEach((element, fileIndex) => {
       if (element.startsWith(' hq_city: ')) {
         hqCity = element.split(': ')[1]
       } else if (element.startsWith(' companies[')) {
@@ -222,15 +222,15 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         }
       }
       if (setting.money && element.startsWith(' money_account')) {
-        arrFile[flieIndex] = element.replace(/money_account: [^,\n]+/, 'money_account: 100000000')
+        arrFile[fileIndex] = element.replace(/money_account: [^,\n]+/, 'money_account: 100000000')
       } else if (setting.level && element.startsWith(' experience_points')) {
         exper.push(index)
       } else if (setting.skills && element.startsWith(' adr:')) {
         skills.push(index)
       } else if (setting.damage && element.startsWith(' wear')) {
-        arrFile[flieIndex] = element.replace(/wear: [^,\n]+/, 'wear: 0')
+        arrFile[fileIndex] = element.replace(/wear: [^,\n]+/, 'wear: 0')
       } else if (setting.oil && element.startsWith(' fuel_relative')) {
-        arrFile[flieIndex] = element.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')
+        arrFile[fileIndex] = element.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')
       } else if (setting.city && element.startsWith(' visited_cities[')) {
         visitedCity.push(element.split(': ')[1])
       } else if (setting.city && element.startsWith(' visited_cities: ')) {
@@ -256,9 +256,11 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       } else if (element.startsWith('economy_event_queue :')) {
         economyEventQueueIndex = index
       } else if (job.moveToCargo && element.startsWith(' truck_placement: ')) {
-        arrFile[flieIndex] = ' truck_placement: ' + jobInfo.departure_coordinates
+        arrFile[fileIndex] = ' truck_placement: ' + jobInfo.departure_coordinates
       } else if (job.moveToCargo && element.startsWith(' trailer_placement: ')) {
-        arrFile[flieIndex] = ' trailer_placement: (0, 0, 0) (1; 0, 0, 0)'
+        arrFile[fileIndex] = ' trailer_placement: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
+      } else if (job.moveToCargo && element.startsWith(' slave_trailer_placements[')) {
+        arrFile[fileIndex] = ' slave_trailer_placements[' + element.split('[')[1].split(']')[0] + ']: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
       }
       index++
     })
@@ -562,9 +564,9 @@ export function addJob (dir, filedirname, info, callback, errorcallback) {
       } else if (job.moveToCargo && input.startsWith(' truck_placement: ')) {
         input = ' truck_placement: ' + jobInfo.departure_coordinates
       } else if (job.moveToCargo && input.startsWith(' trailer_placement: ')) {
-        input = ' trailer_placement: (0, 0, 0) (1; 0, 0, 0)'
+        input = ' trailer_placement: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
       } else if (job.moveToCargo && input.startsWith(' slave_trailer_placements[')) {
-        input = ' slave_trailer_placements[' + input.split('[')[1].split(']')[0] + ']: (0, 0, 0) (1; 0, 0, 0)'
+        input = ' slave_trailer_placements[' + input.split('[')[1].split(']')[0] + ']: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
       }
       arrFile.push(input)
       index++
