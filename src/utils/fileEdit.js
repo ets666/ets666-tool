@@ -207,7 +207,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     let inGameTime = 0
     const economyEventIndex = []
     const jobInfoIndex = []
-    // let economyEventQueueIndex = 0
+    const gpsNameless = []
+    const gpsNamelessIndex = []
 
     let index = 0
     arrFile.forEach((element, fileIndex) => {
@@ -259,6 +260,10 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         arrFile[fileIndex] = ' trailer_placement: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
       } else if (job.moveToCargo && element.startsWith(' slave_trailer_placements[')) {
         arrFile[fileIndex] = ' slave_trailer_placements[' + element.split('[')[1].split(']')[0] + ']: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
+      } else if (job.moveToCargo && element.startsWith(' stored_gps_ahead_waypoints[')) {
+        gpsNameless.push(element.split(': ')[1])
+      } else if (job.moveToCargo && element.startsWith('gps_waypoint_storage : ')) {
+        gpsNamelessIndex.push(index)
       } else if (job.syncJob && job.moveToCargo && element.startsWith(' selected_job: ')) {
         arrFile[fileIndex] = element.replace(/selected_job: [^,\n]+/, 'selected_job: ets666.nameless.job.info')
       } else if (job.syncJob && job.moveToCargo && element.startsWith('job_info :')) {
@@ -413,6 +418,17 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
           }
         }
       }
+    }
+
+    // change gps position to (0, 0, 0)
+    if (job.moveToCargo && gpsNameless.length > 0) {
+      gpsNameless.forEach(value => {
+        gpsNamelessIndex.forEach(index => {
+          if (arrFile[index].indexOf(value) !== -1) {
+            arrFile[index + 1] = ' nav_node_position: (0, 0, 0)'
+          }
+        })
+      })
     }
 
     // 做货

@@ -321,16 +321,6 @@ export default {
       localLanguage: 'zh-CN'
     }
   },
-  watch: {
-    'job.syncJob': {
-      handler (val) {
-        if (!val) {
-          this.job.moveToCargo = false
-        }
-      },
-      deep: true
-    }
-  },
   mounted () {
     this.init()
   },
@@ -505,9 +495,7 @@ export default {
             this.job.syncJob = !this.job.syncJob
             break
           case 'moveToCargo':
-            if (this.job.syncJob) {
-              this.job.moveToCargo = !this.job.moveToCargo
-            }
+            this.job.moveToCargo = !this.job.moveToCargo
             break
         }
       } else {
