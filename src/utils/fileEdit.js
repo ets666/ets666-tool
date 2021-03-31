@@ -203,7 +203,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     let unlockedDealersIndex = 0
 
     // 做货
-    let companyIndex = 0
+    let companyIndex = 0 // 起点货场
+    let companyEndIndex = 0 // 终点货场
     let inGameTime = 0
     const economyEventIndex = []
     const jobInfoIndex = []
@@ -250,6 +251,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         unlockedDealersIndex = index
       } else if (element.startsWith('company : company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
         companyIndex = index
+      } else if (element.startsWith('company : company.volatile.' + jobInfo.destination_company + '.' + jobInfo.destination_city)) {
+        companyEndIndex = index
       } else if (element.startsWith(' game_time: ')) {
         inGameTime = Number(element.split(' ')[2])
       } else if (element.startsWith('economy_event : ')) {
@@ -434,6 +437,11 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     // 做货
     if (job.syncJob) {
       if (companyIndex === 0) {
+        errorcallback && errorcallback(i18n.t('error.companyNotFound'))
+        return
+      }
+
+      if (companyEndIndex === 0) {
         errorcallback && errorcallback(i18n.t('error.companyNotFound'))
         return
       }
