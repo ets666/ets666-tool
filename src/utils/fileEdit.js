@@ -444,7 +444,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       }
       if (job.syncJob && job.moveToCargo) {
         const jobInfoDate = addJobInfo(jobInfo, inGameTime)
-        arrFile.splice(jobInfoIndex[0], 0, ...jobInfoDate)
+        arrFile.splice(arrFile.length - 2, 0, ...jobInfoDate)
       }
     }
 
