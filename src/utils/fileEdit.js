@@ -207,7 +207,8 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     let companyIndex = 0
     let inGameTime = 0
     const economyEventIndex = []
-    let economyEventQueueIndex = 0
+    const jobInfoIndex = []
+    // let economyEventQueueIndex = 0
 
     let index = 0
     arrFile.forEach((element, fileIndex) => {
@@ -253,14 +254,16 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         inGameTime = Number(element.split(' ')[2])
       } else if (element.startsWith('economy_event : ')) {
         economyEventIndex.push(index)
-      } else if (element.startsWith('economy_event_queue :')) {
-        economyEventQueueIndex = index
       } else if (job.moveToCargo && element.startsWith(' truck_placement: ')) {
         arrFile[fileIndex] = ' truck_placement: ' + jobInfo.departure_coordinates
       } else if (job.moveToCargo && element.startsWith(' trailer_placement: ')) {
         arrFile[fileIndex] = ' trailer_placement: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
       } else if (job.moveToCargo && element.startsWith(' slave_trailer_placements[')) {
         arrFile[fileIndex] = ' slave_trailer_placements[' + element.split('[')[1].split(']')[0] + ']: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
+      } else if (job.syncJob && job.moveToCargo && element.startsWith(' selected_job: ')) {
+        arrFile[fileIndex] = element.replace(/selected_job: [^,\n]+/, 'selected_job: ets666.nameless.job.info')
+      } else if (job.syncJob && job.moveToCargo && element.startsWith('job_info :')) {
+        jobInfoIndex.push(index)
       }
       index++
     })
@@ -439,84 +442,9 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       for (let i = 0; i < companyJobData.length; i++) {
         arrFile[jobIndex + 1 + i] = companyJobData[i]
       }
-
-      const arrTimeEconomyEventIndex = []
-      let targetIndex = 0
-      let toIndex = 0
-      let originNameless = {}
-      // 时间和定位economy_event company位置
-      const str = 'company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city
-      economyEventIndex.map((val, index) => {
-        const temp = []
-        // eslint-disable-next-line eqeqeq
-        if (arrFile[val + 2].split(': ')[1] == str) {
-          if (arrFile[val + 3] === ' param: 0') {
-            originNameless = {
-              name: arrFile[val].split(': ')[1].split(' {')[0],
-              index: val
-            }
-            targetIndex = val
-            const time = Number(inGameTime) + 7200
-            arrFile[val + 1] = ' time: ' + time
-          }
-        }
-        temp.push(val) // 下标
-        temp.push(Number(arrFile[val + 1].split(': ')[1])) // time
-        arrTimeEconomyEventIndex.push(temp)
-      })
-
-      arrTimeEconomyEventIndex.sort((val1, val2) => {
-        return val1[1] - val2[1]
-      })
-
-      let isFirst = false
-      for (let j = 0; j < arrTimeEconomyEventIndex.length; j++) {
-        if (targetIndex === arrTimeEconomyEventIndex[j][0]) {
-          if (j === 0) {
-            isFirst = true
-            toIndex = arrTimeEconomyEventIndex[j + 1][0]
-          } else if (j !== arrTimeEconomyEventIndex.length - 1) {
-            toIndex = arrTimeEconomyEventIndex[j + 1][0] - 6
-          } else {
-            toIndex = arrTimeEconomyEventIndex[j - 1][0]
-          }
-          break
-        }
-      }
-      // 移动economy_event
-      arraymove(arrFile, targetIndex, toIndex)
-      const dataStartNum = Number(arrFile[economyEventQueueIndex + 1].split(': ')[1])
-      let findNamelessData = '' // 移动到这个名称下
-
-      for (let x = 1; x < 20; x++) {
-        const tempIndex = isFirst ? toIndex + x : toIndex - x
-        if (arrFile[tempIndex].startsWith('economy_event : ')) {
-          findNamelessData = arrFile[tempIndex].split(': ')[1].split(' {')[0]
-          break
-        }
-      }
-
-      // data 位置变更
-      if (findNamelessData) {
-        let findNamelessIndex = 0
-        let findOriginNamelessIndex = 0
-        for (let n = 0; n < dataStartNum; n++) {
-          // eslint-disable-next-line eqeqeq
-          if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == findNamelessData) {
-            findNamelessIndex = economyEventQueueIndex + 2 + n
-            // eslint-disable-next-line eqeqeq
-          } else if (arrFile[economyEventQueueIndex + 2 + n].split(': ')[1] == originNameless.name) {
-            findOriginNamelessIndex = economyEventQueueIndex + 2 + n
-          }
-        }
-        if (findNamelessIndex && findOriginNamelessIndex) {
-          arrayDatamove(arrFile, findOriginNamelessIndex, findNamelessIndex)
-        }
-      }
-
-      // sort data
-      for (let d = 0; d < dataStartNum; d++) {
-        arrFile[economyEventQueueIndex + 2 + d] = ` data[${d}]: ` + arrFile[economyEventQueueIndex + 2 + d].split(': ')[1]
+      if (job.syncJob && job.moveToCargo) {
+        const jobInfoDate = addJobInfo(jobInfo, inGameTime)
+        arrFile.splice(jobInfoIndex[0], 0, ...jobInfoDate)
       }
     }
 
@@ -707,6 +635,28 @@ function addJobOffer (jobInfo, inGameTime) {
   companyJobData.push(' fill_ratio: 1')
   companyJobData.push(' trailer_place: 0')
   return companyJobData
+}
+
+function addJobInfo (jobInfo, inGameTime) {
+  const jobData = []
+  jobData.push('job_info : ets666.nameless.job.info {')
+  jobData.push(' cargo: cargo.' + jobInfo.cargo)
+  jobData.push(' source_company: company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city + '"')
+  jobData.push(' target_company: company.volatile.' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
+  const exp = Number(inGameTime) + 6120
+  jobData.push(' cargo_model_index: ' + exp)
+  jobData.push(' is_articulated: false')
+  jobData.push(' is_cargo_market_job: false')
+  jobData.push(' start_time: 0')
+  jobData.push(' planned_distance_km: ' + jobInfo.shortest_distance_km)
+  jobData.push(' ferry_time: 0')
+  jobData.push(' ferry_price: 0')
+  jobData.push(' urgency: 0')
+  jobData.push(' special: null')
+  jobData.push(' units_count: ' + jobInfo.units_count)
+  jobData.push(' fill_ratio: 1')
+  jobData.push('}')
+  return jobData
 }
 
 function arraymove (arr, oldIndex, newIndex) {
