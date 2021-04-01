@@ -34,7 +34,7 @@ export default {
     fileNotExist: 'File not exist.',
     saveNotFound: 'Save file not found.',
     decryptFailed: 'Failed to decrypt the file.',
-    companyNotFound: 'Unable to find the company. Missing DLC(s).',
+    companyNotFound: 'Unable to find the company. Missing DLC(s) or MOD(s).',
     companyNotSupported: 'The company is not allowed to pick up a job.',
     writeFileFailed: 'Failed to write the file.',
     error: 'Error',

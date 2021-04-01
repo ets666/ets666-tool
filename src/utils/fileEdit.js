@@ -208,6 +208,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
     let inGameTime = 0
     const economyEventIndex = []
     const jobInfoIndex = []
+    let selectedJobInfoNameless = ''
     const gpsNameless = []
     const gpsNamelessIndex = []
 
@@ -255,7 +256,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         companyEndIndex = index
       } else if (element.startsWith(' game_time: ')) {
         inGameTime = Number(element.split(' ')[2])
-      } else if (element.startsWith('economy_event : ')) {
+      } else if (element.startsWith(' unit_link: company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)) {
         economyEventIndex.push(index)
       } else if (job.moveToCargo && element.startsWith(' truck_placement: ')) {
         arrFile[fileIndex] = ' truck_placement: ' + jobInfo.departure_coordinates
@@ -263,12 +264,13 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         arrFile[fileIndex] = ' trailer_placement: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
       } else if (job.moveToCargo && element.startsWith(' slave_trailer_placements[')) {
         arrFile[fileIndex] = ' slave_trailer_placements[' + element.split('[')[1].split(']')[0] + ']: (0, 0, 0) (' + jobInfo.departure_coordinates.split('(')[2]
-      } else if (job.moveToCargo && element.startsWith(' stored_gps_ahead_waypoints[')) {
+      } else if (job.moveToCargo && element.startsWith(' stored_gps_behind_waypoints[')) {
         gpsNameless.push(element.split(': ')[1])
       } else if (job.moveToCargo && element.startsWith('gps_waypoint_storage : ')) {
         gpsNamelessIndex.push(index)
       } else if (job.syncJob && job.moveToCargo && element.startsWith(' selected_job: ')) {
-        arrFile[fileIndex] = element.replace(/selected_job: [^,\n]+/, 'selected_job: ets666.nameless.job.info')
+        selectedJobInfoNameless = element.split(': ')[1]
+        arrFile[fileIndex] = ' selected_job: ets666.nameless.job.info'
       } else if (job.syncJob && job.moveToCargo && element.startsWith('job_info :')) {
         jobInfoIndex.push(index)
       }
@@ -423,7 +425,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       }
     }
 
-    // change gps position to (0, 0, 0)
+    // change navigation position to (0, 0, 0)
     if (job.moveToCargo && gpsNameless.length > 0) {
       gpsNameless.forEach(value => {
         gpsNamelessIndex.forEach(index => {
@@ -436,15 +438,11 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
 
     // 做货
     if (job.syncJob) {
-      if (companyIndex === 0) {
+      if (companyIndex === 0 || companyEndIndex === 0) {
         errorcallback && errorcallback(i18n.t('error.companyNotFound'))
         return
       }
 
-      if (companyEndIndex === 0) {
-        errorcallback && errorcallback(i18n.t('error.companyNotFound'))
-        return
-      }
       let jobIndex = companyIndex
       const companyJobData = addJobOffer(jobInfo, inGameTime)
       while (!arrFile[jobIndex].startsWith(' job_offer: ')) {
@@ -465,9 +463,26 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
       for (let i = 0; i < companyJobData.length; i++) {
         arrFile[jobIndex + 1 + i] = companyJobData[i]
       }
-      if (job.syncJob && job.moveToCargo) {
-        const jobInfoDate = addJobInfo(jobInfo, inGameTime)
-        arrFile.splice(arrFile.length - 2, 0, ...jobInfoDate)
+
+      economyEventIndex.forEach(index => {
+        if (arrFile[index + 1].startsWith(' param: 0')) {
+          arrFile[index - 1] = ' time: ' + (Number(inGameTime) + 6120)
+        }
+      })
+
+      if (job.moveToCargo) {
+        const selectedJobInfo = addJobInfo(jobInfo, inGameTime)
+        if (selectedJobInfoNameless.startsWith('null')) {
+          arrFile.splice(arrFile.length - 2, 0, ...selectedJobInfo)
+        } else {
+          jobInfoIndex.forEach(index => {
+            if (arrFile[index].startsWith('job_info : ' + selectedJobInfoNameless)) {
+              for (let i = 1; i < selectedJobInfo.length; i++) {
+                arrFile[index + i - 1] = selectedJobInfo[i]
+              }
+            }
+          })
+        }
       }
     }
 
@@ -507,8 +522,8 @@ function addJobInfo (jobInfo, inGameTime) {
   jobData.push('')
   jobData.push('job_info : ets666.nameless.job.info {')
   jobData.push(' cargo: cargo.' + jobInfo.cargo)
-  jobData.push(' source_company: company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city + '"')
-  jobData.push(' target_company: company.volatile.' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
+  jobData.push(' source_company: company.volatile.' + jobInfo.departure_company + '.' + jobInfo.departure_city)
+  jobData.push(' target_company: company.volatile.' + jobInfo.destination_company + '.' + jobInfo.destination_city)
   const exp = Number(inGameTime) + 6120
   jobData.push(' cargo_model_index: ' + exp)
   jobData.push(' is_articulated: false')

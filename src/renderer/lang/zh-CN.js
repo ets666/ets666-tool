@@ -34,7 +34,7 @@ export default {
     fileNotExist: '文件不存在',
     saveNotFound: '未找到存档',
     decryptFailed: '解码失败',
-    companyNotFound: '无法在存档内找到起点货场！请确认地图DLC或MOD是否齐全。如确认齐全，则请先加载相应的DLC或MOD并存档，再运行本工具。',
+    companyNotFound: '无法在存档内找到货场！请确认地图DLC或MOD是否齐全。如确认已齐全，则请先加载相应的DLC或MOD并存档，再运行本工具。',
     companyNotSupported: '该货场无法接货',
     writeFileFailed: '写入失败',
     error: '错误',
