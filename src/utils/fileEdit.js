@@ -311,7 +311,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         }
         arrFile[visitedIndex.city] = ' visited_cities: ' + num + str
         arrFile[visitedIndex.count] = ' visited_cities_count: ' + num + strCount
-      } else {
+      } else if (num > cityNum) {
         let str = '\r\n'
         let strCount = '\r\n'
         for (let j = 0; j < arrCityName.length; j++) {
@@ -353,7 +353,7 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
           }
         }
         arrFile[unlockedDealersIndex] = ' unlocked_dealers: ' + num + str
-      } else {
+      } else if (num > dealerNum) {
         let str = '\r\n'
         for (let j = 0; j < arrDealerCity.length; j++) {
           const num = j + dealerNum

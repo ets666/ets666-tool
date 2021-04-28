@@ -15,12 +15,12 @@ Windows x64
 * Unlock and upgrade all garages
 * Unlock all truck dealers
 * Fix all vehicles and trailers
-* Fill up all fuel tanks
+* Fill up all vehicles
 * Choose a listed job to sync
-* Move truck to the starting place (experimental)
+* Move truck to the starting place
 
 ## Compability
-1.39 is now supported
+1.40 & ProMods 2.55
 
 ## How to Use
 * Preparation: Start the game --> Choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
@@ -31,7 +31,7 @@ Windows x64
 ## License
 [LICENSE](LICENSE)
 
-Copyright (C) 2020 [ETS666.COM](https://ets666.com/)
+Copyright (C) [ETS666.COM](https://ets666.com/)
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
