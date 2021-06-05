@@ -372,7 +372,8 @@ export default {
     },
     utcDiff (serverTime) {
       const localTime = moment.utc(serverTime).local().format('YYYY-MM-DD HH:mm')
-      let diff = moment(localTime).diff(moment(serverTime), 'hours')
+      let d = new Date()
+      let diff = -d.getTimezoneOffset() / 60
       if (diff >= 0) {
         diff = '+' + diff
       }
