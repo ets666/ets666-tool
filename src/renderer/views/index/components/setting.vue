@@ -318,7 +318,7 @@ export default {
       severJobInfo: [],
       jobInfo: {},
       fullscreenLoading: false,
-      localLanguage: 'zh-CN'
+      localLanguage: 'en'
     }
   },
   mounted () {

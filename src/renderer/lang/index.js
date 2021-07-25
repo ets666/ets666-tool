@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import elementEnLocale from 'element-ui/lib/locale/lang/en' // element-ui lang
-import elementZhLocale from 'element-ui/lib/locale/lang/zh-CN' // element-ui lang
+import elementZhSLocale from 'element-ui/lib/locale/lang/zh-CN' // element-ui lang
+import elementZhTLocale from 'element-ui/lib/locale/lang/zh-TW' // element-ui lang
 import enLocale from './en'
-import zhLocale from './zh-CN'
+import zhSLocale from './zh-CN'
+import zhTLocale from './zh-TW'
 
 Vue.use(VueI18n)
 let language = navigator.language
@@ -14,8 +16,24 @@ const messages = {
     ...elementEnLocale
   },
   'zh-CN': {
-    ...zhLocale,
-    ...elementZhLocale
+    ...zhSLocale,
+    ...elementZhSLocale
+  },
+  'zh-TW': {
+    ...zhTLocale,
+    ...elementZhTLocale
+  },
+  'zh-HK': {
+    ...zhTLocale,
+    ...elementZhTLocale
+  },
+  'zh-MO': {
+    ...zhTLocale,
+    ...elementZhTLocale
+  },
+  'zh-SG': {
+    ...zhSLocale,
+    ...elementZhSLocale
   }
 }
 
