@@ -28,6 +28,10 @@ Windows x64
 * Step 2: Open ETS666 Tool --> Select the profile and savegame you want to modify --> Tick what you want --> Save
 * Step 3: Back to game --> Load the modified savegame --> Done, the convoy job could be found in the freight market
 
+## Credits
+* UI design: [Mingran7](https://truckersmp.com/user/2683384)
+* Turkish Translation: [DoruqTV](https://www.youtube.com/channel/UCVg5Qk_O5fRY8GNKbFdK_Tg)
+
 ## License
 [LICENSE](LICENSE)
 
