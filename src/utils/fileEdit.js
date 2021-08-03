@@ -508,7 +508,7 @@ function addJobOffer (jobInfo, inGameTime) {
   companyJobData.push(' ferry_time: 0')
   companyJobData.push(' ferry_price: 0')
   companyJobData.push(' cargo: cargo.' + jobInfo.cargo)
-  companyJobData.push(' company_truck: scania_s_6x4_730')
+  companyJobData.push(' company_truck: scania_s2016_6x4_high_730')
   companyJobData.push(' trailer_variant: ' + jobInfo.trailer_variant)
   companyJobData.push(' trailer_definition: ' + jobInfo.trailer_definition)
   companyJobData.push(' units_count: ' + jobInfo.units_count)

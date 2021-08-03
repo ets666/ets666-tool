@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import elementEnLocale from 'element-ui/lib/locale/lang/en' // element-ui lang
+import elementTrLocale from 'element-ui/lib/locale/lang/tr-TR' // element-ui lang
 import elementZhSLocale from 'element-ui/lib/locale/lang/zh-CN' // element-ui lang
 import elementZhTLocale from 'element-ui/lib/locale/lang/zh-TW' // element-ui lang
 import enLocale from './en'
+import trLocale from './tr-TR'
 import zhSLocale from './zh-CN'
 import zhTLocale from './zh-TW'
 
@@ -14,6 +16,10 @@ const messages = {
   en: {
     ...enLocale,
     ...elementEnLocale
+  },
+  'tr': {
+    ...trLocale,
+    ...elementTrLocale
   },
   'zh-CN': {
     ...zhSLocale,

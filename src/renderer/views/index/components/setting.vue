@@ -632,7 +632,7 @@ export default {
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  min-width: 150px;
+  min-width: 160px;
 }
 
 .aside {
