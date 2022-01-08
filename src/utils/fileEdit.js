@@ -230,8 +230,20 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         exper.push(index)
       } else if (setting.skills && element.startsWith(' adr:')) {
         skills.push(index)
-      } else if (setting.damage && element.startsWith(' wear')) {
-        arrFile[fileIndex] = element.replace(/wear: [^,\n]+/, 'wear: 0')
+      } else if (setting.damage && element.startsWith(' trailer_body_wear:')) {
+        arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' chassis_wear:')) {
+        arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' engine_wear:')) {
+        arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' transmission_wear:')) {
+        arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' cabin_wear:')) {
+        arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' wheels_wear:')) {
+        arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' wheels_wear[')) {
+        arrFile[fileIndex] = ''
       } else if (setting.oil && element.startsWith(' fuel_relative')) {
         arrFile[fileIndex] = element.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')
       } else if (setting.city && element.startsWith(' visited_cities[')) {
