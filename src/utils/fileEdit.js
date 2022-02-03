@@ -1,5 +1,5 @@
 import { exec } from 'child_process'
-import i18n from '../renderer/lang'
+import i18n from '@/lang'
 const fs = require('fs')
 const path = require('path')
 
@@ -27,7 +27,7 @@ export function mapDir (dir, callback, finish) {
       return
     }
     files.forEach((filename, index) => {
-      let pathname = path.join(dir, filename)
+      const pathname = path.join(dir, filename)
       fs.stat(pathname, (err, stats) => { // 读取文件信息
         if (err) {
           console.log(i18n.t('error.fetchFileStatsFailed'))
@@ -128,7 +128,7 @@ export function SiiDecrypt (dir, callback, errorcallback) {
     // 解码
     const cmdStr = `${siiPath} "${gameSiiPath}"`
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-    const workerProcess = exec(cmdStr, {cwd: cwd})
+    const workerProcess = exec(cmdStr, { cwd: cwd })
 
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
@@ -160,7 +160,7 @@ export function SiiDecryptInfo (dir, callback, errorcallback) {
     // 解码
     const cmdStr = `${siiPath} "${infoSiiPath}"`
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-    const workerProcess = exec(cmdStr, {cwd: cwd})
+    const workerProcess = exec(cmdStr, { cwd: cwd })
 
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
