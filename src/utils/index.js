@@ -1,3 +1,6 @@
+import i18n from '@/lang'
+import { ElMessage } from 'element-plus'
+
 // 十六进制转ascii
 export function hex2a (hexx) {
   var hex = hexx.toString()// force conversion
@@ -19,4 +22,22 @@ export function a2hex (str) {
 export function hex2utf8 (str) {
   const buf = Buffer.from(str, 'hex')
   return buf.toString('utf8')
+}
+
+export function errCatch (type) {
+  console.log(type)
+  let result = true
+  switch (type) {
+    case 'invalidPath':
+      ElMessage.error(i18n.global.t('error.invalidPath'))
+      break
+    case 'fileNotExist':
+      ElMessage.error(i18n.global.t('error.fileNotExist'))
+      break
+
+    default:
+      result = false
+      break
+  }
+  return result
 }

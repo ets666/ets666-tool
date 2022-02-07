@@ -2,10 +2,25 @@ const { app, dialog, ipcMain, shell } = require('electron')
 const Store = require('electron-store')
 const store = new Store()
 const info = require('../package.json')
-const { readFile, readdir, access, constants, stat } = require('fs')
+const { readFile, readdir, access, constants, stat, statSync } = require('fs')
 const path = require('path')
-// const EURO_PATH = path.join(app.getPath('documents'), '/Euro Truck Simulator 2')
+const platform = require('os').platform()
+const isMac = platform === 'darwin'
+let EURO_PATH = ''
+if (isMac) {
+  EURO_PATH = path.join(app.getPath('appData'), '/Euro Truck Simulator 2')
+} else {
+  EURO_PATH = path.join(app.getPath('documents'), '/Euro Truck Simulator 2')
+}
 
+if (!store.get('pathType') || !store.get('path')) {
+  store.set('pathType', 'documents')
+  store.set('path', EURO_PATH)
+} else if (store.get('pathType') === 'documents' && store.get('path') !== EURO_PATH) {
+  store.set('path', EURO_PATH)
+} else if (store.get('pathType') !== 'documents' && store.get('path') === EURO_PATH) {
+  store.set('pathType', 'documents')
+}
 // read file data
 const fileData = (path) => {
   return new Promise((resolve, reject) => {
@@ -72,12 +87,8 @@ const Utils = {
       store.set(storeName, val)
     })
 
-    ipcMain.on('getStore', (event, { storeName, callBackName }) => {
-      try {
-        event.reply(callBackName, { [storeName]: store.get(storeName) })
-      } catch (error) {
-        console.log(error)
-      }
+    ipcMain.handle('getStore', async (event, storeName) => {
+      return store.get(storeName)
     })
     ipcMain.on('userData', (event) => {
       event.reply('userData', app.getPath('userData'))
@@ -91,24 +102,38 @@ const Utils = {
      * @param {function} callback 成功返回函数
      * @param {function} errorcallback 失败返回函数
      */
-    ipcMain.on('mapDirName', async (event, { dir, filedirname }) => {
+    ipcMain.handle('mapDirName', async (event, { dir, filedirname }) => {
       try {
         const dirurl = path.join(dir, filedirname)
-        console.log(dirurl)
         const code = await fileAccess(dirurl, constants.F_OK)
         if (code === 1) {
-          event.reply(filedirname)
+          try {
+            const files = await fileDir(dirurl)
+            // 只读取文件夹
+            const filedir = []
+            files.forEach((filename) => {
+              const pathname = path.join(dirurl, filename)
+              const statInfo = statSync(pathname)
+              if (statInfo.isDirectory()) {
+                filedir.push(filename)
+              }
+            })
+            return filedir
+          } catch (error) {
+            return 'fileNotExist'
+          }
         }
       } catch (error) {
-        event.reply('invalidPath', `${filedirname}不存在`)
+        return 'invalidPath'
       }
     })
 
-    ipcMain.on('openDir', async (event) => {
+    ipcMain.handle('openDir', async (event) => {
       const result = await dialog.showOpenDialog({
         properties: ['openDirectory']
       })
-      event.reply('selectedDir', result.filePaths[0])
+      // event.reply('selectedDir', result.filePaths[0])
+      return result.filePaths[0]
     })
   }
 }

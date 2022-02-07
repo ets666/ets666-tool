@@ -8,6 +8,7 @@
 <script>
 import SelectEuroPath from './components/select-euro-path'
 import Setting from './components/setting'
+import { errCatch } from '@/utils/index'
 const ipc = window.ipc
 
 export default {
@@ -21,12 +22,16 @@ export default {
       savePath: ''
     }
   },
-  created () {
+  async created () {
     try {
-      ipc.send('getStore', { storeName: 'path', callBackName: 'gamePath' })
-      ipc.on('gamePath', (e, f) => {
-        this.savePath = f.path || ''
-      })
+      this.savePath = ''
+      const path = await ipc.invoke('getStore', 'path')
+      if (path) {
+        const dir = await ipc.invoke('mapDirName', { dir: path, filedirname: '/profiles' })
+        if (!errCatch(dir)) {
+          this.savePath = path
+        }
+      }
     } catch (error) {
       this.savePath = ''
     }

@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { errCatch } from '@/utils/index'
 const ipc = window.ipc
 
 export default {
@@ -22,33 +23,25 @@ export default {
       disableSure: true
     }
   },
-  mounted () {
+  async mounted () {
     try {
-      ipc.send('getStore', { storeName: 'path', callBackName: 'gamePath' })
-      ipc.on('gamePath', (e, f) => {
-        this.gamePath = f.path || ''
-      })
+      const path = await ipc.invoke('getStore', 'path')
+      this.gamePath = path || ''
     } catch (error) {
       this.gamePath = ''
     }
   },
   methods: {
-    openFileHandler () {
+    async openFileHandler () {
       try {
-        ipc.send('openDir')
-        ipc.on('selectedDir', (event, files) => {
-          this.gamePath = files
-          // 判断路径是否存在
-          ipc.send('mapDirName', { dir: this.gamePath, filedirname: '/profiles' })
-          ipc.on('/profiles', (e, f) => {
-            this.disableSure = false
-          })
-          // 路径无效
-          ipc.on('invalidPath', (e, f) => {
-            this.disableSure = true
-            this.$message.error(this.$t('error.invalidPath'))
-          })
-        })
+        const files = await ipc.invoke('openDir')
+        this.gamePath = files
+        const dir = await ipc.invoke('mapDirName', { dir: files, filedirname: '/profiles' })
+        if (!errCatch(dir)) {
+          this.disableSure = false
+        } else {
+          this.disableSure = true
+        }
       } catch (error) {
         console.log(error)
       }

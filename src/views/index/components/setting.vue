@@ -14,7 +14,7 @@
         <div>
           <el-select
             v-model="profile"
-            size="mini"
+            size="large"
             :placeholder="$t('selectProfile')"
             class="mb10 w select_shadow"
             @change="changeProfile"
@@ -29,7 +29,7 @@
           </el-select>
           <el-select
             v-model="save"
-            size="mini"
+            size="large"
             :placeholder="$t('selectSave')"
             class="mb10 w select_shadow"
             @change="reSet"
@@ -61,7 +61,7 @@
                 <div class="line2">&nbsp;</div>
                 <el-select
                   v-model="tody"
-                  size="mini"
+                  size="large"
                   style="width: 200px"
                   @change="changeTime"
                 >
@@ -322,7 +322,7 @@
       </div>
       <el-dialog
         :title="$t('selectPath')"
-        v-model:visible="dialogTableVisible"
+        v-model="dialogTableVisible"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :show-close="false"
@@ -335,10 +335,10 @@
 
 <script>
 import moment from 'moment'
-import { hex2utf8 } from '@/utils/byte'
+import { hex2utf8 } from '@/utils/index'
 import selectPath from './select-euro-path'
-const axios = require('axios')
-
+import { randomJobs } from '@/api/index'
+const ipc = window.ipc
 export default {
   components: {
     selectPath
@@ -380,30 +380,56 @@ export default {
       localLanguage: 'en'
     }
   },
+  watch: {
+    'job.syncJob': {
+      handler (val) {
+        if (!val) {
+          this.job.moveToCargo = false
+        }
+      },
+      deep: true
+    }
+  },
   mounted () {
     this.init()
   },
   methods: {
-    init () {
-      const _this = this
+    async init () {
       this.localLanguage = navigator.language
-      _this.profileOptions = []
-
-      axios.get('https://ets666.com/api/random_jobs/').then((res) => {
-        if (res.data) {
-          _this.severJobInfo = res.data
-          _this.jobInfo = res.data[0]
-          _this.tody = this.utcDiff(res.data[0].assembly_time)
-          res.data.forEach((element) => {
+      this.profileOptions = []
+      ipc.send('mapDirName', { dir: this.savePath, filedirname: '/profiles' })
+      ipc.on('/profiles', (e, f) => {
+        if (f) {
+          f.forEach((element) => {
             const obj = {
-              value: element.assembly_time,
-              label: this.utcDiff(element.assembly_time)
+              value: element,
+              label: hex2utf8(element)
             }
-            _this.timeOption.push(obj)
+            this.profileOptions.push(obj)
           })
-          _this.setLanguage()
         }
       })
+      // 路径无效
+      ipc.on('invalidPath', (e, f) => {
+        this.$message.error(this.$t('error.invalidPath'))
+      })
+      ipc.on('fileNotExist', (e, f) => {
+        this.$message.error(this.$t('error.fileNotExist'))
+      })
+      const res = await randomJobs()
+      if (res.data) {
+        this.severJobInfo = res.data
+        this.jobInfo = res.data[0]
+        this.tody = this.utcDiff(res.data[0].assembly_time)
+        res.data.forEach((element) => {
+          const obj = {
+            value: element.assembly_time,
+            label: this.utcDiff(element.assembly_time)
+          }
+          this.timeOption.push(obj)
+        })
+        this.setLanguage()
+      }
     },
     utcDiff (serverTime) {
       const localTime = moment
