@@ -25,7 +25,6 @@ export function hex2utf8 (str) {
 }
 
 export function errCatch (type) {
-  console.log(type)
   let result = true
   switch (type) {
     case 'invalidPath':
@@ -34,7 +33,9 @@ export function errCatch (type) {
     case 'fileNotExist':
       ElMessage.error(i18n.global.t('error.fileNotExist'))
       break
-
+    case 'saveNotFound':
+      ElMessage.error(i18n.global.t('error.saveNotFound'))
+      break
     default:
       result = false
       break

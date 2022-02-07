@@ -335,10 +335,11 @@
 
 <script>
 import moment from 'moment'
-import { hex2utf8 } from '@/utils/index'
 import selectPath from './select-euro-path'
+import { hex2utf8, errCatch } from '@/utils/index'
 import { randomJobs } from '@/api/index'
 const ipc = window.ipc
+
 export default {
   components: {
     selectPath
@@ -354,7 +355,6 @@ export default {
       dialogTableVisible: false,
       tody: '',
       timeOption: [],
-      error: '',
       profile: '',
       save: '',
       profileOptions: [],
@@ -390,32 +390,25 @@ export default {
       deep: true
     }
   },
-  mounted () {
+  async mounted () {
     this.init()
   },
   methods: {
     async init () {
       this.localLanguage = navigator.language
       this.profileOptions = []
-      ipc.send('mapDirName', { dir: this.savePath, filedirname: '/profiles' })
-      ipc.on('/profiles', (e, f) => {
-        if (f) {
-          f.forEach((element) => {
-            const obj = {
-              value: element,
-              label: hex2utf8(element)
-            }
-            this.profileOptions.push(obj)
-          })
-        }
-      })
-      // 路径无效
-      ipc.on('invalidPath', (e, f) => {
-        this.$message.error(this.$t('error.invalidPath'))
-      })
-      ipc.on('fileNotExist', (e, f) => {
-        this.$message.error(this.$t('error.fileNotExist'))
-      })
+      const dir = await ipc.invoke('mapDirName', { dir: this.savePath, filedirname: '/profiles' })
+      if (dir === 'invalidPath') this.dialogTableVisible = true
+      if (!errCatch(dir)) {
+        dir.forEach((element) => {
+          const obj = {
+            value: element,
+            label: hex2utf8(element)
+          }
+          this.profileOptions.push(obj)
+        })
+      }
+      // 获取随机Job
       const res = await randomJobs()
       if (res.data) {
         this.severJobInfo = res.data
@@ -462,11 +455,24 @@ export default {
         }
       })
     },
-    changeProfile (path) {
-      const _this = this
-      _this.save = ''
-      _this.saveOptions = []
-      this.reSet()
+    async changeProfile (path) {
+      this.save = ''
+      this.saveOptions = []
+      const file = await ipc.invoke('mapDirName', { dir: this.savePath, filedirname: `/profiles/${path}/save` })
+      if (file === 'invalidPath') this.dialogTableVisible = true
+      if (!errCatch(file)) {
+        file.forEach(async (element) => {
+          const data = ''
+          const obj = {
+            value: element,
+            label: element
+          }
+          const dir = await ipc.invoke('SiiDecryptInfo', `${this.savePath}/profiles/${path}/save/${element}`)
+          console.log(dir)
+          this.saveOptions.push(obj)
+        })
+      }
+      // this.reSet()
     },
     reSet () {
       this.setting = {
@@ -485,10 +491,10 @@ export default {
       }
     },
     goToWeb () {
-      // ipcRenderer.send('open-url', 'https://ets666.com/')
+      ipc.send('open-url', 'https://ets666.com/')
     },
     about () {
-      // ipcRenderer.send('about')
+      ipc.send('about')
     },
     clickBtn (val) {
       if (this.profile && this.save) {

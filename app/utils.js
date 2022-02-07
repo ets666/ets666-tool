@@ -1,3 +1,5 @@
+const util = require('util')
+const exec = util.promisify(require('child_process').exec)
 const { app, dialog, ipcMain, shell } = require('electron')
 const Store = require('electron-store')
 const store = new Store()
@@ -125,6 +127,28 @@ const Utils = {
         }
       } catch (error) {
         return 'invalidPath'
+      }
+    })
+
+    ipcMain.handle('SiiDecryptInfo', async (event, dir) => {
+      try {
+        const cwd = path.join(process.cwd(), '/resources/')
+        const siiPath = path.join('SII_Decrypt.exe')
+        const infoSiiPath = path.join(dir, '/info.sii')
+        const code = await fileAccess(infoSiiPath, constants.F_OK)
+        if (code === 1) {
+          // 解码
+          const cmdStr = `${siiPath} "${infoSiiPath}"`
+          try {
+            // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
+            const { stdout, stderr } = await exec(cmdStr, { cwd: cwd })
+            return { stdout, stderr }
+          } catch (error) {
+            return 'decryptFailed'
+          }
+        }
+      } catch (error) {
+        return 'saveNotFound'
       }
     })
 
