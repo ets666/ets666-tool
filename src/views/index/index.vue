@@ -1,7 +1,7 @@
 <template>
   <div class="w h">
-    <select-euro-path v-if="!savePath" @pathSave="pathSave" />
-    <setting v-else :savePath="savePath" />
+    <select-euro-path v-if="!savePath" :type="type" @pathSave="pathSave" />
+    <setting ref="setting" v-else :savePath="savePath" @pathTypeChange="pathTypeChange" @pathSave="pathSave" />
   </div>
 </template>
 
@@ -19,17 +19,40 @@ export default {
   data () {
     return {
       fileInfo: '',
-      savePath: ''
+      savePath: '',
+      type: 'ETS2',
+      paths: {
+        path: null,
+        aPath: null
+      }
     }
   },
   async created () {
     try {
       this.savePath = ''
       const path = await ipc.invoke('getStore', 'path')
-      if (path) {
-        const dir = await ipc.invoke('mapDirName', { dir: path, filedirname: '/profiles' })
-        if (!errCatch(dir)) {
-          this.savePath = path
+      const aPath = await ipc.invoke('getStore', 'aPath')
+      this.paths.path = path
+      this.paths.aPath = aPath
+      if (path || aPath) {
+        if (path) {
+          const dir = await ipc.invoke('mapDirName', { dir: path, filedirname: '/profiles' })
+          if (!errCatch(dir)) {
+            this.savePath = path
+            this.type = 'ETS2'
+            this.$nextTick(() => {
+              this.$refs.setting.pathType = 'ETS2'
+            })
+          }
+        } else if (aPath) {
+          const dir = await ipc.invoke('mapDirName', { dir: aPath, filedirname: '/profiles' })
+          if (!errCatch(dir)) {
+            this.savePath = aPath
+            this.type = 'ATS'
+            this.$nextTick(() => {
+              this.$refs.setting.pathType = 'ATS'
+            })
+          }
         }
       }
     } catch (error) {
@@ -37,8 +60,41 @@ export default {
     }
   },
   methods: {
-    pathSave (path) {
+    pathSave ({ path, type }) {
       this.savePath = path
+      if (this.type === 'ETS2') {
+        this.paths.path = path
+      } else {
+        this.paths.aPath = path
+      }
+      this.$nextTick(() => {
+        this.$refs.setting.pathType = type
+        this.$refs.setting.init()
+      })
+    },
+    async pathTypeChange (type) {
+      this.type = type
+      if (type === 'ETS2') {
+        const dir = await ipc.invoke('mapDirName', { dir: this.paths.path, filedirname: '/profiles' })
+        if (!errCatch(dir)) {
+          this.savePath = this.paths.path
+          if (this.savePath) {
+            this.$refs.setting.init()
+          }
+        } else {
+          this.savePath = ''
+        }
+      } else if (type === 'ATS') {
+        const dir = await ipc.invoke('mapDirName', { dir: this.paths.aPath, filedirname: '/profiles' })
+        if (!errCatch(dir)) {
+          this.savePath = this.paths.aPath
+          if (this.savePath) {
+            this.$refs.setting.init()
+          }
+        } else {
+          this.savePath = ''
+        }
+      }
     }
   }
 }

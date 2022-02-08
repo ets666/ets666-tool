@@ -3,6 +3,10 @@
     <div class="content">
       {{$t('selectTips')}}
     </div>
+    <div>
+      <el-radio v-model="radio" label="ETS2" size="large">ETS2</el-radio>
+      <el-radio v-model="radio" label="ATS" size="large">ATS</el-radio>
+    </div>
     <div class="input-box w">
       <el-input class="mr10 w60" v-model="gamePath" disabled :placeholder="$t('selectPath')"></el-input>
       <el-button class="mr10" @click="openFileHandler">{{$t('selectBtn')}}</el-button>
@@ -16,16 +20,29 @@ import { errCatch } from '@/utils/index'
 const ipc = window.ipc
 
 export default {
+  props: {
+    type: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       gamePath: '',
       fileInfo: '',
-      disableSure: true
+      disableSure: true,
+      radio: 'ETS2'
     }
   },
   async mounted () {
+    this.radio = this.type
     try {
-      const path = await ipc.invoke('getStore', 'path')
+      let path = ''
+      if (this.type === 'ETS2') {
+        path = await ipc.invoke('getStore', 'path')
+      } else {
+        path = await ipc.invoke('getStore', 'aPath')
+      }
       this.gamePath = path || ''
     } catch (error) {
       this.gamePath = ''
@@ -48,9 +65,14 @@ export default {
     },
     // 写入本地
     saveToLocal () {
-      ipc.send('saveStore', { storeName: 'path', val: this.gamePath })
-      ipc.send('saveStore', { storeName: 'pathType', val: 'custom' })
-      this.$emit('pathSave', this.gamePath)
+      if (this.type === 'ETS2') {
+        ipc.send('saveStore', { storeName: 'path', val: this.gamePath })
+        ipc.send('saveStore', { storeName: 'pathType', val: 'custom' })
+      } else {
+        ipc.send('saveStore', { storeName: 'aPath', val: this.gamePath })
+        ipc.send('saveStore', { storeName: 'aPathType', val: 'custom' })
+      }
+      this.$emit('pathSave', { path: this.gamePath, type: this.type })
     }
   }
 }

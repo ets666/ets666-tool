@@ -7,9 +7,31 @@
         <div class="line"></div>
       </div>
       <div class="btn_box">
-        <div class="btn mb10">
-          <i class="iconfont iconsucai" style="font-size: 18px"></i>
-          {{ $t("select") }}
+        <div class="btn mb10 path_btn">
+          <!-- <i class="iconfont iconsucai" style="font-size: 18px"></i> -->
+          <!-- {{ $t("select") }} -->
+          <div class="path_btn__item" @click="pathTypeChange('ETS2')">
+            <div class="check">
+              <i
+                v-show="pathType === 'ETS2'"
+                class="iconfont iconfuxuankuanggou check_active"
+              ></i>
+            </div>
+            <div class="ml10">
+              ETS2
+            </div>
+          </div>
+          <div class="path_btn__item ml10" @click="pathTypeChange('ATS')">
+            <div class="check">
+              <i
+                v-show="pathType === 'ATS'"
+                class="iconfont iconfuxuankuanggou check_active"
+              ></i>
+            </div>
+            <div class="ml10">
+              ATS
+            </div>
+          </div>
         </div>
         <div>
           <el-select
@@ -328,7 +350,7 @@
         :close-on-press-escape="false"
         :show-close="false"
       >
-        <selectPath @pathSave="pathSave"></selectPath>
+        <selectPath v-if="dialogTableVisible" @pathSave="pathSave"></selectPath>
       </el-dialog>
     </el-main>
   </el-container>
@@ -374,6 +396,7 @@ export default {
         moveToCargo: false,
         syncJob: false
       },
+      pathType: 'ETS2',
       i18nCustom: null,
       severJobInfo: [],
       jobInfo: {},
@@ -587,10 +610,16 @@ export default {
         })
       }
     },
-    pathSave () {
-      this.$message.success(this.$t('success.success'))
+    pathSave ({ path, type }) {
+      // TODO check logic
+      // this.$message.success(this.$t('success.success'))
       this.dialogTableVisible = false
-      this.init()
+      // this.init()
+      this.$emit('pathSave', { path, type })
+    },
+    pathTypeChange (type) {
+      this.pathType = type
+      this.$emit('pathTypeChange', type)
     }
   }
 }
@@ -701,6 +730,23 @@ export default {
 
 .btn_box {
   width: 65%;
+
+  .path_btn {
+    display: flex;
+    padding: 0 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    .path_btn__item {
+      display: flex;
+      align-items: center;
+      position: relative;
+
+      .check_active {
+        bottom: -10px;
+      }
+    }
+  }
 
   .btn {
     width: 100%;

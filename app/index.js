@@ -110,8 +110,11 @@ function createWindow () {
   })
 
   const menu = Menu.buildFromTemplate(template)
-  // Menu.setApplicationMenu(menu)
-  Menu.setApplicationMenu(null)
+  if (process.env.NODE_ENV === 'development') {
+    Menu.setApplicationMenu(menu)
+  } else {
+    Menu.setApplicationMenu(null)
+  }
 
   if (platform === 'darwin') {
     mainWindow.excludedFromShownWindowsMenu = true

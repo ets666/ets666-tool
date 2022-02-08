@@ -8,11 +8,15 @@ const { readFileSync, copyFileSync, writeFile, readdir, access, constants, statS
 const path = require('path')
 const platform = require('os').platform()
 const isMac = platform === 'darwin'
+
+let AMERICAN_PATH = ''
 let EURO_PATH = ''
 if (isMac) {
   EURO_PATH = path.join(app.getPath('appData'), '/Euro Truck Simulator 2')
+  AMERICAN_PATH = path.join(app.getPath('appData'), '/American Truck Simulator')
 } else {
   EURO_PATH = path.join(app.getPath('documents'), '/Euro Truck Simulator 2')
+  AMERICAN_PATH = path.join(app.getPath('documents'), '/American Truck Simulator')
 }
 
 if (!store.get('pathType') || !store.get('path')) {
@@ -22,6 +26,15 @@ if (!store.get('pathType') || !store.get('path')) {
   store.set('path', EURO_PATH)
 } else if (store.get('pathType') !== 'documents' && store.get('path') === EURO_PATH) {
   store.set('pathType', 'documents')
+}
+
+if (!store.get('aPathType') || !store.get('aPath')) {
+  store.set('aPathType', 'documents')
+  store.set('aPath', AMERICAN_PATH)
+} else if (store.get('aPathType') === 'documents' && store.get('aPath') !== AMERICAN_PATH) {
+  store.set('aPath', AMERICAN_PATH)
+} else if (store.get('aPathType') !== 'documents' && store.get('aPath') === AMERICAN_PATH) {
+  store.set('aPathType', 'documents')
 }
 // read file data
 const fileWrite = (path, buf) => {
