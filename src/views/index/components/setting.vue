@@ -116,7 +116,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18n">{{ i18n.server }}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.server }}</span>
                   </div>
                 </el-col>
               </el-row>
@@ -129,7 +129,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px">
-                    <span v-if="i18n">{{ i18n.departure_city }}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.departure_city }}</span>
                   </div>
                 </el-col>
               </el-row>
@@ -142,7 +142,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18n">{{ i18n.departure_company }}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.departure_company }}</span>
                   </div>
                 </el-col>
               </el-row>
@@ -154,7 +154,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px">
-                    <span v-if="i18n">{{ i18n.destination_city }}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.destination_city }}</span>
                   </div>
                 </el-col>
               </el-row>
@@ -166,7 +166,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18n">{{ i18n.destination_company }}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.destination_company }}</span>
                   </div>
                 </el-col>
               </el-row>
@@ -179,7 +179,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px">
-                    <span v-if="i18n">{{ i18n.cargo }}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.cargo }}</span>
                   </div>
                 </el-col>
               </el-row>
@@ -373,7 +373,7 @@ export default {
         moveToCargo: false,
         syncJob: false
       },
-      i18n: null,
+      i18nCustom: null,
       severJobInfo: [],
       jobInfo: {},
       fullscreenLoading: false,
@@ -410,11 +410,11 @@ export default {
       }
       // 获取随机Job
       const res = await randomJobs()
-      if (res.data) {
-        this.severJobInfo = res.data
-        this.jobInfo = res.data[0]
-        this.tody = this.utcDiff(res.data[0].assembly_time)
-        res.data.forEach((element) => {
+      if (res) {
+        this.severJobInfo = res
+        this.jobInfo = res[0]
+        this.tody = this.utcDiff(res[0].assembly_time)
+        res.forEach((element) => {
           const obj = {
             value: element.assembly_time,
             label: this.utcDiff(element.assembly_time)
@@ -442,9 +442,9 @@ export default {
         obj.set(element.language, element)
       })
       if (obj.has(this.localLanguage)) {
-        this.$set(this, 'i18n', obj.get(this.localLanguage))
+        this.i18nCustom = obj.get(this.localLanguage)
       } else {
-        this.$set(this, 'i18n', obj.get('Default'))
+        this.i18nCustom = obj.get('Default')
       }
     },
     changeTime (val) {
@@ -540,8 +540,7 @@ export default {
         })
       }
     },
-    saveSetting () {
-      const _this = this
+    async saveSetting () {
       const { money, level, skills, city, garage, dealer, damage, oil } =
         this.setting
       const { moveToCargo, syncJob } = this.job
@@ -557,15 +556,34 @@ export default {
         moveToCargo ||
         syncJob
       ) {
-        _this.fullscreenLoading = true
-        // const obj = {
-        //   setting: _this.setting,
-        //   jobInfo: _this.jobInfo,
-        //   job: _this.job
-        // }
-        // const gameSiiPath = this.savePath + '/profiles/' + this.profile + '/save/' + this.save
+        this.fullscreenLoading = true
+        const info = {
+          setting: this.setting,
+          jobInfo: this.jobInfo,
+          job: this.job
+        }
+        const gameSiiPath = `${this.savePath}/profiles/${this.profile}/save/${this.save}`
+        const res = await ipc.invoke('SiiDecrypt', { dir: gameSiiPath, info: JSON.stringify(info) })
+        this.gameSiiCatch(res)
       } else {
-        _this.$message.error(_this.$t('error.nothingSelected'))
+        this.$message.error(this.$t('error.nothingSelected'))
+      }
+    },
+    gameSiiCatch (type) {
+      if (['companyNotFound', 'companyNotSupported', 'writeFileFailed', 'failed', 'decryptFailed'].indexOf(type) !== -1) {
+        this.$alert(this.$t(`error.${type}`), this.$t('error.error'), {
+          confirmButtonText: this.$t('ok'),
+          callback: action => {
+            this.fullscreenLoading = false
+          }
+        })
+      } else {
+        this.$alert(this.$t('success.fileSaved'), this.$t('success.success'), {
+          confirmButtonText: this.$t('ok'),
+          callback: action => {
+            this.fullscreenLoading = false
+          }
+        })
       }
     },
     pathSave () {
@@ -698,20 +716,6 @@ export default {
     box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
   }
-
-  deep() .el-input__inner {
-    background: #f4c7c2;
-    border: none;
-    height: 40px;
-
-    &::-webkit-input-placeholder {
-      color: #606266;
-    }
-  }
-
-  deep() .el-select .el-input .el-select__caret {
-    color: #606266;
-  }
 }
 
 .content_box {
@@ -743,22 +747,6 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
-
-    deep() .el-input__inner {
-      background: transparent;
-      border: none;
-      color: #fff;
-      border-bottom: 1px solid #fff;
-      border-radius: 0;
-
-      &::-webkit-input-placeholder {
-        color: #fff;
-      }
-    }
-
-    deep() .el-select .el-input .el-select__caret {
-      color: #fff;
-    }
 
     .line2 {
       background-color: #fff;
@@ -821,6 +809,44 @@ export default {
     .bgfab97d {
       background: #fab97d;
       margin-right: 20px;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.btn_box {
+  .el-input__inner {
+    background: #f4c7c2;
+    border: none;
+    height: 40px;
+
+    &::-webkit-input-placeholder {
+      color: #606266;
+    }
+  }
+
+  .el-select .el-input .el-select__caret {
+    color: #606266;
+  }
+}
+
+.content_box {
+  .job_info {
+    .el-input__inner {
+      background: transparent;
+      border: none;
+      color: #fff;
+      border-bottom: 1px solid #fff;
+      border-radius: 0;
+
+      &::-webkit-input-placeholder {
+        color: #fff;
+      }
+    }
+
+    .el-select .el-input .el-select__caret {
+      color: #fff;
     }
   }
 }

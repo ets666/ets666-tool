@@ -74,9 +74,9 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     frame: true,
     width: 1220,
-    height: 650,
+    height: 680,
     minWidth: 1220,
-    minHeight: 650,
+    minHeight: 680,
     center: true,
     resizable: true,
     show: false,
@@ -109,7 +109,7 @@ function createWindow () {
   })
 
   const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
+  Menu.setApplicationMenu(null)
 
   if (platform === 'darwin') {
     mainWindow.excludedFromShownWindowsMenu = true
