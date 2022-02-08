@@ -3,10 +3,11 @@ const { app, Menu, BrowserWindow, dialog } = require('electron')
 const path = require('path')
 const info = require('../package.json')
 const process = require('process')
-const { ipcOn, fileOn } = require('./utils')
+const { ipcOn, fileOn, update } = require('./utils')
 
 ipcOn()
 fileOn()
+update()
 // 平台判定
 const platform = require('os').platform()
 const isMac = platform === 'darwin'
@@ -109,6 +110,7 @@ function createWindow () {
   })
 
   const menu = Menu.buildFromTemplate(template)
+  // Menu.setApplicationMenu(menu)
   Menu.setApplicationMenu(null)
 
   if (platform === 'darwin') {

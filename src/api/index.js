@@ -6,3 +6,10 @@ export function randomJobs () {
     method: 'get'
   })
 }
+
+export function release () {
+  return request({
+    url: 'https://api.github.com/repos/ets666/ets666-tool/releases/latest',
+    method: 'get'
+  })
+}

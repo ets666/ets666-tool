@@ -574,6 +574,25 @@ const Utils = {
       // event.reply('selectedDir', result.filePaths[0])
       return result.filePaths[0]
     })
+  },
+  update: () => {
+    ipcMain.on('updateMsg', async (event) => {
+      const downloadUrl = 'https://github.com/ets666/ets666-tool/releases/latest'
+      dialog.showMessageBox({
+        type: 'info',
+        title: 'New Version Available',
+        buttons: ['Yes', 'No'],
+        message: 'A new version has been released. Do you want to download it?',
+        checkboxLabel: 'Don\'t remind me again',
+        checkboxChecked: false
+      }).then(res => {
+        const { response, checkboxChecked } = res
+        if (response === 0) { // if selected yes
+          shell.openExternal(downloadUrl)
+        }
+        store.set('showUpdate', !checkboxChecked)
+      })
+    })
   }
 }
 module.exports = Utils
