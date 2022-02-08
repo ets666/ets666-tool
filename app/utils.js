@@ -4,7 +4,7 @@ const { app, dialog, ipcMain, shell } = require('electron')
 const Store = require('electron-store')
 const store = new Store()
 const info = require('../package.json')
-const { readFile, readdir, access, constants, stat, statSync } = require('fs')
+const { readFile, readFileSync, readdir, access, constants, stat, statSync } = require('fs')
 const path = require('path')
 const platform = require('os').platform()
 const isMac = platform === 'darwin'
@@ -69,6 +69,21 @@ const fileAccess = (path, constants) => {
       resolve(1)
     })
   })
+}
+
+// read info.sii 'name' vale
+const readInfoName = (infoSiiPath) => {
+  const data = readFileSync(infoSiiPath, 'utf8')
+  const reg = / name: (.*)/
+  let name = reg.exec(data)[1].trim()
+  if (name.startsWith('"')) {
+    name = escape(name.substring(1, name.length - 1))
+    name = name.replace(/%5Cx/gm, '%')
+    name = name.replace(/%5C/gm, '')
+    return decodeURIComponent(name)
+  } else {
+    return name || ''
+  }
 }
 
 const Utils = {
@@ -138,13 +153,17 @@ const Utils = {
         const code = await fileAccess(infoSiiPath, constants.F_OK)
         if (code === 1) {
           // 解码
-          const cmdStr = `${siiPath} "${infoSiiPath}"`
+          const cmdStr = `"${siiPath}" "${infoSiiPath}"`
           try {
             // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-            const { stdout, stderr } = await exec(cmdStr, { cwd: cwd })
-            return { stdout, stderr }
+            await exec(cmdStr, { cwd: cwd })
+            return readInfoName(infoSiiPath)
           } catch (error) {
-            return 'decryptFailed'
+            if (error.code === 1) {
+              return readInfoName(infoSiiPath)
+            } else {
+              return 'decryptFailed'
+            }
           }
         }
       } catch (error) {

@@ -24,17 +24,20 @@ export function hex2utf8 (str) {
   return buf.toString('utf8')
 }
 
-export function errCatch (type) {
+export function errCatch (type, info) {
   let result = true
   switch (type) {
     case 'invalidPath':
-      ElMessage.error(i18n.global.t('error.invalidPath'))
+      ElMessage.error(`${info} ${i18n.global.t('error.invalidPath')}`)
       break
     case 'fileNotExist':
-      ElMessage.error(i18n.global.t('error.fileNotExist'))
+      ElMessage.error(`${info} ${i18n.global.t('error.fileNotExist')}`)
       break
     case 'saveNotFound':
-      ElMessage.error(i18n.global.t('error.saveNotFound'))
+      ElMessage.error(`${info} ${i18n.global.t('error.saveNotFound')}`)
+      break
+    case 'decryptFailed':
+      ElMessage.error(`${info} ${i18n.global.t('error.decryptFailed')}`)
       break
     default:
       result = false

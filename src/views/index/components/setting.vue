@@ -467,12 +467,14 @@ export default {
             value: element,
             label: element
           }
-          const dir = await ipc.invoke('SiiDecryptInfo', `${this.savePath}/profiles/${path}/save/${element}`)
-          console.log(dir)
+          const name = await ipc.invoke('SiiDecryptInfo', `${this.savePath}/profiles/${path}/save/${element}`)
+          if (!errCatch(name, 'info.sii') && name) {
+            obj.label = name
+          }
           this.saveOptions.push(obj)
         })
       }
-      // this.reSet()
+      this.reSet()
     },
     reSet () {
       this.setting = {
