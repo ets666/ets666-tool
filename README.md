@@ -31,6 +31,7 @@ Windows x64
 ## Credits
 * UI design: [Mingran7](https://truckersmp.com/user/2683384)
 * Turkish Translation: [DoruqTV](https://www.youtube.com/channel/UCVg5Qk_O5fRY8GNKbFdK_Tg)
+* German Translation: [InfoBlock](https://infoblock.github.io/Website/)
 
 ## License
 [LICENSE](LICENSE)
