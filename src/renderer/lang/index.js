@@ -4,10 +4,12 @@ import elementEnLocale from 'element-ui/lib/locale/lang/en' // element-ui lang
 import elementTrLocale from 'element-ui/lib/locale/lang/tr-TR' // element-ui lang
 import elementZhSLocale from 'element-ui/lib/locale/lang/zh-CN' // element-ui lang
 import elementZhTLocale from 'element-ui/lib/locale/lang/zh-TW' // element-ui lang
+import elementDeLocale from 'element-ui/lib/locale/lang/de' // element-ui lang
 import enLocale from './en'
 import trLocale from './tr-TR'
 import zhSLocale from './zh-CN'
 import zhTLocale from './zh-TW'
+import deLocale from './de'
 
 Vue.use(VueI18n)
 let language = navigator.language
@@ -40,6 +42,10 @@ const messages = {
   'zh-SG': {
     ...zhSLocale,
     ...elementZhSLocale
+  },
+  'de': {
+    ...deLocale,
+    ...elementDeLocale
   }
 }
 
