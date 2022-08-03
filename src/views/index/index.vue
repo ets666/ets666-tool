@@ -80,7 +80,9 @@ export default {
         if (!errCatch(dir)) {
           this.savePath = this.paths.path
           if (this.savePath) {
-            this.$refs.setting.init()
+            this.$nextTick(() => {
+              this.$refs.setting.init()
+            })
           }
         } else {
           this.savePath = ''
@@ -90,7 +92,9 @@ export default {
         if (!errCatch(dir)) {
           this.savePath = this.paths.aPath
           if (this.savePath) {
-            this.$refs.setting.init()
+            this.$nextTick(() => {
+              this.$refs.setting.init()
+            })
           }
         } else {
           this.savePath = ''
