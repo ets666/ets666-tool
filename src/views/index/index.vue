@@ -12,6 +12,7 @@ import { errCatch } from '@/utils/index'
 const ipc = window.ipc
 
 export default {
+  name: 'IndexItem',
   components: {
     SelectEuroPath,
     Setting

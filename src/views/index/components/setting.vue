@@ -74,7 +74,7 @@
     </el-aside>
     <el-main style="padding: 10px 18px; user-select: none">
       <div class="content_box w">
-        <div class="job_box">
+        <div v-show="pathType === 'ETS2'" class="job_box">
           <div class="shadow_box">
             <div class="job_offer">
               <div class="job_info">
@@ -364,6 +364,7 @@ import { randomJobs } from '@/api/index'
 const ipc = window.ipc
 
 export default {
+  name: 'SettingItem',
   components: {
     selectPath
   },
@@ -433,19 +434,21 @@ export default {
         })
       }
       // 获取随机Job
-      const res = await randomJobs()
-      if (res) {
-        this.severJobInfo = res
-        this.jobInfo = res[0]
-        this.tody = this.utcDiff(res[0].assembly_time)
-        res.forEach((element) => {
-          const obj = {
-            value: element.assembly_time,
-            label: this.utcDiff(element.assembly_time)
-          }
-          this.timeOption.push(obj)
-        })
-        this.setLanguage()
+      if (this.pathType === 'ETS2') {
+        const res = await randomJobs()
+        if (res) {
+          this.severJobInfo = res
+          this.jobInfo = res[0]
+          this.tody = this.utcDiff(res[0].assembly_time)
+          res.forEach((element) => {
+            const obj = {
+              value: element.assembly_time,
+              label: this.utcDiff(element.assembly_time)
+            }
+            this.timeOption.push(obj)
+          })
+          this.setLanguage()
+        }
       }
     },
     utcDiff (serverTime) {
@@ -486,7 +489,7 @@ export default {
       if (file === 'invalidPath') this.dialogTableVisible = true
       if (!errCatch(file)) {
         file.forEach(async (element) => {
-          const data = ''
+          // const data = ''
           const obj = {
             value: element,
             label: element
@@ -619,7 +622,32 @@ export default {
     },
     pathTypeChange (type) {
       this.pathType = type
+      this.reSetAll()
       this.$emit('pathTypeChange', type)
+    },
+    reSetAll () {
+      this.job = {
+        moveToCargo: false,
+        syncJob: false
+      }
+      this.setting = {
+        money: false,
+        level: false,
+        skills: false,
+        city: false,
+        garage: false,
+        dealer: false,
+        damage: false,
+        oil: false
+      }
+      this.tody = ''
+      this.timeOption = []
+      this.profile = ''
+      this.save = ''
+      this.profileOptions = []
+      this.saveOptions = []
+      this.severJobInfo = []
+      this.jobInfo = {}
     }
   }
 }
