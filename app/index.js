@@ -20,9 +20,9 @@ let mainWindow
 // autoUpdater.autoDownload = false
 
 function createWindow () {
-  const clearObj = {
-    storages: ['appcache', 'filesystem', 'indexdb', 'localstorage', 'shadercache', 'websql', 'serviceworkers', 'cachestorage']
-  }
+  // const clearObj = {
+  //   storages: ['appcache', 'filesystem', 'indexdb', 'localstorage', 'shadercache', 'websql', 'serviceworkers', 'cachestorage']
+  // }
   const template = [
     ...(isMac ? [{
       label: app.name,
@@ -75,9 +75,9 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     frame: true,
     width: 1220,
-    height: 680,
+    height: 700,
     minWidth: 1220,
-    minHeight: 680,
+    minHeight: 700,
     center: true,
     resizable: true,
     show: false,

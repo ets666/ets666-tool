@@ -691,7 +691,7 @@ export default {
 }
 
 .check {
-  background: #efe9e2;
+  background: #ededed;
   border-radius: 10px;
   width: 20px;
   height: 20px;
@@ -722,7 +722,7 @@ export default {
 }
 
 .aside {
-  background: #ef5350;
+  background: #1d4e89;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -783,7 +783,7 @@ export default {
     text-align: center;
     border-radius: 5px;
     color: #fff;
-    background: #dd7262;
+    background: #4a71a0;
     font-size: 21px;
     box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
   }
@@ -791,10 +791,24 @@ export default {
     box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
   }
+
+  /deep/ .el-input__inner {
+    background: #dbdbdb;
+    border: none;
+    height: 40px;
+
+    &::-webkit-input-placeholder {
+      color: #606266;
+    }
+  }
+
+  /deep/ .el-select .el-input .el-select__caret {
+    color: #606266;
+  }
 }
 
 .content_box {
-  background: #efe9e2;
+  background: #ededed;
   border-radius: 5px;
   display: inline-block;
   color: #fff;
@@ -810,7 +824,7 @@ export default {
   }
 
   .job_offer {
-    background: #dd7262;
+    background: #4a71a0;
     height: 70px;
     padding: 0 20px;
     display: flex;
@@ -823,92 +837,7 @@ export default {
     flex-direction: row;
     align-items: center;
 
-    .line2 {
-      background-color: #fff;
-      width: 1px;
-      height: 35px;
-      margin: 0 10px;
-    }
-  }
-
-  .job_check_box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .job_bg {
-      background: #e99386;
-    }
-  }
-
-  .job_table {
-    background: #f5dfcb;
-    color: #dd7262;
-    font-size: 21px;
-    font-weight: bold;
-
-    .bgf8d2af {
-      background: #f8d2af;
-    }
-
-    .title {
-      text-align: center;
-      border-right: 1px solid #fff;
-    }
-  }
-
-  .setting_box {
-    padding: 10px;
-
-    .setting_title {
-      background: #dd7262;
-      height: 40px;
-      padding: 0 20px;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-    }
-
-    .setting_table {
-      background: #f5dfcb;
-      height: 180px;
-    }
-
-    .setting_check_box {
-      padding: 25px 30px;
-      display: flex;
-      flex-direction: row;
-    }
-
-    .bgfab97d {
-      background: #fab97d;
-      margin-right: 20px;
-    }
-  }
-}
-</style>
-
-<style lang="scss">
-.btn_box {
-  .el-input__inner {
-    background: #f4c7c2;
-    border: none;
-    height: 40px;
-
-    &::-webkit-input-placeholder {
-      color: #606266;
-    }
-  }
-
-  .el-select .el-input .el-select__caret {
-    color: #606266;
-  }
-}
-
-.content_box {
-  .job_info {
-    .el-input__inner {
+    /deep/ .el-input__inner {
       background: transparent;
       border: none;
       color: #fff;
@@ -920,9 +849,72 @@ export default {
       }
     }
 
-    .el-select .el-input .el-select__caret {
+    /deep/ .el-select .el-input .el-select__caret {
       color: #fff;
     }
+
+    .line2 {
+      background-color: #fff;
+      width: 1px;
+      height: 35px;
+      margin: 0 10px;
+    }
   }
-}
+
+    .job_check_box {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .job_bg {
+        background: #6e8db3;
+      }
+    }
+
+    .job_table {
+      background: #ededed;
+      color: #4a71a0;
+      font-size: 21px;
+      font-weight: bold;
+
+      .bgf8d2af {
+        background: #dbdbdb;
+      }
+
+      .title {
+        text-align: center;
+        border-right: 1px solid #fff;
+      }
+    }
+
+  .setting_box {
+      padding: 10px;
+
+      .setting_title {
+        background: #4a71a0;
+        height: 40px;
+        padding: 0 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .setting_table {
+        background: #dbdbdb;
+        height: 180px;
+      }
+
+      .setting_check_box {
+        padding: 25px 30px;
+        display: flex;
+        flex-direction: row;
+      }
+
+      .bgfab97d {
+        background: #6e8db3;
+        margin-right: 20px;
+      }
+    }
+  }
 </style>
