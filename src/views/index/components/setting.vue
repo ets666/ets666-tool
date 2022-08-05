@@ -658,9 +658,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$blue:#014f86;
+$blue:#1d4e89;
 $light-blue:#2a6f97;
-$gary:#7d8597;
+$grey:#7d8597;
 $bg: #dbdbdb;
 $bg2: #ededed;
 
@@ -808,12 +808,12 @@ $bg2: #ededed;
     height: 40px;
 
     &::-webkit-input-placeholder {
-      color: $gary;
+      color: $grey;
     }
   }
 
   /deep/ .el-select .el-input .el-select__caret {
-    color: $gary;
+    color: $grey;
   }
 }
 
