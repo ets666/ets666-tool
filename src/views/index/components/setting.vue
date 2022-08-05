@@ -109,7 +109,7 @@
                     ></i>
                   </div>
                   <div class="ml10">
-                    {{ $t("syncJob") }}
+                    {{ $t("syncJob")}}
                   </div>
                 </div>
                 <div
@@ -138,7 +138,8 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18nCustom">{{ i18nCustom.server }}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.server}}</span>
+                    <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
               </el-row>
@@ -152,6 +153,7 @@
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px">
                     <span v-if="i18nCustom">{{ i18nCustom.departure_city }}</span>
+                    <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
               </el-row>
@@ -165,6 +167,7 @@
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
                     <span v-if="i18nCustom">{{ i18nCustom.departure_company }}</span>
+                    <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
               </el-row>
@@ -177,6 +180,7 @@
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px">
                     <span v-if="i18nCustom">{{ i18nCustom.destination_city }}</span>
+                    <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
               </el-row>
@@ -189,6 +193,7 @@
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
                     <span v-if="i18nCustom">{{ i18nCustom.destination_company }}</span>
+                    <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
               </el-row>
@@ -202,6 +207,7 @@
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px">
                     <span v-if="i18nCustom">{{ i18nCustom.cargo }}</span>
+                    <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
               </el-row>
@@ -218,11 +224,9 @@
                         jobInfo.shortest_distance_km + jobInfo.ferry_distance_km
                       }}
                       km
-                      <span v-if="jobInfo.ferry_distance_km"
-                        >({{ jobInfo.ferry_distance_km }} km
-                        {{ $t("ferry") }})</span
-                      >
+                      <span v-if="jobInfo.ferry_distance_km" >({{ jobInfo.ferry_distance_km }} km {{ $t("ferry") }})</span >
                     </template>
+                    <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
               </el-row>
@@ -654,6 +658,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+$blue:#014f86;
+$light-blue:#2a6f97;
+$gary:#7d8597;
+$bg: #dbdbdb;
+$bg2: #ededed;
+
 .w {
   width: 100%;
 }
@@ -691,7 +701,7 @@ export default {
 }
 
 .check {
-  background: #ededed;
+  background: $bg2;
   border-radius: 10px;
   width: 20px;
   height: 20px;
@@ -722,7 +732,7 @@ export default {
 }
 
 .aside {
-  background: #1d4e89;
+  background: $blue;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -783,7 +793,7 @@ export default {
     text-align: center;
     border-radius: 5px;
     color: #fff;
-    background: #4a71a0;
+    background: $light-blue;
     font-size: 21px;
     box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
   }
@@ -793,22 +803,22 @@ export default {
   }
 
   /deep/ .el-input__inner {
-    background: #dbdbdb;
+    background: $bg;
     border: none;
     height: 40px;
 
     &::-webkit-input-placeholder {
-      color: #606266;
+      color: $gary;
     }
   }
 
   /deep/ .el-select .el-input .el-select__caret {
-    color: #606266;
+    color: $gary;
   }
 }
 
 .content_box {
-  background: #ededed;
+  background: $bg2;
   border-radius: 5px;
   display: inline-block;
   color: #fff;
@@ -824,7 +834,7 @@ export default {
   }
 
   .job_offer {
-    background: #4a71a0;
+    background: $light-blue;
     height: 70px;
     padding: 0 20px;
     display: flex;
@@ -867,18 +877,18 @@ export default {
       align-items: center;
 
       .job_bg {
-        background: #6e8db3;
+        background: $light-blue;
       }
     }
 
     .job_table {
-      background: #ededed;
-      color: #4a71a0;
+      background: $bg2;
+      color: $light-blue;
       font-size: 21px;
       font-weight: bold;
 
       .bgf8d2af {
-        background: #dbdbdb;
+        background: $bg;
       }
 
       .title {
@@ -891,7 +901,7 @@ export default {
       padding: 10px;
 
       .setting_title {
-        background: #4a71a0;
+        background: $light-blue;
         height: 40px;
         padding: 0 20px;
         display: flex;
@@ -901,7 +911,7 @@ export default {
       }
 
       .setting_table {
-        background: #dbdbdb;
+        background: $bg;
         height: 180px;
       }
 
@@ -912,7 +922,7 @@ export default {
       }
 
       .bgfab97d {
-        background: #6e8db3;
+        background: $light-blue;
         margin-right: 20px;
       }
     }
