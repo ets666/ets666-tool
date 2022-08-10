@@ -605,7 +605,7 @@ export default {
 }
 
 .check {
-  background: #efe9e2;
+  background: #ededed;
   border-radius: 10px;
   width: 20px;
   height: 20px;
@@ -636,7 +636,7 @@ export default {
 }
 
 .aside {
-  background: #ef5350;
+  background: #1d4e89;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -680,7 +680,7 @@ export default {
       text-align: center;
       border-radius: 5px;
       color: #fff;
-      background: #dd7262;
+      background: #4a71a0;
       font-size: 21px;
       box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
     }
@@ -690,7 +690,7 @@ export default {
     }
 
     /deep/ .el-input__inner {
-      background: #f4c7c2;
+      background: #dbdbdb;
       border: none;
       height: 40px;
 
@@ -705,7 +705,7 @@ export default {
   }
 
   .content_box {
-    background: #efe9e2;
+    background: #ededed;
     border-radius: 5px;
     display: inline-block;
     color: #fff;
@@ -721,7 +721,7 @@ export default {
     }
 
     .job_offer {
-      background: #dd7262;
+      background: #4a71a0;
       height: 70px;
       padding: 0 20px;
       display: flex;
@@ -764,18 +764,18 @@ export default {
       align-items: center;
 
       .job_bg {
-        background: #e99386;
+        background: #6e8db3;
       }
     }
 
     .job_table {
-      background: #f5dfcb;
-      color: #dd7262;
+      background: #ededed;
+      color: #4a71a0;
       font-size: 21px;
       font-weight: bold;
 
       .bgf8d2af {
-        background: #f8d2af;
+        background: #dbdbdb;
       }
 
       .title {
@@ -788,7 +788,7 @@ export default {
       padding: 10px;
 
       .setting_title {
-        background: #dd7262;
+        background: #4a71a0;
         height: 40px;
         padding: 0 20px;
         display: flex;
@@ -798,7 +798,7 @@ export default {
       }
 
       .setting_table {
-        background: #f5dfcb;
+        background: #dbdbdb;
         height: 180px;
       }
 
@@ -809,7 +809,7 @@ export default {
       }
 
       .bgfab97d {
-        background: #fab97d;
+        background: #6e8db3;
         margin-right: 20px;
       }
     }

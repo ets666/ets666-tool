@@ -2,7 +2,7 @@
   "name": "ets666",
   "version": "0.0.8",
   "author": "rsl140 <rsl140@qq.com>",
-  "description": "ETS666 SaveEdit & JobSync Tool",
+  "description": "ETS666 Tool",
   "license": "GPL-3.0-or-later",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "ETS666 SaveEdit & JobSync Tool",
+    "productName": "ETS666 Tool",
     "appId": "com.ets666.app",
     "copyright": "Copyright © ETS666",
     "directories": {
