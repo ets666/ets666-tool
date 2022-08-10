@@ -1,4 +1,4 @@
-# ETS666 SaveEdit & JobSync Tool
+# ETS666 Tool
 A tool for editing save files and syncing jobs on Euro Truck Simulator 2.
 
 ## OS
