@@ -20,7 +20,7 @@ Windows x64
 * Move truck to the starting place
 
 ## Compability
-1.45 & ProMods Europe + Middle East 2.62
+1.46 & ProMods Europe + Middle East 2.63
 
 ## How to Use
 * Preparation: Start the game --> Choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
