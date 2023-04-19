@@ -17,10 +17,10 @@ Windows x64
 * Fix all vehicles and trailers
 * Fill up all vehicles
 * Choose a listed job to sync
-* Move truck to the starting place
+* Teleport to the starting place
 
 ## Compability
-1.46 & ProMods Europe + Middle East 2.63
+1.47
 
 ## How to Use
 * Preparation: Start the game --> Choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
