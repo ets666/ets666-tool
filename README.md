@@ -20,7 +20,7 @@ Windows x64
 * Teleport to the starting place
 
 ## Compability
-1.47
+1.47 & ProMods 2.65 + ME + TGS
 
 ## How to Use
 * Preparation: Start the game --> Choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
