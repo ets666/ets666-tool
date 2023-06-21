@@ -19,6 +19,14 @@ const messages = {
     ...enLocale,
     ...elementEnLocale
   },
+  'es-419': {
+    ...esLocale,
+    ...elementEsLocale
+  },
+  'es-ES': {
+    ...esLocale,
+    ...elementEsLocale
+  },
   'es': {
     ...esLocale,
     ...elementEsLocale

@@ -1,7 +1,7 @@
 {
   "name": "ets666",
-  "version": "0.0.9",
-  "author": "rsl140 <rsl140@qq.com>",
+  "version": "0.0.10",
+  "author": "ETS666 <sunwinbus@ets666.com>",
   "description": "ETS666 Tool",
   "license": "GPL-3.0-or-later",
   "main": "./dist/electron/main.js",
