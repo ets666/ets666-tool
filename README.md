@@ -30,6 +30,7 @@ Windows x64
 
 ## Credits
 * UI design: [Mingran7](https://truckersmp.com/user/2683384)
+* Spanish Translation: [Jordan.](https://truckersmp.com/user/182824)
 * Turkish Translation: [DoruqTV](https://www.youtube.com/channel/UCVg5Qk_O5fRY8GNKbFdK_Tg)
 
 ## License
