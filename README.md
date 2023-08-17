@@ -20,7 +20,7 @@ Windows x64
 * Teleport to the starting place
 
 ## Compability
-1.47 & ProMods 2.65 + ME + TGS
+1.48
 
 ## How to Use
 * Preparation: Start the game --> Choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
@@ -32,6 +32,9 @@ Windows x64
 * UI design: [Mingran7](https://truckersmp.com/user/2683384)
 * Spanish Translation: [Jordan.](https://truckersmp.com/user/182824)
 * Turkish Translation: [DoruqTV](https://www.youtube.com/channel/UCVg5Qk_O5fRY8GNKbFdK_Tg)
+* Korean Translation: [IU - KOR](https://truckersmp.com/user/3622448)
+* Japanese Translation: [Lineage](https://truckersmp.com/user/3337615)
+* Italian Translation: [Ricky {19}](https://truckersmp.com/user/2100102)
 
 ## License
 [LICENSE](LICENSE)

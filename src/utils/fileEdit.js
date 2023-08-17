@@ -230,6 +230,10 @@ export function editGameSii (dir, filedirname, info, callback, errorcallback) {
         exper.push(index)
       } else if (setting.skills && element.startsWith(' adr:')) {
         skills.push(index)
+      } else if (setting.skills && element.startsWith(' screen_access_list:')) {
+        arrFile[fileIndex] = element.replace(/screen_access_list: [^,\n]+/, 'screen_access_list: 0')
+      } else if (setting.skills && element.startsWith(' screen_access_list[')) {
+        arrFile[fileIndex] = ''
       } else if (setting.damage && element.startsWith(' trailer_body_wear:')) {
         arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
       } else if (setting.damage && element.startsWith(' chassis_wear:')) {
