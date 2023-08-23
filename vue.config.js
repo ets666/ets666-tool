@@ -19,6 +19,13 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
+    },
+    proxy: {
+      // 配置代理，解决跨域请求后台数据的问题
+      '/api': {
+        target: 'https://ets666.com', // 后台接口
+        changeOrigin: true
+      }
     }
   },
   configureWebpack: {

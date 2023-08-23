@@ -470,8 +470,8 @@ const Utils = {
 
     ipcMain.on('about', (event) => {
       dialog.showMessageBox({
-        title: 'ETS666 SaveEdit & JobSync Tool',
-        message: 'ETS666 SaveEdit & JobSync Tool',
+        title: 'ETS666 Tool',
+        message: 'ETS666 Tool',
         detail: `Version: ${info.version}\nAuthor: xiaosi & sunwinbus\nUI Design: Mingran7\nhttps://github.com/ets666/ets666-tool`
       })
     })

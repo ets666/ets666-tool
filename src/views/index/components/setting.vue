@@ -72,7 +72,7 @@
                   <i class="iconfont iconhb-addrss f21"></i>
                   <div class="f21 fb ml10">{{ $t("job") }}</div>
                   <div class="line2">&nbsp;</div>
-                  <el-select v-model="tody" size="large" popper-class="select-ets" style="width: 200px"
+                  <el-select v-model="tody" size="large" popper-class="select-ets" style="width: 240px"
                     @change="changeTime">
                     <el-option v-for="item in timeOption" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
@@ -691,7 +691,7 @@ $black: #000;
 
   .active {
     background-color: $blue;
-    margin: 5px 0 0 0;
+    // margin: 5px 0 0 0;
     padding: 0;
     border-radius: 10px 10px 0 0;
   }
@@ -871,8 +871,8 @@ $black: #000;
     /deep/ .el-select .el-input__wrapper {
       background: transparent;
       box-shadow: none !important;
-      border-bottom: 1px solid $white;
       border: none;
+      border-bottom: 1px solid $white;
       border-radius: 0;
 
       &::-webkit-input-placeholder {
