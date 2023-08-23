@@ -611,7 +611,7 @@ $grey: #7d8597;
 $bg: #dbdbdb;
 $bg2: #ededed;
 $white: #fff;
-$black: #fff;
+$black: #000;
 
 .w {
   width: 100%;
