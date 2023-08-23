@@ -35,7 +35,10 @@ export default {
       const aPath = await ipc.invoke('getStore', 'aPath')
       this.paths.path = path
       this.paths.aPath = aPath
+      // 判定是否显示首页
+      // 依据是否有欧卡或者美卡其一 且地址不为空的情况
       if (path || aPath) {
+        // 优先选择欧卡地址进入首页
         if (path) {
           const dir = await ipc.invoke('mapDirName', { dir: path, filedirname: '/profiles' })
           if (!errCatch(dir)) {

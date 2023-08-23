@@ -1,79 +1,71 @@
 <template>
   <el-container class="h" v-loading="fullscreenLoading">
-    <el-aside width="320px" class="aside">
-      <div class="icon_box">
-        <i class="iconfont iconlogo-640 ets666_icon"></i>
-        <div class="websize cursor_pointer" @click="goToWeb">ETS666.COM</div>
-        <div class="line"></div>
-      </div>
-      <div class="btn_box">
-        <div class="btn mb10 path_btn">
-          <!-- <i class="iconfont iconsucai" style="font-size: 18px"></i> -->
-          <!-- {{ $t("select") }} -->
-          <div class="path_btn__item" @click="pathTypeChange('ETS2')">
-            <div class="check">
-              <i
-                v-show="pathType === 'ETS2'"
-                class="iconfont iconfuxuankuanggou check_active"
-              ></i>
-            </div>
-            <div class="ml10">
-              ETS2
-            </div>
+    <el-aside width="312px">
+      <el-container class="h">
+        <el-aside width="72px" class="nav">
+          <div class="nav-box" @click="pathTypeChange('ETS2')">
+            <div v-show="pathType === 'ETS2'" class="active" />
+            <div class="img">ETS2</div>
           </div>
-          <div class="path_btn__item ml10" @click="pathTypeChange('ATS')">
-            <div class="check">
-              <i
-                v-show="pathType === 'ATS'"
-                class="iconfont iconfuxuankuanggou check_active"
-              ></i>
-            </div>
-            <div class="ml10">
-              ATS
-            </div>
+          <div class="nav-box" @click="pathTypeChange('ATS')">
+            <div v-show="pathType === 'ATS'" class="active" />
+            <div class="img">ATS</div>
           </div>
-        </div>
-        <div>
-          <el-select
-            v-model="profile"
-            size="large"
-            :placeholder="$t('selectProfile')"
-            class="mb10 w select_shadow"
-            @change="changeProfile"
-          >
-            <el-option
-              v-for="(item, index) in profileOptions"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-          <el-select
-            v-model="save"
-            size="large"
-            :placeholder="$t('selectSave')"
-            class="mb10 w select_shadow"
-            @change="reSet"
-          >
-            <el-option
-              v-for="item in saveOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="btn mb10 cursor_pointer" @click="saveSetting">
-          <i class="iconfont iconbaocun"></i>
-          {{ $t("save") }}
-        </div>
-        <div class="copyright cursor_pointer" @click="about">&copy; ETS666</div>
-      </div>
+          <div class="nav-box" @click="pathTypeChange('666')">
+            <div v-show="pathType === '666'" class="active" />
+            <img src="../../../assets/logo.png" alt="">
+          </div>
+        </el-aside>
+        <el-main class="aside">
+          <div class="icon_box">
+            <i class="iconfont iconlogo-640 ets666_icon"></i>
+            <div class="websize cursor_pointer" @click="goToWeb('https://ets666.com/')">ETS666.COM</div>
+            <div class="line"></div>
+          </div>
+          <div class="btn_box">
+            <div class="btn mb10 path_btn">
+              <i class="iconfont iconsucai" style="font-size: 18px"></i>
+              {{ $t("select") }}
+              <!-- <div class="path_btn__item" @click="pathTypeChange('ETS2')">
+                <div class="check">
+                  <i v-show="pathType === 'ETS2'" class="iconfont iconfuxuankuanggou check_active"></i>
+                </div>
+                <div class="ml10">
+                  ETS2
+                </div>
+              </div>
+              <div class="path_btn__item ml10" @click="pathTypeChange('ATS')">
+                <div class="check">
+                  <i v-show="pathType === 'ATS'" class="iconfont iconfuxuankuanggou check_active"></i>
+                </div>
+                <div class="ml10">
+                  ATS
+                </div>
+              </div> -->
+            </div>
+            <div>
+              <el-select v-model="profile" size="large" :placeholder="$t('selectProfile')" class="mb10 w select_shadow"
+                @change="changeProfile">
+                <el-option v-for="(item, index) in profileOptions" :key="index" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+              <el-select v-model="save" size="large" :placeholder="$t('selectSave')" class="mb10 w select_shadow"
+                @change="reSet">
+                <el-option v-for="item in saveOptions" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+            <div class="btn mb10 cursor_pointer" @click="saveSetting">
+              <i class="iconfont iconbaocun"></i>
+              {{ $t("save") }}
+            </div>
+            <div class="copyright cursor_pointer" @click="about">&copy; ETS666</div>
+          </div>
+        </el-main>
+      </el-container>
     </el-aside>
     <el-main style="padding: 10px 18px; user-select: none">
-      <div class="content_box w">
+      <div v-show="['ETS2', 'ATS'].indexOf(pathType) !== -1" class="content_box w">
         <div v-show="pathType === 'ETS2'" class="job_box">
           <div class="shadow_box">
             <div class="job_offer">
@@ -81,46 +73,23 @@
                 <i class="iconfont iconhb-addrss f21"></i>
                 <div class="f21 fb ml10">{{ $t("job") }}</div>
                 <div class="line2">&nbsp;</div>
-                <el-select
-                  v-model="tody"
-                  size="large"
-                  style="width: 200px"
-                  @change="changeTime"
-                >
-                  <el-option
-                    v-for="item in timeOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
+                <el-select v-model="tody" size="large" style="width: 200px" @change="changeTime">
+                  <el-option v-for="item in timeOption" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </div>
               <div class="job_check_box">
-                <div
-                  class="check_btn job_bg"
-                  style="min-width: 100px"
-                  @click="clickBtn('syncJob')"
-                >
+                <div class="check_btn job_bg" style="min-width: 100px" @click="clickBtn('syncJob')">
                   <div class="check">
-                    <i
-                      v-show="job.syncJob"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="job.syncJob" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
-                    {{ $t("syncJob")}}
+                    {{ $t("syncJob") }}
                   </div>
                 </div>
-                <div
-                  class="check_btn job_bg ml10"
-                  @click="clickBtn('moveToCargo')"
-                >
+                <div class="check_btn job_bg ml10" @click="clickBtn('moveToCargo')">
                   <div class="check">
-                    <i
-                      v-show="job.moveToCargo"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="job.moveToCargo" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("moveCar") }}
@@ -138,7 +107,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18nCustom">{{ i18nCustom.server}}</span>
+                    <span v-if="i18nCustom">{{ i18nCustom.server }}</span>
                     <span v-else>&nbsp;</span>
                   </div>
                 </el-col>
@@ -224,7 +193,7 @@
                         jobInfo.shortest_distance_km + jobInfo.ferry_distance_km
                       }}
                       km
-                      <span v-if="jobInfo.ferry_distance_km" >({{ jobInfo.ferry_distance_km }} km {{ $t("ferry") }})</span >
+                      <span v-if="jobInfo.ferry_distance_km">({{ jobInfo.ferry_distance_km }} km {{ $t("ferry") }})</span>
                     </template>
                     <span v-else>&nbsp;</span>
                   </div>
@@ -246,10 +215,7 @@
               <div class="setting_check_box">
                 <div class="check_btn bgfab97d" @click="clickBtn('money')">
                   <div class="check">
-                    <i
-                      v-show="setting.money"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.money" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("money") }}
@@ -258,10 +224,7 @@
 
                 <div class="check_btn bgfab97d" @click="clickBtn('level')">
                   <div class="check">
-                    <i
-                      v-show="setting.level"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.level" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("level") }}
@@ -270,10 +233,7 @@
 
                 <div class="check_btn bgfab97d" @click="clickBtn('skills')">
                   <div class="check">
-                    <i
-                      v-show="setting.skills"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.skills" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("skills") }}
@@ -282,10 +242,7 @@
 
                 <div class="check_btn bgfab97d" @click="clickBtn('city')">
                   <div class="check">
-                    <i
-                      v-show="setting.city"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.city" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("city") }}
@@ -296,10 +253,7 @@
               <div class="setting_check_box">
                 <div class="check_btn bgfab97d" @click="clickBtn('garage')">
                   <div class="check">
-                    <i
-                      v-show="setting.garage"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.garage" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("garage") }}
@@ -308,10 +262,7 @@
 
                 <div class="check_btn bgfab97d" @click="clickBtn('dealer')">
                   <div class="check">
-                    <i
-                      v-show="setting.dealer"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.dealer" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("dealer") }}
@@ -320,10 +271,7 @@
 
                 <div class="check_btn bgfab97d" @click="clickBtn('damage')">
                   <div class="check">
-                    <i
-                      v-show="setting.damage"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.damage" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("damage") }}
@@ -332,10 +280,7 @@
 
                 <div class="check_btn bgfab97d" @click="clickBtn('oil')">
                   <div class="check">
-                    <i
-                      v-show="setting.oil"
-                      class="iconfont iconfuxuankuanggou check_active"
-                    ></i>
+                    <i v-show="setting.oil" class="iconfont iconfuxuankuanggou check_active"></i>
                   </div>
                   <div class="ml10">
                     {{ $t("oil") }}
@@ -346,14 +291,82 @@
           </div>
         </div>
       </div>
-      <el-dialog
-        :title="$t('selectPath')"
-        v-model="dialogTableVisible"
-        :width="'80%'"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :show-close="false"
-      >
+      <div v-show="pathType === '666'" class="content_box w">
+        <div class="job_box">
+          <div class="shadow_box">
+            <div class="job_offer">
+              <div class="job_info">
+                <div class="f21 fb ml10">ETS666 SaveEdit & JobSync Tool</div>
+              </div>
+            </div>
+
+            <div class="job_table">
+              <el-row>
+                <el-col :span="4">
+                  <div class="title bgf8d2af" style="padding: 10px 0">
+                    Version
+                  </div>
+                </el-col>
+                <el-col :span="20">
+                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                    <span>{{ infoPackage.version }}</span>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="4">
+                  <div class="title" style="padding: 10px 0">
+                    Author
+                  </div>
+                </el-col>
+                <el-col :span="20">
+                  <div style="padding: 10px 0 10px 20px">
+                    <span>xiaosi & sunwinbus</span>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="4">
+                  <div class="title bgf8d2af" style="padding: 10px 0">
+                    UI Design
+                  </div>
+                </el-col>
+                <el-col :span="20">
+                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                    <span>Mingran7</span>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="4">
+                  <div class="title" style="padding: 10px 0">
+                    Github
+                  </div>
+                </el-col>
+                <el-col :span="20" class="cursor_pointer">
+                  <div style="padding: 10px 0 10px 20px" @click="goToWeb('https://github.com/ets666/ets666-tool')">
+                    <span>https://github.com/ets666/ets666-tool</span>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="4">
+                  <div class="title bgf8d2af" style="padding: 10px 0">
+                    WebSite
+                  </div>
+                </el-col>
+                <el-col :span="20" class="cursor_pointer">
+                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af" @click="goToWeb('https://ets666.com')">
+                    <span>https://ets666.com</span>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+        </div>
+      </div>
+      <el-dialog :title="$t('selectPath')" v-model="dialogTableVisible" :width="'80%'" :close-on-click-modal="false"
+        :close-on-press-escape="false" :show-close="false">
         <selectPath v-if="dialogTableVisible" @pathSave="pathSave"></selectPath>
       </el-dialog>
     </el-main>
@@ -361,6 +374,7 @@
 </template>
 
 <script>
+import infoPackage from '../../../../package.json'
 import moment from 'moment'
 import selectPath from './select-euro-path'
 import { hex2utf8, errCatch } from '@/utils/index'
@@ -380,6 +394,7 @@ export default {
   },
   data () {
     return {
+      infoPackage,
       dialogTableVisible: false,
       tody: '',
       timeOption: [],
@@ -523,8 +538,8 @@ export default {
         syncJob: false
       }
     },
-    goToWeb () {
-      ipc.send('open-url', 'https://ets666.com/')
+    goToWeb (url) {
+      ipc.send('open-url', url)
     },
     about () {
       ipc.send('about')
@@ -658,18 +673,22 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$blue:#1d4e89;
-$light-blue:#2a6f97;
-$grey:#7d8597;
+$dark-blue: #0a3a75;
+$blue: #1d4e89;
+$light-blue: #2a6f97;
+$grey: #7d8597;
 $bg: #dbdbdb;
 $bg2: #ededed;
+$white: #fff;
 
 .w {
   width: 100%;
 }
+
 .h {
   height: 100%;
 }
+
 .cursor_pointer {
   cursor: pointer;
 }
@@ -677,6 +696,7 @@ $bg2: #ededed;
 .mb10 {
   margin-bottom: 10px;
 }
+
 .ml10 {
   margin-left: 10px;
 }
@@ -731,6 +751,58 @@ $bg2: #ededed;
   min-width: 160px;
 }
 
+.nav {
+  background-color: $dark-blue;
+  padding: 10px 0;
+  box-sizing: border-box;
+
+  .nav-box {
+    position: relative;
+    margin: 0 0 8px;
+    display: flex;
+    justify-content: center;
+    width: 72px;
+    cursor: pointer;
+
+    .active {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: ' ';
+        width: 4px;
+        height: 65%;
+        background-color: $white;
+        border-radius: 0 5px 5px 0;
+      }
+    }
+
+    img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .img {
+      width: 48px;
+      height: 48px;
+      background-color: $dark-blue;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: $white;
+    }
+  }
+}
+
 .aside {
   background: $blue;
   text-align: center;
@@ -761,7 +833,7 @@ $bg2: #ededed;
   }
 
   .ets666_icon {
-    font-size: 80px;
+    font-size: 70px;
     color: #fff;
   }
 }
@@ -797,6 +869,7 @@ $bg2: #ededed;
     font-size: 21px;
     box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
   }
+
   .select_shadow {
     box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
@@ -842,6 +915,7 @@ $bg2: #ededed;
     justify-content: space-between;
     align-items: center;
   }
+
   .job_info {
     display: flex;
     flex-direction: row;
@@ -871,60 +945,59 @@ $bg2: #ededed;
     }
   }
 
-    .job_check_box {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
+  .job_check_box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-      .job_bg {
-        background: $light-blue;
-      }
-    }
-
-    .job_table {
-      background: $bg2;
-      color: $light-blue;
-      font-size: 21px;
-      font-weight: bold;
-
-      .bgf8d2af {
-        background: $bg;
-      }
-
-      .title {
-        text-align: center;
-        border-right: 1px solid #fff;
-      }
-    }
-
-  .setting_box {
-      padding: 10px;
-
-      .setting_title {
-        background: $light-blue;
-        height: 40px;
-        padding: 0 20px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-      }
-
-      .setting_table {
-        background: $bg;
-        height: 180px;
-      }
-
-      .setting_check_box {
-        padding: 25px 30px;
-        display: flex;
-        flex-direction: row;
-      }
-
-      .bgfab97d {
-        background: $light-blue;
-        margin-right: 20px;
-      }
+    .job_bg {
+      background: $light-blue;
     }
   }
-</style>
+
+  .job_table {
+    background: $bg2;
+    color: $light-blue;
+    font-size: 21px;
+    font-weight: bold;
+
+    .bgf8d2af {
+      background: $bg;
+    }
+
+    .title {
+      text-align: center;
+      border-right: 1px solid #fff;
+    }
+  }
+
+  .setting_box {
+    padding: 10px;
+
+    .setting_title {
+      background: $light-blue;
+      height: 40px;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .setting_table {
+      background: $bg;
+      height: 180px;
+    }
+
+    .setting_check_box {
+      padding: 25px 30px;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .bgfab97d {
+      background: $light-blue;
+      margin-right: 20px;
+    }
+  }
+}</style>
