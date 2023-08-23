@@ -5,15 +5,14 @@
         <el-container class="h">
           <el-header height="50px" class="nav">
             <div class="nav-box" @click="pathTypeChange('ETS2')" :class="{ active: pathType === 'ETS2' }">
-              <div class="img"><i class="iconfont iconbaocun" style="margin-right: 10px;"></i>ETS2</div>
+              <div class="img"><i class="iconfont iconkache3" style="margin-right: 10px;"></i>ETS2</div>
             </div>
             <div class="nav-box" @click="pathTypeChange('ATS')" :class="{ active: pathType === 'ATS' }">
-              <div class="img"><i class="iconfont iconbaocun" style="margin-right: 10px;"></i>ATS</div>
+              <div class="img"><i class="iconfont iconhuoche" style="margin-right: 10px;"></i>ATS</div>
             </div>
-            <div class="nav-box" @click="pathTypeChange('666')" :class="{ active: pathType === '666' }">
-              <div class="img"><i class="iconfont iconbaocun" style="margin-right: 10px;"></i>ABOUT</div>
-              <!-- <img src="../../../assets/logo.png" alt=""> -->
-            </div>
+            <!-- <div class="nav-box" @click="pathTypeChange('666')" :class="{ active: pathType === '666' }">
+              <div class="img"><i class="iconfont iconguanyu1" style="margin-right: 10px;"></i>ABOUT</div>
+            </div> -->
           </el-header>
           <el-main class="aside">
             <div class="icon_box">
@@ -58,6 +57,7 @@
                 <i class="iconfont iconbaocun" style="margin-right: 5px;"></i>
                 {{ $t("save") }}
               </div>
+              <div class="copyright cursor_pointer" @click="about">&copy; ETS666</div>
             </div>
           </el-main>
         </el-container>
@@ -723,7 +723,7 @@ $black: #000;
     position: relative;
     display: flex;
     justify-content: center;
-    width: 32.333%;
+    width: 48%;
     cursor: pointer;
 
     img {

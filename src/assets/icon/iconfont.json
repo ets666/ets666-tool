@@ -1,0 +1,86 @@
+{
+  "id": "2076817",
+  "name": "ets666",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11542846",
+      "name": "关于",
+      "font_class": "guanyu1",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "8629965",
+      "name": "货车 (1)",
+      "font_class": "huoche",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "32416876",
+      "name": "卡车3",
+      "font_class": "kache3",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "17334041",
+      "name": "ets666",
+      "font_class": "logo-640",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "10103342",
+      "name": "fenxiang",
+      "font_class": "ico-share",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "3222914",
+      "name": "保存",
+      "font_class": "baocun",
+      "unicode": "e70b",
+      "unicode_decimal": 59147
+    },
+    {
+      "icon_id": "12985225",
+      "name": "下箭头",
+      "font_class": "arrow-left",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "1516387",
+      "name": "素材",
+      "font_class": "sucai",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "2583854",
+      "name": "复选框勾",
+      "font_class": "fuxuankuanggou",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "8488785",
+      "name": "定位",
+      "font_class": "hb-addrss",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "17272815",
+      "name": "ets666",
+      "font_class": "00000",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    }
+  ]
+}
