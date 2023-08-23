@@ -1,22 +1,19 @@
 <template>
-  <el-container class="h" v-loading="fullscreenLoading">
-    <el-aside width="312px">
+    <el-container class="h" v-loading="fullscreenLoading">
+      <el-header height="45px" class="nav">
+        <div class="nav-box" @click="pathTypeChange('ETS2')" :class="{active: pathType === 'ETS2'}">
+          <div class="img">ETS2</div>
+        </div>
+        <div class="nav-box" @click="pathTypeChange('ATS')" :class="{active: pathType === 'ATS'}">
+          <div class="img">ATS</div>
+        </div>
+        <div class="nav-box" @click="pathTypeChange('666')" :class="{active: pathType === '666'}">
+          <div class="img">ETS666</div>
+          <!-- <img src="../../../assets/logo.png" alt=""> -->
+        </div>
+      </el-header>
       <el-container class="h">
-        <el-aside width="72px" class="nav">
-          <div class="nav-box" @click="pathTypeChange('ETS2')">
-            <div v-show="pathType === 'ETS2'" class="active" />
-            <div class="img">ETS2</div>
-          </div>
-          <div class="nav-box" @click="pathTypeChange('ATS')">
-            <div v-show="pathType === 'ATS'" class="active" />
-            <div class="img">ATS</div>
-          </div>
-          <div class="nav-box" @click="pathTypeChange('666')">
-            <div v-show="pathType === '666'" class="active" />
-            <img src="../../../assets/logo.png" alt="">
-          </div>
-        </el-aside>
-        <el-main class="aside">
+        <el-aside width="340px" class="aside">
           <div class="icon_box">
             <i class="iconfont iconlogo-640 ets666_icon"></i>
             <div class="websize cursor_pointer" @click="goToWeb('https://ets666.com/')">ETS666.COM</div>
@@ -61,316 +58,316 @@
             </div>
             <div class="copyright cursor_pointer" @click="about">&copy; ETS666</div>
           </div>
+        </el-aside>
+        <el-main style="padding: 10px 18px; user-select: none">
+          <div v-show="['ETS2', 'ATS'].indexOf(pathType) !== -1" class="content_box w">
+            <div v-show="pathType === 'ETS2'" class="job_box">
+              <div class="shadow_box">
+                <div class="job_offer">
+                  <div class="job_info">
+                    <i class="iconfont iconhb-addrss f21"></i>
+                    <div class="f21 fb ml10">{{ $t("job") }}</div>
+                    <div class="line2">&nbsp;</div>
+                    <el-select v-model="tody" size="large" style="width: 200px" @change="changeTime">
+                      <el-option v-for="item in timeOption" :key="item.value" :label="item.label" :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </div>
+                  <div class="job_check_box">
+                    <div class="check_btn job_bg" style="min-width: 100px" @click="clickBtn('syncJob')">
+                      <div class="check">
+                        <i v-show="job.syncJob" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("syncJob") }}
+                      </div>
+                    </div>
+                    <div class="check_btn job_bg ml10" @click="clickBtn('moveToCargo')">
+                      <div class="check">
+                        <i v-show="job.moveToCargo" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("moveCar") }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="job_table">
+                  <el-row>
+                    <el-col :span="8">
+                      <div class="title bgf8d2af" style="padding: 10px 0">
+                        {{ $t("server") }}
+                      </div>
+                    </el-col>
+                    <el-col :span="16">
+                      <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                        <span v-if="i18nCustom">{{ i18nCustom.server }}</span>
+                        <span v-else>&nbsp;</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+
+                  <el-row>
+                    <el-col :span="8">
+                      <div class="title" style="padding: 10px 0">
+                        {{ $t("departureCity") }}
+                      </div>
+                    </el-col>
+                    <el-col :span="16">
+                      <div style="padding: 10px 0 10px 20px">
+                        <span v-if="i18nCustom">{{ i18nCustom.departure_city }}</span>
+                        <span v-else>&nbsp;</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+
+                  <el-row>
+                    <el-col :span="8">
+                      <div class="title bgf8d2af" style="padding: 10px 0">
+                        {{ $t("departureCompany") }}
+                      </div>
+                    </el-col>
+                    <el-col :span="16">
+                      <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                        <span v-if="i18nCustom">{{ i18nCustom.departure_company }}</span>
+                        <span v-else>&nbsp;</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="8">
+                      <div class="title" style="padding: 10px 0">
+                        {{ $t("destinationCity") }}
+                      </div>
+                    </el-col>
+                    <el-col :span="16">
+                      <div style="padding: 10px 0 10px 20px">
+                        <span v-if="i18nCustom">{{ i18nCustom.destination_city }}</span>
+                        <span v-else>&nbsp;</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="8">
+                      <div class="title bgf8d2af" style="padding: 10px 0">
+                        {{ $t("destinationCompany") }}
+                      </div>
+                    </el-col>
+                    <el-col :span="16">
+                      <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                        <span v-if="i18nCustom">{{ i18nCustom.destination_company }}</span>
+                        <span v-else>&nbsp;</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+
+                  <el-row>
+                    <el-col :span="8">
+                      <div class="title" style="padding: 10px 0">
+                        {{ $t("cargo") }}
+                      </div>
+                    </el-col>
+                    <el-col :span="16">
+                      <div style="padding: 10px 0 10px 20px">
+                        <span v-if="i18nCustom">{{ i18nCustom.cargo }}</span>
+                        <span v-else>&nbsp;</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="8">
+                      <div class="title bgf8d2af" style="padding: 10px 0">
+                        {{ $t("mileage") }}
+                      </div>
+                    </el-col>
+                    <el-col :span="16">
+                      <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                        <template v-if="jobInfo && jobInfo.shortest_distance_km">
+                          {{
+                            jobInfo.shortest_distance_km + jobInfo.ferry_distance_km
+                          }}
+                          km
+                          <span v-if="jobInfo.ferry_distance_km">({{ jobInfo.ferry_distance_km }} km {{ $t("ferry")
+                          }})</span>
+                        </template>
+                        <span v-else>&nbsp;</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </div>
+              </div>
+            </div>
+
+            <div class="setting_box">
+              <div class="shadow_box">
+                <div class="setting_title">
+                  <i class="iconfont iconico-share" style="font-size: 18px"></i>
+                  <span class="f21 fb ml10">
+                    {{ $t("change") }}
+                  </span>
+                </div>
+                <div class="setting_table">
+                  <div class="setting_check_box">
+                    <div class="check_btn bgfab97d" @click="clickBtn('money')">
+                      <div class="check">
+                        <i v-show="setting.money" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("money") }}
+                      </div>
+                    </div>
+
+                    <div class="check_btn bgfab97d" @click="clickBtn('level')">
+                      <div class="check">
+                        <i v-show="setting.level" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("level") }}
+                      </div>
+                    </div>
+
+                    <div class="check_btn bgfab97d" @click="clickBtn('skills')">
+                      <div class="check">
+                        <i v-show="setting.skills" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("skills") }}
+                      </div>
+                    </div>
+
+                    <div class="check_btn bgfab97d" @click="clickBtn('city')">
+                      <div class="check">
+                        <i v-show="setting.city" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("city") }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting_check_box">
+                    <div class="check_btn bgfab97d" @click="clickBtn('garage')">
+                      <div class="check">
+                        <i v-show="setting.garage" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("garage") }}
+                      </div>
+                    </div>
+
+                    <div class="check_btn bgfab97d" @click="clickBtn('dealer')">
+                      <div class="check">
+                        <i v-show="setting.dealer" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("dealer") }}
+                      </div>
+                    </div>
+
+                    <div class="check_btn bgfab97d" @click="clickBtn('damage')">
+                      <div class="check">
+                        <i v-show="setting.damage" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("damage") }}
+                      </div>
+                    </div>
+
+                    <div class="check_btn bgfab97d" @click="clickBtn('oil')">
+                      <div class="check">
+                        <i v-show="setting.oil" class="iconfont iconfuxuankuanggou check_active"></i>
+                      </div>
+                      <div class="ml10">
+                        {{ $t("oil") }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-show="pathType === '666'" class="content_box w">
+            <div class="job_box">
+              <div class="shadow_box">
+                <div class="job_offer">
+                  <div class="job_info">
+                    <div class="f21 fb ml10">ETS666 SaveEdit & JobSync Tool</div>
+                  </div>
+                </div>
+
+                <div class="job_table">
+                  <el-row>
+                    <el-col :span="4">
+                      <div class="title bgf8d2af" style="padding: 10px 0">
+                        Version
+                      </div>
+                    </el-col>
+                    <el-col :span="20">
+                      <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                        <span>{{ infoPackage.version }}</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="4">
+                      <div class="title" style="padding: 10px 0">
+                        Author
+                      </div>
+                    </el-col>
+                    <el-col :span="20">
+                      <div style="padding: 10px 0 10px 20px">
+                        <span>xiaosi & sunwinbus</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="4">
+                      <div class="title bgf8d2af" style="padding: 10px 0">
+                        UI Design
+                      </div>
+                    </el-col>
+                    <el-col :span="20">
+                      <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
+                        <span>Mingran7</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="4">
+                      <div class="title" style="padding: 10px 0">
+                        Github
+                      </div>
+                    </el-col>
+                    <el-col :span="20" class="cursor_pointer">
+                      <div style="padding: 10px 0 10px 20px" @click="goToWeb('https://github.com/ets666/ets666-tool')">
+                        <span>https://github.com/ets666/ets666-tool</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="4">
+                      <div class="title bgf8d2af" style="padding: 10px 0">
+                        WebSite
+                      </div>
+                    </el-col>
+                    <el-col :span="20" class="cursor_pointer">
+                      <div style="padding: 10px 0 10px 20px" class="bgf8d2af" @click="goToWeb('https://ets666.com')">
+                        <span>https://ets666.com</span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </div>
+              </div>
+            </div>
+          </div>
+          <el-dialog :title="$t('selectPath')" v-model="dialogTableVisible" :width="'80%'" :close-on-click-modal="false"
+            :close-on-press-escape="false" :show-close="false">
+            <selectPath v-if="dialogTableVisible" @pathSave="pathSave"></selectPath>
+          </el-dialog>
         </el-main>
       </el-container>
-    </el-aside>
-    <el-main style="padding: 10px 18px; user-select: none">
-      <div v-show="['ETS2', 'ATS'].indexOf(pathType) !== -1" class="content_box w">
-        <div v-show="pathType === 'ETS2'" class="job_box">
-          <div class="shadow_box">
-            <div class="job_offer">
-              <div class="job_info">
-                <i class="iconfont iconhb-addrss f21"></i>
-                <div class="f21 fb ml10">{{ $t("job") }}</div>
-                <div class="line2">&nbsp;</div>
-                <el-select v-model="tody" size="large" style="width: 200px" @change="changeTime">
-                  <el-option v-for="item in timeOption" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="job_check_box">
-                <div class="check_btn job_bg" style="min-width: 100px" @click="clickBtn('syncJob')">
-                  <div class="check">
-                    <i v-show="job.syncJob" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("syncJob") }}
-                  </div>
-                </div>
-                <div class="check_btn job_bg ml10" @click="clickBtn('moveToCargo')">
-                  <div class="check">
-                    <i v-show="job.moveToCargo" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("moveCar") }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="job_table">
-              <el-row>
-                <el-col :span="8">
-                  <div class="title bgf8d2af" style="padding: 10px 0">
-                    {{ $t("server") }}
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18nCustom">{{ i18nCustom.server }}</span>
-                    <span v-else>&nbsp;</span>
-                  </div>
-                </el-col>
-              </el-row>
-
-              <el-row>
-                <el-col :span="8">
-                  <div class="title" style="padding: 10px 0">
-                    {{ $t("departureCity") }}
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px">
-                    <span v-if="i18nCustom">{{ i18nCustom.departure_city }}</span>
-                    <span v-else>&nbsp;</span>
-                  </div>
-                </el-col>
-              </el-row>
-
-              <el-row>
-                <el-col :span="8">
-                  <div class="title bgf8d2af" style="padding: 10px 0">
-                    {{ $t("departureCompany") }}
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18nCustom">{{ i18nCustom.departure_company }}</span>
-                    <span v-else>&nbsp;</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="title" style="padding: 10px 0">
-                    {{ $t("destinationCity") }}
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px">
-                    <span v-if="i18nCustom">{{ i18nCustom.destination_city }}</span>
-                    <span v-else>&nbsp;</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="title bgf8d2af" style="padding: 10px 0">
-                    {{ $t("destinationCompany") }}
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span v-if="i18nCustom">{{ i18nCustom.destination_company }}</span>
-                    <span v-else>&nbsp;</span>
-                  </div>
-                </el-col>
-              </el-row>
-
-              <el-row>
-                <el-col :span="8">
-                  <div class="title" style="padding: 10px 0">
-                    {{ $t("cargo") }}
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px">
-                    <span v-if="i18nCustom">{{ i18nCustom.cargo }}</span>
-                    <span v-else>&nbsp;</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="title bgf8d2af" style="padding: 10px 0">
-                    {{ $t("mileage") }}
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <template v-if="jobInfo && jobInfo.shortest_distance_km">
-                      {{
-                        jobInfo.shortest_distance_km + jobInfo.ferry_distance_km
-                      }}
-                      km
-                      <span v-if="jobInfo.ferry_distance_km">({{ jobInfo.ferry_distance_km }} km {{ $t("ferry") }})</span>
-                    </template>
-                    <span v-else>&nbsp;</span>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
-        </div>
-
-        <div class="setting_box">
-          <div class="shadow_box">
-            <div class="setting_title">
-              <i class="iconfont iconico-share" style="font-size: 18px"></i>
-              <span class="f21 fb ml10">
-                {{ $t("change") }}
-              </span>
-            </div>
-            <div class="setting_table">
-              <div class="setting_check_box">
-                <div class="check_btn bgfab97d" @click="clickBtn('money')">
-                  <div class="check">
-                    <i v-show="setting.money" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("money") }}
-                  </div>
-                </div>
-
-                <div class="check_btn bgfab97d" @click="clickBtn('level')">
-                  <div class="check">
-                    <i v-show="setting.level" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("level") }}
-                  </div>
-                </div>
-
-                <div class="check_btn bgfab97d" @click="clickBtn('skills')">
-                  <div class="check">
-                    <i v-show="setting.skills" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("skills") }}
-                  </div>
-                </div>
-
-                <div class="check_btn bgfab97d" @click="clickBtn('city')">
-                  <div class="check">
-                    <i v-show="setting.city" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("city") }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="setting_check_box">
-                <div class="check_btn bgfab97d" @click="clickBtn('garage')">
-                  <div class="check">
-                    <i v-show="setting.garage" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("garage") }}
-                  </div>
-                </div>
-
-                <div class="check_btn bgfab97d" @click="clickBtn('dealer')">
-                  <div class="check">
-                    <i v-show="setting.dealer" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("dealer") }}
-                  </div>
-                </div>
-
-                <div class="check_btn bgfab97d" @click="clickBtn('damage')">
-                  <div class="check">
-                    <i v-show="setting.damage" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("damage") }}
-                  </div>
-                </div>
-
-                <div class="check_btn bgfab97d" @click="clickBtn('oil')">
-                  <div class="check">
-                    <i v-show="setting.oil" class="iconfont iconfuxuankuanggou check_active"></i>
-                  </div>
-                  <div class="ml10">
-                    {{ $t("oil") }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-show="pathType === '666'" class="content_box w">
-        <div class="job_box">
-          <div class="shadow_box">
-            <div class="job_offer">
-              <div class="job_info">
-                <div class="f21 fb ml10">ETS666 SaveEdit & JobSync Tool</div>
-              </div>
-            </div>
-
-            <div class="job_table">
-              <el-row>
-                <el-col :span="4">
-                  <div class="title bgf8d2af" style="padding: 10px 0">
-                    Version
-                  </div>
-                </el-col>
-                <el-col :span="20">
-                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span>{{ infoPackage.version }}</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4">
-                  <div class="title" style="padding: 10px 0">
-                    Author
-                  </div>
-                </el-col>
-                <el-col :span="20">
-                  <div style="padding: 10px 0 10px 20px">
-                    <span>xiaosi & sunwinbus</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4">
-                  <div class="title bgf8d2af" style="padding: 10px 0">
-                    UI Design
-                  </div>
-                </el-col>
-                <el-col :span="20">
-                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
-                    <span>Mingran7</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4">
-                  <div class="title" style="padding: 10px 0">
-                    Github
-                  </div>
-                </el-col>
-                <el-col :span="20" class="cursor_pointer">
-                  <div style="padding: 10px 0 10px 20px" @click="goToWeb('https://github.com/ets666/ets666-tool')">
-                    <span>https://github.com/ets666/ets666-tool</span>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4">
-                  <div class="title bgf8d2af" style="padding: 10px 0">
-                    WebSite
-                  </div>
-                </el-col>
-                <el-col :span="20" class="cursor_pointer">
-                  <div style="padding: 10px 0 10px 20px" class="bgf8d2af" @click="goToWeb('https://ets666.com')">
-                    <span>https://ets666.com</span>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
-        </div>
-      </div>
-      <el-dialog :title="$t('selectPath')" v-model="dialogTableVisible" :width="'80%'" :close-on-click-modal="false"
-        :close-on-press-escape="false" :show-close="false">
-        <selectPath v-if="dialogTableVisible" @pathSave="pathSave"></selectPath>
-      </el-dialog>
-    </el-main>
-  </el-container>
+    </el-container>
 </template>
 
 <script>
@@ -752,48 +749,73 @@ $white: #fff;
 }
 
 .nav {
-  background-color: $dark-blue;
-  padding: 10px 0;
+  background-color: $light-blue;
   box-sizing: border-box;
+  display: flex;
+  padding: 5px 15px 0 15px;
+
+  .active {
+    background-color: $blue;
+    margin: 5px 0 0 0;
+    padding: 0;
+    border-radius: 10px 10px 0 0;
+  }
+  .active::before,.active::after{
+    position: absolute;
+    bottom: 0;
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    box-shadow: 0 0 0 40px $blue;/*使用box-shadow不影响尺寸*/
+    transition: .2s;
+  }
+  .active::before{
+    left: -20px;
+    clip-path: inset(50% -10px 0 50%);
+  }
+  .active::after{
+    right: -20px;
+    clip-path: inset(50% 50% 0 -10px);
+  }
 
   .nav-box {
     position: relative;
-    margin: 0 0 8px;
     display: flex;
     justify-content: center;
-    width: 72px;
+    width: 100px;
     cursor: pointer;
 
-    .active {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      display: flex;
-      align-items: center;
+    // .active {
+    //   position: absolute;
+    //   left: 0;
+    //   top: 0;
+    //   bottom: 0;
+    //   width: 4px;
+    //   display: flex;
+    //   align-items: center;
 
-      &::before {
-        content: ' ';
-        width: 4px;
-        height: 65%;
-        background-color: $white;
-        border-radius: 0 5px 5px 0;
-      }
-    }
+    //   &::before {
+    //     content: ' ';
+    //     width: 4px;
+    //     height: 65%;
+    //     background-color: $white;
+    //     border-radius: 0 5px 5px 0;
+    //   }
+    // }
 
     img {
-      width: 48px;
-      height: 48px;
+      width: 30px;
+      height: 30px;
       object-fit: cover;
       border-radius: 50%;
     }
 
     .img {
-      width: 48px;
-      height: 48px;
-      background-color: $dark-blue;
-      border-radius: 50%;
+      // width: 48px;
+      // height: 48px;
+      // background-color: $dark-blue;
+      // border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1000,4 +1022,5 @@ $white: #fff;
       margin-right: 20px;
     }
   }
-}</style>
+}
+</style>
