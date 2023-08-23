@@ -604,13 +604,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$dark-blue: #0a3a75;
+$dark-blue: #4a71a0;
 $blue: #1d4e89;
-$light-blue: #2a6f97;
+$light-blue: #6e8db3;
 $grey: #7d8597;
 $bg: #dbdbdb;
 $bg2: #ededed;
 $white: #fff;
+$black: #fff;
 
 .w {
   width: 100%;
@@ -641,7 +642,7 @@ $white: #fff;
 }
 
 .copyright {
-  color: #fff;
+  color: $white;
   font-size: 16px;
   margin-top: 10px;
 }
@@ -656,14 +657,14 @@ $white: #fff;
   border-radius: 10px;
   min-width: 20px;
   height: 20px;
-  border: 2px solid #fff;
+  border: 2px solid $white;
   position: relative;
 }
 
 .check_active {
   position: absolute;
   font-size: 30px;
-  color: #000;
+  color: $black;
   bottom: -5px;
   left: -5px;
 }
@@ -672,9 +673,9 @@ $white: #fff;
   padding: 5px 10px;
   text-align: left;
   border-radius: 5px;
-  color: #fff;
+  color: $white;
   font-size: 15px;
-  box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 0px 1px $white, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -756,7 +757,7 @@ $white: #fff;
   position: relative;
 
   .websize {
-    color: #fff;
+    color: $white;
     font-size: 20px;
     font-family: Regular;
     font-style: normal;
@@ -767,13 +768,13 @@ $white: #fff;
   .line {
     width: 100%;
     height: 1px;
-    background: #fff;
+    background: $white;
     margin: 0 auto;
   }
 
   .ets666_icon {
     font-size: 70px;
-    color: #fff;
+    color: $white;
   }
 }
 
@@ -803,14 +804,14 @@ $white: #fff;
     line-height: 40px;
     text-align: center;
     border-radius: 5px;
-    color: #fff;
+    color: $white;
     background: $light-blue;
     font-size: 21px;
-    box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 0px 1px $white, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
   }
 
   .select_shadow {
-    box-shadow: 0px 0px 0px 1px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 0px 1px $white, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
   }
 
@@ -838,14 +839,14 @@ $white: #fff;
   background: $bg2;
   border-radius: 5px;
   display: inline-block;
-  color: #fff;
+  color: $white;
 
   .job_box {
     padding: 10px;
   }
 
   .shadow_box {
-    box-shadow: 0px 0px 0px 0px #fff, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 0px 0px $white, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
     overflow: hidden;
   }
@@ -868,45 +869,45 @@ $white: #fff;
     /deep/ .el-select .el-input__wrapper {
       background: transparent;
       box-shadow: none !important;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid $white;
       border: none;
       border-radius: 0;
 
       &::-webkit-input-placeholder {
-        color: #fff;
+        color: $white;
       }
     }
 
     /deep/ .el-select .el-input__wrapperis-focus {
       background: transparent;
       box-shadow: none !important;
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid $white;
       border: none;
       border-radius: 0;
 
       &::-webkit-input-placeholder {
-        color: #fff;
+        color: $white;
       }
     }
 
     /deep/ .el-input__inner {
       background: transparent;
       border: none;
-      color: #fff;
-      // border-bottom: 1px solid #fff;
+      color: $white;
+      // border-bottom: 1px solid $white;
       border-radius: 0;
 
       &::-webkit-input-placeholder {
-        color: #fff;
+        color: $white;
       }
     }
 
     /deep/ .el-select .el-input .el-select__caret {
-      color: #fff;
+      color: $white;
     }
 
     .line2 {
-      background-color: #fff;
+      background-color: $white;
       width: 1px;
       height: 35px;
       margin: 0 10px;
@@ -935,7 +936,7 @@ $white: #fff;
 
     .title {
       text-align: center;
-      border-right: 1px solid #fff;
+      border-right: 1px solid $white;
     }
   }
 
