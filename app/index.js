@@ -37,23 +37,23 @@ function createWindow () {
         { label: '退出', role: 'quit' }
       ]
     }] : []),
-    // {
-    //   label: '视图',
-    //   submenu: [
-    //     { label: '重新加载', role: 'reload' },
-    //     { label: '强制重新加载', role: 'forcereload' },
-    //     { label: '开发者工具', role: 'toggledevtools' },
-    //     {
-    //       label: '清除缓存数据',
-    //       accelerator: 'CmdOrCtrl+Shift+Delete',
-    //       click: (item, focusedWindow) => {
-    //         if (focusedWindow) {
-    //           focusedWindow.webContents.session.clearStorageData(clearObj)
-    //         }
-    //       }
-    //     }
-    //   ]
-    // },
+    {
+      label: '视图',
+      submenu: [
+        { label: '重新加载', role: 'reload' },
+        { label: '强制重新加载', role: 'forcereload' },
+        { label: '开发者工具', role: 'toggledevtools' },
+        {
+          label: '清除缓存数据',
+          accelerator: 'CmdOrCtrl+Shift+Delete',
+          click: (item, focusedWindow) => {
+            if (focusedWindow) {
+              focusedWindow.webContents.session.clearStorageData(clearObj)
+            }
+          }
+        }
+      ]
+    },
     {
       label: '其他',
       submenu: [
@@ -75,9 +75,9 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     frame: true,
     width: 1220,
-    height: 720,
+    height: 700,
     minWidth: 1220,
-    minHeight: 720,
+    minHeight: 700,
     center: true,
     resizable: true,
     show: false,

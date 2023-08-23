@@ -684,7 +684,7 @@ $black: #000;
 }
 
 .nav {
-  background-color: $light-blue;
+  background-color: $dark-blue;
   box-sizing: border-box;
   display: flex;
   padding: 5px 15px 0 15px;
@@ -784,6 +784,7 @@ $black: #000;
   .path_btn {
     display: flex;
     padding: 0 10px;
+    justify-content: center;
     box-sizing: border-box;
     cursor: pointer;
 
@@ -805,7 +806,7 @@ $black: #000;
     text-align: center;
     border-radius: 5px;
     color: $white;
-    background: $light-blue;
+    background: $dark-blue;
     font-size: 21px;
     box-shadow: 0px 0px 0px 1px $white, 3px 4px 10px 0px rgba(0, 0, 0, 0.4);
   }
@@ -852,7 +853,7 @@ $black: #000;
   }
 
   .job_offer {
-    background: $light-blue;
+    background: $dark-blue;
     height: 70px;
     padding: 0 20px;
     display: flex;
@@ -920,13 +921,13 @@ $black: #000;
     align-items: center;
 
     .job_bg {
-      background: $light-blue;
+      background: $dark-blue;
     }
   }
 
   .job_table {
     background: $bg2;
-    color: $light-blue;
+    color: $dark-blue;
     font-size: 21px;
     font-weight: bold;
 
@@ -944,7 +945,7 @@ $black: #000;
     padding: 10px;
 
     .setting_title {
-      background: $light-blue;
+      background: $dark-blue;
       height: 40px;
       padding: 0 20px;
       display: flex;
