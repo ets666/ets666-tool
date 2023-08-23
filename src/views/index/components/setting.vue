@@ -5,13 +5,13 @@
         <el-container class="h">
           <el-header height="50px" class="nav">
             <div class="nav-box" @click="pathTypeChange('ETS2')" :class="{ active: pathType === 'ETS2' }">
-              <div class="img">ETS2</div>
+              <div class="img"><i class="iconfont iconbaocun" style="margin-right: 10px;"></i>ETS2</div>
             </div>
             <div class="nav-box" @click="pathTypeChange('ATS')" :class="{ active: pathType === 'ATS' }">
-              <div class="img">ATS</div>
+              <div class="img"><i class="iconfont iconbaocun" style="margin-right: 10px;"></i>ATS</div>
             </div>
             <div class="nav-box" @click="pathTypeChange('666')" :class="{ active: pathType === '666' }">
-              <div class="img">ABOUT</div>
+              <div class="img"><i class="iconfont iconbaocun" style="margin-right: 10px;"></i>ABOUT</div>
               <!-- <img src="../../../assets/logo.png" alt=""> -->
             </div>
           </el-header>
@@ -23,7 +23,7 @@
             </div>
             <div class="btn_box">
               <div class="btn mb10 path_btn">
-                <i class="iconfont iconsucai" style="font-size: 18px"></i>
+                <i class="iconfont iconsucai" style="font-size: 18px;margin-right: 10px;"></i>
                 {{ $t("select") }}
                 <!-- <div class="path_btn__item" @click="pathTypeChange('ETS2')">
                 <div class="check">
@@ -55,7 +55,7 @@
                 </el-select>
               </div>
               <div class="btn mb10 cursor_pointer" @click="saveSetting">
-                <i class="iconfont iconbaocun"></i>
+                <i class="iconfont iconbaocun" style="margin-right: 5px;"></i>
                 {{ $t("save") }}
               </div>
             </div>
@@ -774,7 +774,7 @@ $black: #000;
   }
 
   .ets666_icon {
-    font-size: 70px;
+    font-size: 85px;
     color: $white;
   }
 }
