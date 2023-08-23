@@ -703,7 +703,7 @@ $bg2: #ededed;
 .check {
   background: $bg2;
   border-radius: 10px;
-  width: 20px;
+  min-width: 20px;
   height: 20px;
   border: 2px solid #fff;
   position: relative;
