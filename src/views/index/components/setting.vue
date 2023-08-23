@@ -1,7 +1,7 @@
 <template>
   <el-container class="h" v-loading="fullscreenLoading">
     <el-container class="h">
-      <el-aside width="320px">
+      <el-aside width="340px">
         <el-container class="h">
           <el-header height="50px" class="nav">
             <div class="nav-box" @click="pathTypeChange('ETS2')" :class="{ active: pathType === 'ETS2' }">
@@ -751,6 +751,7 @@ $black: #000;
   justify-content: space-around;
   align-items: center;
   user-select: none;
+  overflow: hidden;
 }
 
 .icon_box {
@@ -779,7 +780,7 @@ $black: #000;
 }
 
 .btn_box {
-  width: 65%;
+  width: 75%;
 
   .path_btn {
     display: flex;
