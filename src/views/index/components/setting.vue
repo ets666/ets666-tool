@@ -722,7 +722,7 @@ $white: #fff;
     position: relative;
     display: flex;
     justify-content: center;
-    width: 33.333%;
+    width: 32.333%;
     cursor: pointer;
 
     img {
