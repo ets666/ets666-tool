@@ -7,7 +7,7 @@
 <script>
 import { release } from '@/api/index'
 import { version } from '../package.json'
-import compareVersions from 'compare-versions'
+import { compareVersions } from 'compare-versions'
 const ipc = window.ipc
 
 export default {

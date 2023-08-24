@@ -87,6 +87,20 @@ const readInfoName = (path) => {
   }
 }
 
+const readReadme = () => {
+  try {
+    const readmePath = path.join(process.cwd(), '/resources/README.md')
+    const data = readFileSync(readmePath, 'utf8')
+    const showdown = require('showdown')
+    const converter = new showdown.Converter()
+    const text = data
+    const html = converter.makeHtml(text)
+    return html
+  } catch (error) {
+    return ''
+  }
+}
+
 const addJobOffer = (jobInfo, inGameTime) => {
   const companyJobData = []
   companyJobData.push(' target: "' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
@@ -488,6 +502,10 @@ const Utils = {
     })
   },
   fileOn: () => {
+    ipcMain.handle('readReadme', async (event) => {
+      return readReadme()
+    })
+
     /**
      * @description:查找文件夹名字
      * @param {String} dir 文件路径

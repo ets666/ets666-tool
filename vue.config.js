@@ -41,6 +41,12 @@ module.exports = {
   },
   chainWebpack: config => { // 修改webpack打包的入口文件。需要在根目录建两个对应入口js文件
     config.entry('app').clear().add('./src/main.js')
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title = process.env.VUE_APP_TITLE
+        return args
+      })
 
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin('preload').tap(() => [

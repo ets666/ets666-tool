@@ -57,7 +57,7 @@
                 <i class="iconfont iconbaocun" style="margin-right: 5px;"></i>
                 {{ $t("save") }}
               </div>
-              <div class="copyright cursor_pointer" @click="about">&copy; ETS666</div>
+              <div class="copyright cursor_pointer" @click="pathTypeChange('666')">&copy; ETS666</div>
             </div>
           </el-main>
         </el-container>
@@ -293,7 +293,7 @@
           </div>
         </div>
         <div v-show="pathType === '666'" class="w">
-          <aboutUs></aboutUs>
+          <aboutUs :info="readMe"></aboutUs>
         </div>
         <el-dialog :title="$t('selectPath')" v-model="dialogTableVisible" :width="'80%'" :close-on-click-modal="false"
           :close-on-press-escape="false" :show-close="false">
@@ -352,7 +352,8 @@ export default {
       severJobInfo: [],
       jobInfo: {},
       fullscreenLoading: false,
-      localLanguage: 'en'
+      localLanguage: 'en',
+      readMe: ''
     }
   },
   watch: {
@@ -367,6 +368,8 @@ export default {
   },
   async mounted () {
     this.init()
+    const res = await ipc.invoke('readReadme')
+    this.readMe = res
   },
   methods: {
     async init () {

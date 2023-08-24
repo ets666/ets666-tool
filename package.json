@@ -10,7 +10,7 @@
     "electron": "electron ./app/",
     "dev": "cross-env NODE_ENV=development electron ./app/",
     "build": "cross-env NODE_ENV=production vue-cli-service build",
-    "electron:copy": "cpx ./app/**/*.js ./build",
+    "electron:copy": "cpx ./app/**/*.js ./build && cpx ./README.md ./resources",
     "pack:mac": "npm run build && npm run electron:copy && electron-builder --mac",
     "pack:win": "npm run build && npm run electron:copy && electron-builder --win",
     "test:unit": "vue-cli-service test:unit",
@@ -66,7 +66,9 @@
     "core-js": "^3.6.5",
     "electron-store": "^8.0.1",
     "element-plus": "^2.3.9",
+    "github-markdown-css": "^5.2.0",
     "moment": "^2.29.1",
+    "showdown": "^2.1.0",
     "vue": "^3.2.26",
     "vue-i18n": "^9.2.0-beta.26",
     "vue-router": "^4.0.0-0"
