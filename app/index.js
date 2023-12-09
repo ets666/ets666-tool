@@ -92,11 +92,11 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     frame: true,
     width: 1240,
-    height: 700,
+    height: 670,
     minWidth: 1240,
-    minHeight: 700,
+    minHeight: 670,
     center: true,
-    resizable: true,
+    resizable: false,
     show: false,
     webPreferences: {
       autoplayPolicy: 'no-user-gesture-required',

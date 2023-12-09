@@ -8,7 +8,7 @@ export default {
   save: 'Guardar',
   job: 'SINC DE TRABAJO',
   syncJob: 'Sinc Trabajo',
-  moveCar: 'Teletransportarse',
+  moveCar: 'Viaje rápido',
   server: 'Servidor',
   departureCity: 'Ciudad de Salida',
   departureCompany: 'Empresa de Salida',

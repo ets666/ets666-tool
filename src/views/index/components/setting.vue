@@ -65,7 +65,7 @@
       </el-aside>
       <el-main style="padding: 10px 18px; user-select: none">
         <div v-show="['ETS2', 'ATS'].indexOf(pathType) !== -1" class="content_box w">
-          <div v-show="pathType === 'ETS2'" class="job_box">
+          <div v-show="pathType === 'ETS2' || pathType === 'ATS'" class="job_box">
             <div class="shadow_box">
               <div class="job_offer">
                 <div class="job_info">
@@ -87,7 +87,7 @@
                       {{ $t("syncJob") }}
                     </div>
                   </div>
-                  <div class="check_btn job_bg ml10" @click="clickBtn('moveToCargo')">
+                  <div class="check_btn job_bg ml10" style="min-width: 100px" @click="clickBtn('moveToCargo')">
                     <div class="check">
                       <i v-show="job.moveToCargo" class="iconfont iconfuxuankuanggou check_active"></i>
                     </div>
@@ -309,7 +309,7 @@ import moment from 'moment'
 import selectPath from './select-euro-path'
 import aboutUs from './about-us'
 import { hex2utf8, errCatch } from '@/utils/index'
-import { randomJobs } from '@/api/index'
+import { randomJobs, randomJobsATS } from '@/api/index'
 const ipc = window.ipc
 
 export default {
@@ -389,6 +389,21 @@ export default {
       // 获取随机Job
       if (this.pathType === 'ETS2') {
         const res = await randomJobs()
+        if (res) {
+          this.severJobInfo = res
+          this.jobInfo = res[0]
+          this.tody = this.utcDiff(res[0].assembly_time)
+          res.forEach((element) => {
+            const obj = {
+              value: element.assembly_time,
+              label: this.utcDiff(element.assembly_time)
+            }
+            this.timeOption.push(obj)
+          })
+          this.setLanguage()
+        }
+      } else if (this.pathType === 'ATS') {
+        const res = await randomJobsATS()
         if (res) {
           this.severJobInfo = res
           this.jobInfo = res[0]

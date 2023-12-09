@@ -44,7 +44,7 @@ module.exports = {
     config
       .plugin('html')
       .tap(args => {
-        args[0].title = process.env.VUE_APP_TITLE
+        args[0].title = process.env.VUE_APP_TITLE + ' ' + process.env.VUE_APP_VERSION
         return args
       })
 

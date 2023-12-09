@@ -7,6 +7,9 @@ import elementEsLocale from 'element-plus/es/locale/lang/es' // element-ui lang
 import elementItLocale from 'element-plus/es/locale/lang/it' // element-ui lang
 import elementJaLocale from 'element-plus/es/locale/lang/ja' // element-ui lang
 import elementKoLocale from 'element-plus/es/locale/lang/ko' // element-ui lang
+import elementDeLocale from 'element-plus/es/locale/lang/de' // element-ui lang
+import elementPlLocale from 'element-plus/es/locale/lang/pl' // element-ui lang
+import elementRuLocale from 'element-plus/es/locale/lang/ru' // element-ui lang
 
 import enLocale from './en'
 import trLocale from './tr-TR'
@@ -16,6 +19,9 @@ import esLocale from './es'
 import itLocale from './it'
 import jaLocale from './ja'
 import koLocale from './ko'
+import deLocale from './de'
+import plLocale from './pl'
+import ruLocale from './ru'
 
 const language = navigator.language
 
@@ -59,6 +65,30 @@ const messages = {
   ko: {
     ...koLocale,
     ...elementKoLocale
+  },
+  'de-DE': {
+    ...deLocale,
+    ...elementDeLocale
+  },
+  de: {
+    ...deLocale,
+    ...elementDeLocale
+  },
+  'pl-PL': {
+    ...plLocale,
+    ...elementPlLocale
+  },
+  pl: {
+    ...plLocale,
+    ...elementPlLocale
+  },
+  'ru-RU': {
+    ...ruLocale,
+    ...elementRuLocale
+  },
+  ru: {
+    ...ruLocale,
+    ...elementRuLocale
   },
   tr: {
     ...trLocale,

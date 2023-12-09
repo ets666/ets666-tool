@@ -8,7 +8,7 @@ export default {
   save: 'Save',
   job: 'JOB SYNC',
   syncJob: 'Sync Job',
-  moveCar: 'Move to Start Point',
+  moveCar: 'Teleport',
   server: 'Server',
   departureCity: 'Departure City',
   departureCompany: 'Departure Company',

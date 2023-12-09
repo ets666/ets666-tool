@@ -1,5 +1,5 @@
 # ETS666 Tool
-A tool for editing save files and syncing jobs on Euro Truck Simulator 2.
+A tool for editing save files and synchronising jobs on Euro Truck Simulator 2 & American Truck Simulator.
 
 ## OS
 Windows x64
@@ -20,21 +20,25 @@ Windows x64
 * Teleport to the starting place
 
 ## Compability
-1.48
+* Euro Truck Simulator 2 v1.49
+* American Truck Simulator v1.49
 
 ## How to Use
-* Preparation: Start the game --> Choose the profile you want to modify --> Edit --> Disable 'Use Steam Cloud'
+* Preparation: Start the game -> Choose the profile you want to modify -> Edit -> Disable 'Use Steam Cloud'
 * Step 1: Save a savegame in the game
-* Step 2: Open ETS666 Tool --> Select the profile and savegame you want to modify --> Tick what you want --> Save
-* Step 3: Back to game --> Load the modified savegame --> Done, the convoy job could be found in the freight market
+* Step 2: Open ETS666 Tool -> Select the profile and savegame you want to modify -> Tick what you want -> Save
+* Step 3: Back to game -> Load the modified savegame -> Done, the job could be found in the freight market
 
 ## Credits
-* UI design: [Mingran7](https://truckersmp.com/user/2683384)
+* Graphic Design: [Mingran7](https://truckersmp.com/user/2683384)
 * Spanish Translation: [Jordan.](https://truckersmp.com/user/182824)
-* Turkish Translation: [DoruqTV](https://www.youtube.com/channel/UCVg5Qk_O5fRY8GNKbFdK_Tg)
+* Turkish Translation: [DoruqTV](https://www.youtube.com/DoruqTV)
 * Korean Translation: [IU - KOR](https://truckersmp.com/user/3622448)
 * Japanese Translation: [Lineage](https://truckersmp.com/user/3337615)
 * Italian Translation: [Ricky {19}](https://truckersmp.com/user/2100102)
+* Polish Translation: Danming
+* Russian Translation: [Вовка](https://www.youtube.com/@Brian_Anderson)
+* German Translation: [Lukas](https://truckersmp.com/user/5039583) & [HWA](https://truckersmp.com/user/1270039) & [berechtigter](https://truckersmp.com/user/2645349)
 
 ## License
 [LICENSE](LICENSE)

@@ -7,6 +7,13 @@ export function randomJobs () {
   })
 }
 
+export function randomJobsATS () {
+  return request({
+    url: '/api/random_jobs_ats/',
+    method: 'get'
+  })
+}
+
 export function release () {
   return request({
     url: 'https://api.github.com/repos/ets666/ets666-tool/releases/latest',

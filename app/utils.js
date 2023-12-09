@@ -198,17 +198,31 @@ const editGameSii = async (path, info) => {
         arrFile[fileIndex] = ''
       } else if (setting.damage && element.startsWith(' trailer_body_wear:')) {
         arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' trailer_body_wear_unfixable:')) {
+        arrFile[fileIndex] = element.replace(/_wear_unfixable: [^,\n]+/, '_wear_unfixable: 0')
       } else if (setting.damage && element.startsWith(' chassis_wear:')) {
         arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' chassis_wear_unfixable:')) {
+        arrFile[fileIndex] = element.replace(/_wear_unfixable: [^,\n]+/, '_wear_unfixable: 0')
       } else if (setting.damage && element.startsWith(' engine_wear:')) {
         arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' engine_wear_unfixable:')) {
+        arrFile[fileIndex] = element.replace(/_wear_unfixable: [^,\n]+/, '_wear_unfixable: 0')
       } else if (setting.damage && element.startsWith(' transmission_wear:')) {
         arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' transmission_wear_unfixable:')) {
+        arrFile[fileIndex] = element.replace(/_wear_unfixable: [^,\n]+/, '_wear_unfixable: 0')
       } else if (setting.damage && element.startsWith(' cabin_wear:')) {
         arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' cabin_wear_unfixable:')) {
+        arrFile[fileIndex] = element.replace(/_wear_unfixable: [^,\n]+/, '_wear_unfixable: 0')
       } else if (setting.damage && element.startsWith(' wheels_wear:')) {
         arrFile[fileIndex] = element.replace(/_wear: [^,\n]+/, '_wear: 0')
+      } else if (setting.damage && element.startsWith(' wheels_wear_unfixable:')) {
+        arrFile[fileIndex] = element.replace(/_wear_unfixable: [^,\n]+/, '_wear_unfixable: 0')
       } else if (setting.damage && element.startsWith(' wheels_wear[')) {
+        arrFile[fileIndex] = ''
+      } else if (setting.damage && element.startsWith(' wheels_wear_unfixable[')) {
         arrFile[fileIndex] = ''
       } else if (setting.oil && element.startsWith(' fuel_relative')) {
         arrFile[fileIndex] = element.replace(/fuel_relative: [^,\n]+/, 'fuel_relative: 1')

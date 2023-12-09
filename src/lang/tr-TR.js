@@ -8,7 +8,7 @@ export default {
   save: 'Kayıt',
   job: 'IŞ SENKRONIZESI',
   syncJob: 'Senkronize iş',
-  moveCar: 'Başlama noktasına git',
+  moveCar: 'Işınlanma',
   server: 'Sunucu',
   departureCity: 'Başlanacak Şehri',
   departureCompany: 'Başlanacak Şirketi',

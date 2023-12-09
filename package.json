@@ -1,6 +1,6 @@
 {
   "name": "ets666",
-  "version": "0.0.11",
+  "version": "0.1.1",
   "author": "ETS666 <sunwinbus@ets666.com>",
   "description": "ETS666 Tool",
   "license": "GPL-3.0-or-later",
@@ -10,7 +10,7 @@
     "electron": "electron ./app/",
     "dev": "cross-env NODE_ENV=development electron ./app/",
     "build": "cross-env NODE_ENV=production vue-cli-service build",
-    "electron:copy": "cpx ./app/**/*.js ./build && cpx ./README.md ./resources",
+    "electron:copy": "cpx ./app/**/*.js ./build",
     "pack:mac": "npm run build && npm run electron:copy && electron-builder --mac",
     "pack:win": "npm run build && npm run electron:copy && electron-builder --win",
     "test:unit": "vue-cli-service test:unit",
@@ -26,7 +26,7 @@
         "to": "./"
       }
     ],
-    "productName": "ETS666 SaveEdit & JobSync Tool",
+    "productName": "ETS666 Tool",
     "appId": "com.ets666.app",
     "copyright": "Copyright © ETS666",
     "files": [
@@ -34,15 +34,15 @@
     ],
     "mac": {
       "icon": "./resources/icons/icon.icns",
-      "artifactName": "${productName}_setup_${version}.${ext}"
+      "artifactName": "${productName}_${version}.${ext}"
     },
     "dmg": {
       "sign": false,
-      "artifactName": "${productName}_setup_${version}.${ext}"
+      "artifactName": "${productName}_${version}.${ext}"
     },
     "win": {
       "icon": "./resources/icons/icon.ico",
-      "artifactName": "${productName}_setup_${version}.${ext}",
+      "artifactName": "${productName}_${version}.${ext}",
       "target": [
         "portable"
       ]
@@ -53,7 +53,7 @@
     "nsis": {
       "allowToChangeInstallationDirectory": true,
       "oneClick": false,
-      "artifactName": "${productName}_setup_${version}.${ext}"
+      "artifactName": "${productName}_${version}.${ext}"
     },
     "directories": {
       "buildResources": "assets",

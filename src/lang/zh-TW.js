@@ -8,7 +8,7 @@ export default {
   save: '保　　存',
   job: '聯運任務',
   syncJob: '同步聯運任務',
-  moveCar: '移動車輛至起點',
+  moveCar: '快速前往',
   server: '伺 服 器',
   departureCity: '出發城市',
   departureCompany: '出發貨場',
