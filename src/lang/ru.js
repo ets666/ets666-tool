@@ -6,7 +6,7 @@ export default {
   selectBtn: 'Выбрать',
   selectTips: 'Пожалуйста, выберите правильный путь к игровым документам. Пример: C:\\Users\\xx\\Documents\\Euro Truck Simulator 2',
   save: 'Сохранить',
-  job: 'Заданий',
+  job: 'Задания',
   syncJob: 'Синхронизация',
   moveCar: 'Начало',
   server: 'Сервер',
