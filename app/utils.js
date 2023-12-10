@@ -92,7 +92,7 @@ const readReadme = () => {
     const readmePath = path.join(process.cwd(), '/resources/README.md')
     const data = readFileSync(readmePath, 'utf8')
     const showdown = require('showdown')
-    const converter = new showdown.Converter()
+    const converter = new showdown.Converter({ openLinksInNewWindow: true })
     const text = data
     const html = converter.makeHtml(text)
     return html

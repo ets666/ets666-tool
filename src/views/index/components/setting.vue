@@ -1,8 +1,8 @@
 <template>
   <el-container class="h" v-loading="fullscreenLoading">
     <el-container class="h">
-      <el-aside width="340px">
-        <el-container class="h">
+      <el-aside width="340px" class="bg-color">
+        <el-container class="h bg-color">
           <el-header height="50px" class="nav">
             <div class="nav-box" @click="pathTypeChange('ETS2')" :class="{ active: pathType === 'ETS2' }">
               <div class="img"><i class="iconfont iconkache3" style="margin-right: 10px;"></i>ETS2</div>
@@ -373,6 +373,7 @@ export default {
   },
   methods: {
     async init () {
+      this.fullscreenLoading = true
       this.localLanguage = navigator.language
       this.profileOptions = []
       const dir = await ipc.invoke('mapDirName', { dir: this.savePath, filedirname: '/profiles' })
@@ -386,9 +387,15 @@ export default {
           this.profileOptions.push(obj)
         })
       }
-      // 获取随机Job
-      if (this.pathType === 'ETS2') {
-        const res = await randomJobs()
+
+      try {
+        // 获取随机Job,根据标签判定游戏类型
+        let res = null
+        if (this.pathType === 'ETS2') {
+          res = await randomJobs()
+        } else if (this.pathType === 'ATS') {
+          res = await randomJobsATS()
+        }
         if (res) {
           this.severJobInfo = res
           this.jobInfo = res[0]
@@ -402,21 +409,9 @@ export default {
           })
           this.setLanguage()
         }
-      } else if (this.pathType === 'ATS') {
-        const res = await randomJobsATS()
-        if (res) {
-          this.severJobInfo = res
-          this.jobInfo = res[0]
-          this.tody = this.utcDiff(res[0].assembly_time)
-          res.forEach((element) => {
-            const obj = {
-              value: element.assembly_time,
-              label: this.utcDiff(element.assembly_time)
-            }
-            this.timeOption.push(obj)
-          })
-          this.setLanguage()
-        }
+        this.fullscreenLoading = false
+      } catch (error) {
+        this.fullscreenLoading = false
       }
     },
     utcDiff (serverTime) {
@@ -699,6 +694,10 @@ $black: #000;
   align-items: center;
   cursor: pointer;
   min-width: 160px;
+}
+
+.bg-color {
+  background-color: $dark-blue;
 }
 
 .nav {

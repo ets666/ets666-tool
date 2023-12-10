@@ -20,9 +20,9 @@ let mainWindow
 // autoUpdater.autoDownload = false
 
 function createWindow () {
-  // const clearObj = {
-  //   storages: ['appcache', 'filesystem', 'indexdb', 'localstorage', 'shadercache', 'websql', 'serviceworkers', 'cachestorage']
-  // }
+  const clearObj = {
+    storages: ['appcache', 'filesystem', 'indexdb', 'localstorage', 'shadercache', 'websql', 'serviceworkers', 'cachestorage']
+  }
   const template = [
     ...(isMac ? [{
       label: app.name,
