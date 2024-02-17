@@ -296,8 +296,8 @@
           <aboutUs :info="readMe"></aboutUs>
         </div>
         <el-dialog :title="$t('selectPath')" v-model="dialogTableVisible" :width="'80%'" :close-on-click-modal="false"
-          :close-on-press-escape="false" :show-close="false">
-          <selectPath v-if="dialogTableVisible" @pathSave="pathSave"></selectPath>
+          :close-on-press-escape="false">
+          <selectPath v-if="dialogTableVisible" :type="pathType" @pathSave="pathSave"></selectPath>
         </el-dialog>
       </el-main>
     </el-container>
@@ -377,15 +377,19 @@ export default {
       this.localLanguage = navigator.language
       this.profileOptions = []
       const dir = await ipc.invoke('mapDirName', { dir: this.savePath, filedirname: '/profiles' })
-      if (dir === 'invalidPath') this.dialogTableVisible = true
-      if (!errCatch(dir)) {
-        dir.forEach((element) => {
-          const obj = {
-            value: element,
-            label: hex2utf8(element)
-          }
-          this.profileOptions.push(obj)
-        })
+      // if (dir === 'invalidPath') this.dialogTableVisible = true
+      try {
+        if (dir !== 'invalidPath' && !errCatch(dir)) {
+          dir.forEach((element) => {
+            const obj = {
+              value: element,
+              label: hex2utf8(element)
+            }
+            this.profileOptions.push(obj)
+          })
+        }
+      } catch (error) {
+        this.fullscreenLoading = false
       }
 
       try {
@@ -488,7 +492,8 @@ export default {
     about () {
       ipc.send('about')
     },
-    clickBtn (val) {
+    async clickBtn (val) {
+      if (await this.catchPathSaveAddress()) return
       if (this.profile && this.save) {
         switch (val) {
           case 'money':
@@ -530,7 +535,22 @@ export default {
         })
       }
     },
+    async catchPathSaveAddress () {
+      try {
+        const dir = await ipc.invoke('mapDirName', { dir: this.savePath, filedirname: '/profiles' })
+        errCatch(dir)
+        if (dir === 'invalidPath') {
+          this.dialogTableVisible = true
+          return true
+        } else {
+          return false
+        }
+      } catch (error) {
+        return true
+      }
+    },
     async saveSetting () {
+      if (await this.catchPathSaveAddress()) return
       const { money, level, skills, city, garage, dealer, damage, oil } =
         this.setting
       const { moveToCargo, syncJob } = this.job
