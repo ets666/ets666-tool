@@ -3,10 +3,10 @@
     <div class="content">
       {{$t('selectTips')}}
     </div>
-    <div>
+    <!-- <div>
       <el-radio v-model="radio" label="ETS2" size="large">ETS2</el-radio>
       <el-radio v-model="radio" label="ATS" size="large">ATS</el-radio>
-    </div>
+    </div> -->
     <div class="input-box w">
       <el-input class="mr10 w60" v-model="gamePath" disabled :placeholder="$t('selectPath')"></el-input>
       <el-button class="mr10" @click="openFileHandler">{{$t('selectBtn')}}</el-button>
