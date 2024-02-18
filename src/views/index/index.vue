@@ -52,6 +52,9 @@ export default {
           this.$refs.setting.pathType = 'ETS2'
         })
       }
+      this.$nextTick(() => {
+        this.$refs.setting.init()
+      })
     } catch (error) {
       this.savePath = ''
     }
