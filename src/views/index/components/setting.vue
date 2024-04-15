@@ -21,7 +21,7 @@
               <div class="line"></div>
             </div>
             <div class="btn_box">
-              <div class="btn mb10 path_btn">
+              <div class="btn mb10 path_btn" @click="dialogTableVisible = true">
                 <i class="iconfont iconsucai" style="font-size: 18px;margin-right: 10px;"></i>
                 {{ $t("select") }}
                 <!-- <div class="path_btn__item" @click="pathTypeChange('ETS2')">
