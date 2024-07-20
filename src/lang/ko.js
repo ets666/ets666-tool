@@ -1,4 +1,5 @@
 export default {
+  noDataTips: 'Preparation: Start the game -> Choose the profile you want to modify -> Edit -> Disable "Use Steam Cloud"',
   select: '프로필&저장 파일',
   selectProfile: '프로필을 선택해주세요',
   selectSave: '저장 파일을 선택해주세요',

@@ -118,6 +118,7 @@ const messages = {
 
 const i18n = new CreateI18n({
   legacy: false,
+  fallbackLocale: 'en',
   globalInjection: true,
   locale: language || 'en', // set locale
   messages // set locale messages
