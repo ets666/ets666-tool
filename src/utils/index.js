@@ -28,7 +28,7 @@ export function errCatch (type, info) {
   let result = true
   switch (type) {
     case 'invalidPath':
-      ElMessage.error(`${info} ${i18n.global.t('error.invalidPath')}`)
+      ElMessage.error(`${i18n.global.t('error.invalidPath')}`)
       break
     case 'fileNotExist':
       ElMessage.error(`${info} ${i18n.global.t('error.fileNotExist')}`)

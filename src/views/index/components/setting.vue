@@ -16,7 +16,7 @@
           </el-header>
           <el-main class="aside">
             <div class="icon_box">
-              <i class="iconfont iconlogo-640 ets666_icon"></i>
+              <i class="iconfont iconlogo-640 ets666_icon cursor_pointer" @click="goToWeb('https://ets666.com/')"></i>
               <div class="websize cursor_pointer" @click="goToWeb('https://ets666.com/')">ETS666.COM</div>
               <div class="line"></div>
             </div>

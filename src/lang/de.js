@@ -1,5 +1,5 @@
 export default {
-  noDataTips: 'Preparation: Start the game -> Choose the profile you want to modify -> Edit -> Disable "Use Steam Cloud"',
+  noDataTips: 'Bitte deaktivieren Sie "Steam Cloud verwenden" für Ihre Profile.',
   select: 'Profile & Dateien',
   selectProfile: 'Wähle Profil',
   selectSave: 'Wähle Speicherstand',

@@ -24,7 +24,7 @@ Windows x64
 * American Truck Simulator v1.49
 
 ## How to Use
-* Preparation: Start the game -> Choose the profile you want to modify -> Edit -> Disable 'Use Steam Cloud'
+* Preparation: Start the game -> Choose the profile you want to modify -> Edit Profile -> Disable 'Use Steam Cloud'
 * Step 1: Save a savegame in the game
 * Step 2: Open ETS666 Tool -> Select the profile and savegame you want to modify -> Tick what you want -> Save
 * Step 3: Back to game -> Load the modified savegame -> Done, the job could be found in the freight market

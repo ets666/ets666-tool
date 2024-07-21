@@ -1,5 +1,5 @@
 export default {
-  noDataTips: 'Preparation: Start the game -> Choose the profile you want to modify -> Edit -> Disable "Use Steam Cloud"',
+  noDataTips: '請爲您的遊戲檔案禁用"使用Steam雲端"。',
   select: '選擇存檔',
   selectProfile: '選擇檔案',
   selectSave: '選擇存檔',
