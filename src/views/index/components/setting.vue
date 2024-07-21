@@ -42,18 +42,13 @@
               </div> -->
               </div>
               <div>
-                <el-select v-model="profile" size="large" :placeholder="$t('selectProfile')" class="mb10 w select_shadow"
-                  @change="changeProfile">
+                <el-select v-model="profile" size="large" :placeholder="$t('selectProfile')" class="mb10 w select_shadow" @change="changeProfile" @visibleChange="visibleProfile">
                   <el-option v-for="(item, index) in profileOptions" :key="index" :label="item.label" :value="item.value">
-                  </el-option>
-                  <el-option v-if="!profileOptions.length" :label="$t('noDataTips')" :value="'nodata'">
                   </el-option>
                 </el-select>
                 <el-select v-model="save" size="large" :placeholder="$t('selectSave')" class="mb10 w select_shadow"
                   @change="reSet">
                   <el-option v-for="item in saveOptions" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                  <el-option v-if="!saveOptions.length" :label="$t('noDataTips')" :value="'nodata'">
                   </el-option>
                 </el-select>
               </div>
@@ -473,6 +468,15 @@ export default {
         })
       }
       this.reSet()
+    },
+    visibleProfile (flag) {
+      if (flag && this.profileOptions.length === 0) {
+        this.$message({
+          message: this.$t('noDataTips'),
+          type: 'warning',
+          center: 'center'
+        })
+      }
     },
     reSet () {
       this.setting = {
