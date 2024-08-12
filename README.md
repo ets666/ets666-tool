@@ -37,7 +37,7 @@ Windows x64
 * Japanese Translation: [Lineage](https://truckersmp.com/user/3337615)
 * Italian Translation: [Ricky {19}](https://truckersmp.com/user/2100102)
 * Polish Translation: Danming
-* Russian Translation: [Вовка](https://www.youtube.com/@Brian_Anderson)
+* Russian Translation: [Вовка](https://www.youtube.com/@Brian_Anderson) & [Jonny_Bro](https://github.com/JonnyBro)
 * German Translation: [Lukas](https://truckersmp.com/user/5039583) & [HWA](https://truckersmp.com/user/1270039) & [berechtigter](https://truckersmp.com/user/2645349)
 
 ## License
