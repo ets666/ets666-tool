@@ -1,6 +1,6 @@
 export default {
   noDataTips: 'Пожалуйста, отключите «Использовать облако Steam» для ваших профилей.',
-  select: 'Профили и Сохранения',
+  select: 'Профили и Сейвы',
   selectProfile: 'Выбрать профиль',
   selectSave: 'Выбрать сохранение',
   selectPath: 'Выберите путь',
@@ -16,7 +16,7 @@ export default {
   destinationCity: 'Город получения',
   destinationCompany: 'Компания получения',
   cargo: 'Груз',
-  mileage: 'Приблизительная дистанция',
+  mileage: 'Ехать примерно',
   ferry: 'паром',
   change: 'Сохранить изменения',
   money: 'Установить 100 млн денег',
