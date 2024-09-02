@@ -39,7 +39,6 @@ Windows x64
 * Polish Translation: Danming
 * Russian Translation: [Вовка](https://www.youtube.com/@Brian_Anderson) & [Jonny_Bro](https://github.com/JonnyBro)
 * German Translation: [Lukas](https://truckersmp.com/user/5039583) & [HWA](https://truckersmp.com/user/1270039) & [berechtigter](https://truckersmp.com/user/2645349)
-
 * Wanna help us translate the tool? [Click here](https://forms.gle/fX7ny43v1phYvEeS9).
 
 ## License
