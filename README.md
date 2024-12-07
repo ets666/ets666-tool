@@ -20,8 +20,8 @@ Windows x64
 * Teleport to the starting place
 
 ## Compability
-* Euro Truck Simulator 2 v1.51
-* American Truck Simulator v1.51
+* Euro Truck Simulator 2 v1.53
+* American Truck Simulator v1.53
 
 ## How to Use
 * Preparation: Start the game -> Choose the profile you want to modify -> Edit Profile -> Disable 'Use Steam Cloud'

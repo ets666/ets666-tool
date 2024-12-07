@@ -346,7 +346,7 @@ export default {
         moveToCargo: false,
         syncJob: false
       },
-      pathType: 'ETS2',
+      pathType: '',
       i18nCustom: null,
       severJobInfo: [],
       jobInfo: {},
