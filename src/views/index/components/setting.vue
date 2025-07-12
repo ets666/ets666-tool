@@ -71,7 +71,7 @@
                   <i class="iconfont iconhb-addrss f21"></i>
                   <div class="f21 fb ml10">{{ $t("job") }}</div>
                   <div class="line2">&nbsp;</div>
-                  <el-select v-model="tody" size="large" popper-class="select-ets" style="width: 240px"
+                  <el-select v-model="tody" size="large" class="selsect_ets6" popper-class="select-ets" style="width: 240px"
                     @change="changeTime">
                     <el-option v-for="item in timeOption" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
@@ -913,7 +913,26 @@ $black: #000;
     flex-direction: row;
     align-items: center;
 
-    /deep/ .el-select .el-input__wrapper {
+
+    /deep/ .selsect_ets6 {
+      .el-select__wrapper {
+        background: transparent;
+        box-shadow: none !important;
+        border: none;
+        border-bottom: 1px solid $white;
+        border-radius: 0;
+
+        &::-webkit-input-placeholder {
+          color: $white;
+        }
+      }
+
+      .el-select__placeholder, .el-select__caret {
+        color: $white;
+      }
+    }
+
+    /deep/ .selsect_ets6 .el-input__wrapper {
       background: transparent;
       box-shadow: none !important;
       border: none;
