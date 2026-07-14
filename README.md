@@ -1,61 +1,98 @@
 # ETS666 Tool
-A tool for editing save files and synchronising jobs on Euro Truck Simulator 2 & American Truck Simulator.
 
-## OS
-Windows x64
+基于 Vue 3 + Vite + Electron + TypeScript 的桌面应用程序。
 
-## Download
-<https://github.com/ets666/ets666-tool/releases/latest>
+## 技术栈
 
-## Features
-* Edit money
-* Edit player level
-* Unlock all player skills
-* Unlock all cities
-* Unlock and upgrade all garages
-* Unlock all truck dealers
-* Fix all vehicles and trailers
-* Fill up all vehicles
-* Choose a listed job to sync
-* Teleport to the starting place
+- **前端框架**: Vue 3 (Composition API)
+- **构建工具**: Vite 5
+- **桌面应用**: Electron 29
+- **UI 框架**: Element Plus 2.6
+- **路由**: Vue Router 4
+- **状态管理**: Pinia 2
+- **国际化**: Vue I18n 9
+- **语言**: TypeScript 5.4
 
-## Compability
-* Euro Truck Simulator 2 v1.53
-* American Truck Simulator v1.53
+## 项目结构
 
-## How to Use
-* Preparation: Start the game -> Choose the profile you want to modify -> Edit Profile -> Disable 'Use Steam Cloud'
-* Step 1: Save a savegame in the game
-* Step 2: Open ETS666 Tool -> Select the profile and savegame you want to modify -> Tick what you want -> Save
-* Step 3: Back to game -> Load the modified savegame -> Done, the job could be found in the freight market
+\`\`\`
+ets666-tool/
+├── electron/              # Electron 相关文件
+│   ├── main.ts            # 主进程
+│   └── preload/           # 预加载脚本
+│       └── index.ts
+├── src/                   # 源代码
+│   ├── i18n/              # 国际化
+│   │   ├── index.ts
+│   │   └── locales/
+│   │       ├── en-US.ts
+│   │       └── zh-CN.ts
+│   ├── router/            # 路由配置
+│   │   └── index.ts
+│   ├── stores/            # Pinia 状态管理
+│   │   └── index.ts
+│   ├── styles/            # 全局样式
+│   │   └── index.css
+│   ├── views/             # 页面组件
+│   │   ├── Home.vue
+│   │   └── About.vue
+│   ├── App.vue            # 根组件
+│   ├── main.ts            # 应用入口
+│   └── vite-env.d.ts      # 类型声明
+├── index.html             # HTML 模板
+├── package.json           # 项目配置
+├── tsconfig.json          # TypeScript 配置
+├── tsconfig.node.json     # Node TypeScript 配置
+├── vite.config.ts         # Vite 配置
+└── electron-builder.json5 # Electron 打包配置
+\`\`\`
 
-## Credits
-* Graphic Design: [Mingran7](https://truckersmp.com/user/2683384)
-* Spanish Translation: [Jordan.](https://truckersmp.com/user/182824)
-* Turkish Translation: [DoruqTV](https://www.youtube.com/DoruqTV)
-* Korean Translation: [IU - KOR](https://truckersmp.com/user/3622448)
-* Japanese Translation: [Lineage](https://truckersmp.com/user/3337615)
-* Italian Translation: [Ricky {19}](https://truckersmp.com/user/2100102)
-* Polish Translation: Danming
-* Russian Translation: [Вовка](https://www.youtube.com/@Brian_Anderson) & [Jonny_Bro](https://github.com/JonnyBro)
-* German Translation: [Lukas](https://truckersmp.com/user/5039583) & [HWA](https://truckersmp.com/user/1270039) & [berechtigter](https://truckersmp.com/user/2645349)
-* Wanna help us translate the tool? [Click here](https://forms.gle/fX7ny43v1phYvEeS9).
+## 开发指南
+
+### 安装依赖
+
+\`\`\`bash
+npm install
+\`\`\`
+
+### 开发模式
+
+\`\`\`bash
+# 仅启动 Web 开发服务器
+npm run dev
+
+# 启动 Electron 开发环境
+npm run electron:dev
+\`\`\`
+
+### 构建应用
+
+\`\`\`bash
+# 构建 Web 应用
+npm run build
+
+# 构建 Electron 应用
+npm run electron:build
+\`\`\`
+
+## 功能特性
+
+- ✅ Vue 3 Composition API
+- ✅ TypeScript 支持
+- ✅ Vue Router 路由管理
+- ✅ Pinia 状态管理
+- ✅ Element Plus UI 组件库
+- ✅ Vue I18n 国际化（支持中英文切换）
+- ✅ Electron 桌面应用
+- ✅ Vite 快速构建
+- ✅ 组件自动导入
+- ✅ API 自动导入
+
+## 环境要求
+
+- Node.js >= 18.0.0
+- npm >= 9.0.0
 
 ## License
-[LICENSE](LICENSE)
 
-Copyright (C) [ETS666.COM](https://ets666.com/)
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-This program includes a number of subcomponents with separate copyright notices and license terms. Your use of the source code for these subcomponents is subject to the terms and conditions of the following licenses.
-
-For the SII_Decrypt component:
-
-	Licensing:
-    Everything (source codes, executables/binaries, configurations, etc.) is licensed under Mozilla Public License Version 2.0. You can find full text of this license in file license.txt or on web page https://www.mozilla.org/MPL/2.0/.
-
-    Authors, contacts, links:
-	František Milt, frantisek.milt@gmail.com
+MIT

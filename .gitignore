@@ -1,30 +1,81 @@
-.DS_Store
-node_modules
-/dist
-/build
-/release
-package-lock.json
-
-
-# local env files
-.env.local
-.env.*.local
-
-# Log files
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+dist-electron
+release
+*.local
 
 # Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 .idea
-.vscode
-.vs
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-resources/*
-static/*
+# TypeScript cache
+*.tsbuildinfo
+
+# Auto-generated
+src/auto-imports.d.ts
+src/components.d.ts
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Electron
+out/
+build/
+
+# Windows
+Thumbs.db
+Thumbs.db:ss
+Desktop.ini
+ehthumbs.db
+ehthumbs_vista.db
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Certificate files
+*.pem
+*.key
+*.cert
+
+# MacOS
+.DS_Store
+
+# Package manager
+.yarn/
+.yarn-integrity
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
