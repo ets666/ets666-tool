@@ -1,81 +1,110 @@
 <template>
-  <div class="home">
-    <el-container>
-      <el-header>
-        <h1>{{ $t('home.title') }}</h1>
-      </el-header>
-
-      <el-main>
-        <el-card>
-          <p>{{ $t('home.description') }}</p>
-          <el-divider />
-          <p>{{ $t('home.count') }}: {{ store.count }}</p>
-          <el-space>
-            <el-button type="primary" @click="store.increment">
-              {{ $t('home.increment') }}
-            </el-button>
-            <el-button type="danger" @click="store.decrement">
-              {{ $t('home.decrement') }}
-            </el-button>
-          </el-space>
-        </el-card>
-
-        <el-divider />
-
-        <el-space>
-          <el-button type="primary" @click="changeLanguage('zh-CN')">
-            中文
-          </el-button>
-          <el-button @click="changeLanguage('en-US')">
-            English
-          </el-button>
-        </el-space>
-      </el-main>
-
-      <el-footer>
-        <router-link to="/about">
-          <el-button type="text">
-            <el-icon><InfoFilled /></el-icon>
-            {{ $t('common.about') }}
-          </el-button>
-        </router-link>
-      </el-footer>
-    </el-container>
+  <div class="w h">
+    <setting ref="settingRef" :savePath="savePath" @pathTypeChange="pathTypeChange" @pathSave="pathSave" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import { useAppStore } from '@/stores'
-import { InfoFilled } from '@element-plus/icons-vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
+import Setting from '@/views/setting/Index.vue'
 
-const { locale } = useI18n()
-const store = useAppStore()
+const ipc = window.ipc
 
-const changeLanguage = (lang: string) => {
-  locale.value = lang
+const settingRef = ref<any>(null)
+const savePath = ref('')
+const type = ref('ETS2')
+const paths = reactive({
+  path: null as string | null,
+  aPath: null as string | null
+})
+
+const pathSave = ({ path, type: t }: { path: string, type: string }) => {
+  savePath.value = path
+  if (type.value === 'ETS2') {
+    paths.path = path
+  } else {
+    paths.aPath = path
+  }
+  nextTick(() => {
+    if (settingRef.value) {
+      settingRef.value.pathType = t
+      settingRef.value.init()
+    }
+  })
 }
+
+const pathTypeChange = (t: string) => {
+  type.value = t
+  if (t === 'ETS2') {
+    savePath.value = paths.path || ''
+    if (savePath.value) {
+      nextTick(() => {
+        if (settingRef.value) {
+          settingRef.value.init()
+        }
+      })
+    }
+  } else if (t === 'ATS') {
+    savePath.value = paths.aPath || ''
+    if (savePath.value) {
+      nextTick(() => {
+        if (settingRef.value) {
+          settingRef.value.init()
+        }
+      })
+    }
+  }
+}
+
+onMounted(async () => {
+  try {
+    savePath.value = ''
+    const path = await ipc.invoke('getStore', 'path')
+    const aPath = await ipc.invoke('getStore', 'aPath')
+    paths.path = path
+    paths.aPath = aPath
+    // Default path setting
+    if (path) {
+      savePath.value = path
+      type.value = 'ETS2'
+      nextTick(() => {
+        if (settingRef.value) {
+          settingRef.value.pathType = 'ETS2'
+        }
+      })
+    } else if (aPath) {
+      savePath.value = aPath
+      type.value = 'ATS'
+      nextTick(() => {
+        if (settingRef.value) {
+          settingRef.value.pathType = 'ATS'
+        }
+      })
+    } else {
+      savePath.value = ''
+      type.value = 'ETS2'
+      nextTick(() => {
+        if (settingRef.value) {
+          settingRef.value.pathType = 'ETS2'
+        }
+      })
+    }
+    nextTick(() => {
+      if (settingRef.value) {
+        settingRef.value.init()
+      }
+    })
+  } catch (error) {
+    savePath.value = ''
+  }
+})
 </script>
 
-<style scoped>
-.home {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+<style scoped lang="scss">
+.w {
+  width: 100%;
 }
-
-.el-header {
-  background-color: #409eff;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.el-footer {
-  background-color: #f5f5f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.h {
+  height: 100%;
 }
 </style>

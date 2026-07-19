@@ -3,12 +3,12 @@ import { app, BrowserWindow, Menu, dialog } from 'electron'
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { platform } from 'os'
-// import { ipcOn, fileOn, update } from './server/index'
+import Utils from './server/index'
 
 // 执行初始化
-// ipcOn()
-// fileOn()
-// update()
+Utils.ipcOn()
+Utils.fileOn()
+Utils.update()
 
 // 平台判定
 const isMac = platform() === 'darwin'

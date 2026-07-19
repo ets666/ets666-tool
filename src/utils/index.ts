@@ -41,6 +41,41 @@ export function debounce<T extends (...args: any[]) => any>(
   }
 }
 
+/**
+ * Convert hex encoded string to utf8 string
+ * ETS2 profile directory names are hex encoded
+ */
+export function hex2utf8(hex: string): string {
+  try {
+    let str = ''
+    for (let i = 0; i < hex.length; i += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16))
+    }
+    return decodeURIComponent(escape(str))
+  } catch (e) {
+    return hex
+  }
+}
+
+/**
+ * Check if the data represents an error
+ */
+export function errCatch(data: any, keyword?: string): boolean {
+  if (data && typeof data === 'object' && data.error) {
+    return true
+  }
+  if (data === 'invalidPath') {
+    return true
+  }
+  if (typeof data === 'string' && data.includes('Error')) {
+    return true
+  }
+  if (keyword && typeof data === 'string' && !data.includes(keyword)) {
+    return true
+  }
+  return false
+}
+
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
   wait: number

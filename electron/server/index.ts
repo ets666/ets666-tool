@@ -1,13 +1,16 @@
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
-const { app, dialog, ipcMain, shell } = require('electron')
-const Store = require('electron-store')
+import { promisify } from 'util'
+import { exec } from 'child_process'
+import { app, dialog, ipcMain, shell } from 'electron'
+import Store from 'electron-store'
+import { readFileSync, copyFileSync, writeFile, readdir, access, constants, statSync } from 'fs'
+import path from 'path'
+import { platform } from 'os'
+import showdown from 'showdown'
+import info from '../../package.json'
+
+const execAsync = promisify(exec)
 const store = new Store()
-const info = require('../package.json')
-const { readFileSync, copyFileSync, writeFile, readdir, access, constants, statSync } = require('fs')
-const path = require('path')
-const platform = require('os').platform()
-const isMac = platform === 'darwin'
+const isMac = platform() === 'darwin'
 
 let AMERICAN_PATH = ''
 let EURO_PATH = ''
@@ -37,7 +40,7 @@ if (!store.get('aPathType') || !store.get('aPath')) {
   store.set('aPathType', 'documents')
 }
 // read file data
-const fileWrite = (path: string, buf: Buffer<any>) => {
+const fileWrite = (path: string, buf: Buffer) => {
   return new Promise((resolve, reject) => {
     writeFile(path, buf.toString('utf8'), (err: any) => {
       if (err) {
@@ -51,7 +54,7 @@ const fileWrite = (path: string, buf: Buffer<any>) => {
 // read file name
 const fileDir = (dir: string) => {
   return new Promise((resolve, reject) => {
-    readdir(dir, (err: any, files) => {
+    readdir(dir, (err: any, files: string[]) => {
       if (err) {
         reject(err)
       }
@@ -61,9 +64,9 @@ const fileDir = (dir: string) => {
 }
 
 // Check the file
-const fileAccess = (path, constants) => {
+const fileAccess = (path: string, constants: number) => {
   return new Promise((resolve, reject) => {
-    access(path, constants, (err) => {
+    access(path, constants, (err: NodeJS.ErrnoException | null) => {
       if (err) {
         reject(err)
       }
@@ -73,10 +76,12 @@ const fileAccess = (path, constants) => {
 }
 
 // read info.sii 'name' vale
-const readInfoName = (path) => {
+const readInfoName = (path: string) => {
   const data = readFileSync(path, 'utf8')
   const reg = / name: (.*)/
-  let name = reg.exec(data)[1].trim()
+  const match = reg.exec(data)
+  if (!match) return ''
+  let name = match[1].trim()
   if (name.startsWith('"')) {
     name = escape(name.substring(1, name.length - 1))
     name = name.replace(/%5Cx/gm, '%')
@@ -91,17 +96,15 @@ const readReadme = () => {
   try {
     const readmePath = path.join(process.cwd(), '/resources/README.md')
     const data = readFileSync(readmePath, 'utf8')
-    const showdown = require('showdown')
     const converter = new showdown.Converter({ openLinksInNewWindow: true })
-    const text = data
-    const html = converter.makeHtml(text)
+    const html = converter.makeHtml(data)
     return html
   } catch (error) {
     return ''
   }
 }
 
-const addJobOffer = (jobInfo, inGameTime) => {
+const addJobOffer = (jobInfo: any, inGameTime: any) => {
   const companyJobData = []
   companyJobData.push(' target: "' + jobInfo.destination_company + '.' + jobInfo.destination_city + '"')
   const exp = Number(inGameTime) + 6120
@@ -120,7 +123,7 @@ const addJobOffer = (jobInfo, inGameTime) => {
   return companyJobData
 }
 
-const addJobInfo = (jobInfo, inGameTime) => {
+const addJobInfo = (jobInfo: any, inGameTime: any) => {
   const jobData = []
   jobData.push('')
   jobData.push('job_info : ets666.nameless.job.info {')
@@ -144,38 +147,42 @@ const addJobInfo = (jobInfo, inGameTime) => {
 }
 
 // edit game.sii
-const editGameSii = async (path, info) => {
+const editGameSii = async (path: string, info: any) => {
   try {
     const { setting, jobInfo, job } = info
     const fRead = readFileSync(path, 'utf8')
     const arrFile = fRead.split('\r\n')
-    const skills = []
-    const garage = []
-    const exper = []
+    const skills: number[] = []
+    const garage: number[] = []
+    const exper: number[] = []
     let hqCity = ''
-    const visitedCity = []
-    const visitedIndex = {
+    const visitedCity: string[] = []
+    const visitedIndex: {
+      city: number
+      count: number
+      company: number[]
+    } = {
       city: 0,
       count: 0,
       company: []
     }
     const cityName = new Set()
     const dealerCities = new Set()
-    const unlockedDealers = []
+    const unlockedDealers: string[] = []
     let unlockedDealersIndex = 0
 
     // 做货
     let companyIndex = 0 // 起点货场
     let companyEndIndex = 0 // 终点货场
     let inGameTime = 0
-    const economyEventIndex = []
-    const jobInfoIndex = []
+    const economyEventIndex: number[] = []
+    const jobInfoIndex: number[] = []
     let selectedJobInfoNameless = ''
-    const gpsNameless = []
-    const gpsNamelessIndex = []
+    const gpsNameless: string[] = []
+    const gpsNamelessIndex: number[] = []
 
     let index = 0
-    arrFile.forEach((element, fileIndex) => {
+    arrFile.forEach((element: string, fileIndex: number) => {
       if (element.startsWith(' hq_city: ')) {
         hqCity = element.split(': ')[1]
       } else if (element.startsWith(' companies[')) {
@@ -287,7 +294,7 @@ const editGameSii = async (path, info) => {
       })
       const cityNum = Number(arrFile[visitedIndex.city].split(': ')[1])
       const num = cityNum + cityName.size
-      const arrCityName = [...cityName]
+      const arrCityName = Array.from(cityName)
 
       if (cityNum === 0) {
         let str = '\r\n'
@@ -333,7 +340,7 @@ const editGameSii = async (path, info) => {
       })
       const dealerNum = Number(arrFile[unlockedDealersIndex].split(': ')[1])
       const num = dealerNum + dealerCities.size
-      const arrDealerCity = [...dealerCities]
+      const arrDealerCity = Array.from(dealerCities)
 
       if (dealerNum === 0) {
         let str = '\r\n'
@@ -492,11 +499,11 @@ const editGameSii = async (path, info) => {
 
 const Utils = {
   ipcOn: () => {
-    ipcMain.on('open-url', (event, url) => {
+    ipcMain.on('open-url', (event: Electron.IpcMainEvent, url: string) => {
       shell.openExternal(url)
     })
 
-    ipcMain.on('about', (event) => {
+    ipcMain.on('about', (event: Electron.IpcMainEvent) => {
       dialog.showMessageBox({
         title: 'ETS666 Tool',
         message: 'ETS666 Tool',
@@ -504,19 +511,19 @@ const Utils = {
       })
     })
 
-    ipcMain.on('saveStore', (event, { storeName, val }) => {
+    ipcMain.on('saveStore', (event: Electron.IpcMainEvent, { storeName, val }: { storeName: string, val: any }) => {
       store.set(storeName, val)
     })
 
-    ipcMain.handle('getStore', async (event, storeName) => {
+    ipcMain.handle('getStore', async (event: Electron.IpcMainInvokeEvent, storeName: string) => {
       return store.get(storeName)
     })
-    ipcMain.on('userData', (event) => {
+    ipcMain.on('userData', (event: Electron.IpcMainEvent) => {
       event.reply('userData', app.getPath('userData'))
     })
   },
   fileOn: () => {
-    ipcMain.handle('readReadme', async (event) => {
+    ipcMain.handle('readReadme', async (event: Electron.IpcMainInvokeEvent) => {
       return readReadme()
     })
 
@@ -527,16 +534,16 @@ const Utils = {
      * @param {function} callback 成功返回函数
      * @param {function} errorcallback 失败返回函数
      */
-    ipcMain.handle('mapDirName', async (event, { dir, filedirname }) => {
+    ipcMain.handle('mapDirName', async (event: Electron.IpcMainInvokeEvent, { dir, filedirname }: { dir: string, filedirname: string }) => {
       try {
         const dirurl = path.join(dir, filedirname)
         const code = await fileAccess(dirurl, constants.F_OK)
         if (code === 1) {
           try {
-            const files = await fileDir(dirurl)
+            const files = await fileDir(dirurl) as string[]
             // 只读取文件夹
-            const filedir = []
-            files.forEach((filename) => {
+            const filedir: string[] = []
+            files.forEach((filename: string) => {
               const pathname = path.join(dirurl, filename)
               const statInfo = statSync(pathname)
               if (statInfo.isDirectory()) {
@@ -557,7 +564,7 @@ const Utils = {
    * @description: 解码info.sii
    * @param {String} dir 文件路径
    */
-    ipcMain.handle('SiiDecryptInfo', async (event, dir) => {
+    ipcMain.handle('SiiDecryptInfo', async (event: Electron.IpcMainInvokeEvent, dir: string) => {
       try {
         const cwd = path.join(process.cwd(), '/resources/')
         const siiPath = path.join('SII_Decrypt.exe')
@@ -568,9 +575,9 @@ const Utils = {
           const cmdStr = `"${siiPath}" "${infoSiiPath}"`
           try {
             // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-            await exec(cmdStr, { cwd: cwd })
+            await execAsync(cmdStr, { cwd: cwd })
             return readInfoName(infoSiiPath)
-          } catch (error) {
+          } catch (error: any) {
             if (error.code === 1) {
               return readInfoName(infoSiiPath)
             } else {
@@ -587,7 +594,7 @@ const Utils = {
    * @description: 解码game.sii
    * @param {String} dir 文件路径
    */
-    ipcMain.handle('SiiDecrypt', async (event, { dir, info }) => {
+    ipcMain.handle('SiiDecrypt', async (event: Electron.IpcMainInvokeEvent, { dir, info }: { dir: string, info: string }) => {
       try {
         const infos = JSON.parse(info)
         const cwd = path.join(process.cwd(), '/resources/')
@@ -601,7 +608,7 @@ const Utils = {
           // 解码
           const cmdStr = `"${siiPath}" "${gameSiiPath}"`
           try {
-            await exec(cmdStr, { cwd: cwd })
+            await execAsync(cmdStr, { cwd: cwd })
             return await editGameSii(gameSiiPath, infos)
           } catch (error: any) {
             if (error.code === 1) {
@@ -616,7 +623,7 @@ const Utils = {
       }
     })
 
-    ipcMain.handle('openDir', async (event: any) => {
+    ipcMain.handle('openDir', async (event: Electron.IpcMainInvokeEvent) => {
       const result = await dialog.showOpenDialog({
         properties: ['openDirectory']
       })
@@ -644,4 +651,4 @@ const Utils = {
     })
   }
 }
-module.exports = Utils
+export default Utils
