@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Home.vue'),
+    component: () => import('@/views/home/Index.vue'),
     meta: {
       title: '首页',
     },
@@ -18,6 +18,10 @@ const routes: RouteRecordRaw[] = [
       title: '关于',
     },
   },
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/'
+  }
 ]
 
 const router = createRouter({

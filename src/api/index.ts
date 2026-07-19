@@ -1,48 +1,41 @@
-const BASE_URL = import.meta.env.VITE_API_URL || ''
+import request from '@/utils/request'
 
-interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  headers?: Record<string, string>
-  body?: any
+interface RandomJobsResponse {
+  [key: string]: any
 }
 
-export async function request<T>(
-  url: string,
-  options: RequestOptions = {}
-): Promise<T> {
-  const { method = 'GET', headers = {}, body } = options
-
-  const config: RequestInit = {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-  }
-
-  if (body) {
-    config.body = JSON.stringify(body)
-  }
-
-  const response = await fetch(`${BASE_URL}${url}`, config)
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
-  }
-
-  return response.json()
+interface ReleaseResponse {
+  // GitHub Release API 返回的数据结构
+  id: number
+  tag_name: string
+  name: string
+  body: string
+  html_url: string
+  assets: Array<{
+    id: number
+    name: string
+    browser_download_url: string
+  }>
+  [key: string]: any
 }
 
-export const api = {
-  get: <T>(url: string, options?: Omit<RequestOptions, 'method' | 'body'>) =>
-    request<T>(url, { ...options, method: 'GET' }),
+export function randomJobs(): Promise<RandomJobsResponse> {
+  return request({
+    url: '/api/random_jobs/',
+    method: 'get'
+  })
+}
 
-  post: <T>(url: string, body: any, options?: Omit<RequestOptions, 'method'>) =>
-    request<T>(url, { ...options, method: 'POST', body }),
+export function randomJobsATS(): Promise<RandomJobsResponse> {
+  return request({
+    url: '/api/random_jobs_ats/',
+    method: 'get'
+  })
+}
 
-  put: <T>(url: string, body: any, options?: Omit<RequestOptions, 'method'>) =>
-    request<T>(url, { ...options, method: 'PUT', body }),
-
-  delete: <T>(url: string, options?: Omit<RequestOptions, 'method'>) =>
-    request<T>(url, { ...options, method: 'DELETE' }),
+export function release(): Promise<ReleaseResponse> {
+  return request({
+    url: 'https://api.github.com/repos/ets666/ets666-tool/releases/latest',
+    method: 'get'
+  })
 }

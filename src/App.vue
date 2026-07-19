@@ -3,7 +3,34 @@
 </template>
 
 <script setup lang="ts">
-// App 根组件
+import { release } from '@/api/index'
+import { version } from '../package.json'
+import { compareVersions } from 'compare-versions'
+import { onMounted } from 'vue'
+
+const ipc = window.ipc
+
+const checkUpdate = async () => {
+  let showTip = null
+  showTip = await ipc.invoke('getStore', 'showUpdate')
+  if (showTip === undefined) {
+    ipc.send('saveStore', { storeName: 'showUpdate', val: true })
+    showTip = true
+  }
+  if (showTip) {
+    const res = await release()
+    const latest = res.name
+    const result = compareVersions(version, latest)
+
+    if (result === -1) {
+      ipc.send('updateMsg')
+    }
+  }
+}
+
+onMounted(() => {
+  checkUpdate()
+})
 </script>
 
 <style>
