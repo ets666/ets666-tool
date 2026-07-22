@@ -5,8 +5,10 @@ import Store from 'electron-store'
 import { readFileSync, copyFileSync, writeFile, readdir, access, constants, statSync } from 'fs'
 import path from 'path'
 import { platform } from 'os'
+// @ts-ignore
 import showdown from 'showdown'
 import info from '../../package.json'
+import { SIIDecryptor } from "@trucky/sii-decrypt-ts";
 
 const execAsync = promisify(exec)
 const store = new Store()
@@ -76,8 +78,8 @@ const fileAccess = (path: string, constants: number) => {
 }
 
 // read info.sii 'name' vale
-const readInfoName = (path: string) => {
-  const data = readFileSync(path, 'utf8')
+const readInfoName = (path: string, data: string) => {
+  // const data = readFileSync(path, 'utf8')
   const reg = / name: (.*)/
   const match = reg.exec(data)
   if (!match) return ''
@@ -147,10 +149,9 @@ const addJobInfo = (jobInfo: any, inGameTime: any) => {
 }
 
 // edit game.sii
-const editGameSii = async (path: string, info: any) => {
+const editGameSii = async (path: string, info: any, fRead: string) => {
   try {
     const { setting, jobInfo, job } = info
-    const fRead = readFileSync(path, 'utf8')
     const arrFile = fRead.split('\r\n')
     const skills: number[] = []
     const garage: number[] = []
@@ -566,24 +567,17 @@ const Utils = {
    */
     ipcMain.handle('SiiDecryptInfo', async (event: Electron.IpcMainInvokeEvent, dir: string) => {
       try {
-        const cwd = path.join(process.cwd(), '/resources/')
-        const siiPath = path.join('SII_Decrypt.exe')
         const infoSiiPath = path.join(dir, '/info.sii')
-        const code = await fileAccess(infoSiiPath, constants.F_OK)
-        if (code === 1) {
-          // 解码
-          const cmdStr = `"${siiPath}" "${infoSiiPath}"`
-          try {
-            // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
-            await execAsync(cmdStr, { cwd: cwd })
-            return readInfoName(infoSiiPath)
-          } catch (error: any) {
-            if (error.code === 1) {
-              return readInfoName(infoSiiPath)
+        const result = SIIDecryptor.decrypt(infoSiiPath, true)
+        if (result.success) {
+            const coverString = result.string_content
+            if (coverString) {
+              return readInfoName(infoSiiPath, coverString)
             } else {
-              return 'decryptFailed'
+              return ''
             }
-          }
+        } else {
+          return result.error
         }
       } catch (error) {
         return 'saveNotFound'
@@ -596,27 +590,17 @@ const Utils = {
    */
     ipcMain.handle('SiiDecrypt', async (event: Electron.IpcMainInvokeEvent, { dir, info }: { dir: string, info: string }) => {
       try {
-        const infos = JSON.parse(info)
-        const cwd = path.join(process.cwd(), '/resources/')
-        const siiPath = path.join('SII_Decrypt.exe')
         const gameSiiPath = path.join(dir, '/game.sii')
         const backSiiPath = path.join(dir, '/game_bak.sii')
-        const code = await fileAccess(gameSiiPath, constants.F_OK)
-        if (code === 1) {
-          // backup
-          copyFileSync(gameSiiPath, backSiiPath)
-          // 解码
-          const cmdStr = `"${siiPath}" "${gameSiiPath}"`
-          try {
-            await execAsync(cmdStr, { cwd: cwd })
-            return await editGameSii(gameSiiPath, infos)
-          } catch (error: any) {
-            if (error.code === 1) {
-              return await editGameSii(gameSiiPath, infos)
-            } else {
-              return 'decryptFailed'
-            }
-          }
+        const result = SIIDecryptor.decrypt(gameSiiPath, true)
+        if (result.success) {
+            // backup
+            copyFileSync(gameSiiPath, backSiiPath)
+            const infos = JSON.parse(info)
+            const coverString = result.string_content
+            return coverString && await editGameSii(coverString, infos, coverString)
+        } else {
+          return result.error
         }
       } catch (error) {
         return 'saveNotFound'
