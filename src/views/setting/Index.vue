@@ -40,13 +40,13 @@
                   class="iconfont iconsucai"
                   style="font-size: 18px; margin-right: 10px"
                 ></i>
-                选择路径
+                {{ $t("select") }}
               </div>
               <div>
                 <el-select
                   v-model="profile"
                   size="large"
-                  placeholder="选择存档"
+                  :placeholder="$t('selectProfile')"
                   class="mb10 w select_shadow"
                   @change="changeProfile"
                   @visibleChange="visibleProfile"
@@ -62,7 +62,7 @@
                 <el-select
                   v-model="save"
                   size="large"
-                  placeholder="选择存档"
+                  :placeholder="$t('selectSave')"
                   class="mb10 w select_shadow"
                   @change="reSet"
                 >
@@ -77,7 +77,7 @@
               </div>
               <div class="btn mb10 cursor_pointer" @click="saveSetting">
                 <i class="iconfont iconbaocun" style="margin-right: 5px"></i>
-                保存
+                {{ $t("save") }}
               </div>
               <div class="copyright cursor_pointer" @click="pathTypeChange('666')">
                 &copy; ETS666
@@ -93,7 +93,7 @@
               <div class="job_offer">
                 <div class="job_info">
                   <i class="iconfont iconhb-addrss f21"></i>
-                  <div class="f21 fb ml10">任务</div>
+                  <div class="f21 fb ml10">{{ $t("job") }}</div>
                   <div class="line2">&nbsp;</div>
                   <el-select
                     v-model="tody"
@@ -124,7 +124,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">同步任务</div>
+                    <div class="ml10">{{ $t("syncJob") }}</div>
                   </div>
                   <div
                     class="check_btn job_bg ml10"
@@ -137,7 +137,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">移动到货物</div>
+                    <div class="ml10">{{ $t("moveCar") }}</div>
                   </div>
                 </div>
               </div>
@@ -145,7 +145,7 @@
               <div class="job_table">
                 <el-row>
                   <el-col :span="8">
-                    <div class="title bgf8d2af" style="padding: 10px 0">服务器</div>
+                    <div class="title bgf8d2af" style="padding: 10px 0">{{ $t("server") }}</div>
                   </el-col>
                   <el-col :span="16">
                     <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
@@ -157,7 +157,7 @@
 
                 <el-row>
                   <el-col :span="8">
-                    <div class="title" style="padding: 10px 0">出发城市</div>
+                    <div class="title" style="padding: 10px 0"> {{ $t("departureCity") }}</div>
                   </el-col>
                   <el-col :span="16">
                     <div style="padding: 10px 0 10px 20px">
@@ -169,7 +169,7 @@
 
                 <el-row>
                   <el-col :span="8">
-                    <div class="title bgf8d2af" style="padding: 10px 0">出发公司</div>
+                    <div class="title bgf8d2af" style="padding: 10px 0">{{ $t("departureCompany") }}</div>
                   </el-col>
                   <el-col :span="16">
                     <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
@@ -180,7 +180,7 @@
                 </el-row>
                 <el-row>
                   <el-col :span="8">
-                    <div class="title" style="padding: 10px 0">目的城市</div>
+                    <div class="title" style="padding: 10px 0">{{ $t("destinationCity") }}</div>
                   </el-col>
                   <el-col :span="16">
                     <div style="padding: 10px 0 10px 20px">
@@ -191,7 +191,7 @@
                 </el-row>
                 <el-row>
                   <el-col :span="8">
-                    <div class="title bgf8d2af" style="padding: 10px 0">目的公司</div>
+                    <div class="title bgf8d2af" style="padding: 10px 0">{{ $t("destinationCompany") }}</div>
                   </el-col>
                   <el-col :span="16">
                     <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
@@ -203,7 +203,7 @@
 
                 <el-row>
                   <el-col :span="8">
-                    <div class="title" style="padding: 10px 0">货物</div>
+                    <div class="title" style="padding: 10px 0">{{ $t("cargo") }}</div>
                   </el-col>
                   <el-col :span="16">
                     <div style="padding: 10px 0 10px 20px">
@@ -214,7 +214,7 @@
                 </el-row>
                 <el-row>
                   <el-col :span="8">
-                    <div class="title bgf8d2af" style="padding: 10px 0">里程</div>
+                    <div class="title bgf8d2af" style="padding: 10px 0">{{ $t("mileage") }}</div>
                   </el-col>
                   <el-col :span="16">
                     <div style="padding: 10px 0 10px 20px" class="bgf8d2af">
@@ -222,7 +222,7 @@
                         {{ jobInfo.shortest_distance_km + jobInfo.ferry_distance_km }}
                         km
                         <span v-if="jobInfo.ferry_distance_km"
-                          >({{ jobInfo.ferry_distance_km }} km 渡轮)</span
+                          >({{ jobInfo.ferry_distance_km }} km {{ $t("ferry") }})</span
                         >
                       </template>
                       <span v-else>&nbsp;</span>
@@ -237,7 +237,7 @@
             <div class="shadow_box">
               <div class="setting_title">
                 <i class="iconfont iconico-share" style="font-size: 18px"></i>
-                <span class="f21 fb ml10"> 修改设置 </span>
+                <span class="f21 fb ml10"> {{ $t("change") }} </span>
               </div>
               <div class="setting_table">
                 <div class="setting_check_box">
@@ -248,7 +248,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">金钱</div>
+                    <div class="ml10">{{ $t("money") }}</div>
                   </div>
 
                   <div class="check_btn bgfab97d" @click="clickBtn('level')">
@@ -258,7 +258,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">等级</div>
+                    <div class="ml10">{{ $t("level") }}</div>
                   </div>
 
                   <div class="check_btn bgfab97d" @click="clickBtn('skills')">
@@ -268,7 +268,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">技能</div>
+                    <div class="ml10">{{ $t("skills") }}</div>
                   </div>
 
                   <div class="check_btn bgfab97d" @click="clickBtn('city')">
@@ -278,7 +278,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">城市</div>
+                    <div class="ml10">{{ $t("city") }}</div>
                   </div>
                 </div>
 
@@ -290,7 +290,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">车库</div>
+                    <div class="ml10">{{ $t("garage") }}</div>
                   </div>
 
                   <div class="check_btn bgfab97d" @click="clickBtn('dealer')">
@@ -300,7 +300,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">经销商</div>
+                    <div class="ml10">{{ $t("dealer") }}</div>
                   </div>
 
                   <div class="check_btn bgfab97d" @click="clickBtn('damage')">
@@ -310,7 +310,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">损坏</div>
+                    <div class="ml10">{{ $t("damage") }}</div>
                   </div>
 
                   <div class="check_btn bgfab97d" @click="clickBtn('oil')">
@@ -320,7 +320,7 @@
                         class="iconfont iconfuxuankuanggou check_active"
                       ></i>
                     </div>
-                    <div class="ml10">燃油</div>
+                    <div class="ml10">{{ $t("oil") }}</div>
                   </div>
                 </div>
               </div>
@@ -331,7 +331,7 @@
           <aboutUs :info="readMe"></aboutUs>
         </div>
         <el-dialog
-          title="选择路径"
+          :title="$t('selectPath')"
           v-model="dialogTableVisible"
           :width="'80%'"
           :close-on-click-modal="false"
@@ -356,7 +356,9 @@ import selectPath from "@/views/selectEuroPath/Index.vue";
 import aboutUs from "@/views/about/Index.vue";
 import { hex2utf8, errCatch } from "@/utils/index";
 import { RandomJob } from "@/api/index";
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const ipc = window.ipc;
 
 const props = defineProps<{
@@ -521,7 +523,7 @@ const changeProfile = async (path: string) => {
 const visibleProfile = (flag: boolean) => {
   if (flag && profileOptions.value.length === 0) {
     ElMessage({
-      message: "暂无数据",
+      message: t('noDataTips'),
       type: "warning",
     });
   }
@@ -585,7 +587,7 @@ const clickBtn = async (val: string) => {
     }
   } else {
     ElMessage({
-      message: "请先选择存档",
+      message: t('error.selectSaveFirst'),
       type: "warning",
     });
   }
@@ -638,16 +640,16 @@ const saveSetting = async () => {
     });
     gameSiiCatch(res);
   } else {
-    ElMessage.error("未选择任何修改项");
+    ElMessage.error("t('error.nothingSelected')");
   }
 };
 
 const errorMessages: Record<string, string> = {
-  companyNotFound: "未找到公司",
-  companyNotSupported: "不支持该公司",
-  writeFileFailed: "写入文件失败",
-  failed: "操作失败",
-  decryptFailed: "解密失败",
+  companyNotFound: t(`error.companyNotFound`),
+  companyNotSupported: t(`error.companyNotSupported`),
+  writeFileFailed: t(`error.writeFileFailed`),
+  failed: t(`error.failed`),
+  decryptFailed: t(`error.decryptFailed`),
 };
 
 const gameSiiCatch = (type: string) => {
@@ -660,15 +662,15 @@ const gameSiiCatch = (type: string) => {
       "decryptFailed",
     ].indexOf(type) !== -1
   ) {
-    ElMessageBox.alert(errorMessages[type] || type, "错误", {
-      confirmButtonText: "确定",
+    ElMessageBox.alert(errorMessages[type] || type, t('error.error'), {
+      confirmButtonText: t('ok'),
       callback: () => {
         fullscreenLoading.value = false;
       },
     });
   } else {
-    ElMessageBox.alert("文件保存成功", "成功", {
-      confirmButtonText: "确定",
+    ElMessageBox.alert(t('success.fileSaved'), t('success.success'), {
+      confirmButtonText: t('ok'),
       callback: () => {
         fullscreenLoading.value = false;
       },

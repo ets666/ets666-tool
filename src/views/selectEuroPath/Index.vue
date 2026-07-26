@@ -1,12 +1,12 @@
 <template>
   <div class="box">
     <div class="content">
-      请选择游戏路径
+      {{$t('selectTips')}}
     </div>
     <div class="input-box w">
-      <el-input class="mr10 w60" v-model="gamePath" disabled placeholder="选择路径"></el-input>
-      <el-button class="mr10" @click="openFileHandler">选择</el-button>
-      <el-button style="margin-left: 0;" :disabled="disableSure" type="primary" @click="saveToLocal">确定</el-button>
+      <el-input class="mr10 w60" v-model="gamePath" disabled :placeholder="$t('selectPath')"></el-input>
+      <el-button class="mr10" @click="openFileHandler">{{$t('selectBtn')}}</el-button>
+      <el-button style="margin-left: 0;" :disabled="disableSure" type="primary" @click="saveToLocal">{{$t('ok')}}</el-button>
     </div>
   </div>
 </template>

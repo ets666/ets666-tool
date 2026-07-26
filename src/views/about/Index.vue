@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
   import 'github-markdown-css/github-markdown-light.css'
+
   const props = defineProps<{
     info: string
   }>()
