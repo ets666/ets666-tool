@@ -502,20 +502,24 @@ const changeProfile = async (path: string) => {
   });
   if (file === "invalidPath") dialogTableVisible.value = true;
   if (!errCatch(file)) {
-    file.forEach(async (element: string) => {
-      const obj: { value: string; label: string } = {
-        value: element,
-        label: element,
-      };
-      const name = await ipc.invoke(
-        "SiiDecryptInfo",
-        `${props.savePath}/profiles/${path}/save/${element}`
-      );
-      if (!errCatch(name, "info.sii") && name) {
-        obj.label = name;
-      }
-      saveOptions.value.push(obj);
-    });
+    try {
+      const options = await Promise.all(file.map(async (element: string) => {
+        const name = await ipc.invoke(
+          "SiiDecryptInfo",
+          `${props.savePath}/profiles/${path}/save/${element}`
+        );
+        return {
+          value: element,
+          label: name || element,
+        }
+      }))
+      saveOptions.value = options
+    } catch (error) {
+      ElMessage({
+        message: t('error.fetchFileStatsFailed'),
+        type: "error",
+      });
+    }
   }
   reSet();
 };
