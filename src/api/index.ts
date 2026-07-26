@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-interface RandomJobsResponse {
+export interface RandomJobsResponse {
   [key: string]: any
 }
 
-interface ReleaseResponse {
+export interface ReleaseResponse {
   // GitHub Release API 返回的数据结构
   id: number
   tag_name: string
@@ -19,19 +19,35 @@ interface ReleaseResponse {
   [key: string]: any
 }
 
-export function randomJobs(): Promise<RandomJobsResponse> {
-  return request({
-    url: '/api/random_jobs/',
-    method: 'get'
-  })
+export interface I18nItem {
+  language: string;
+  server: string;
+  departure_city: string;
+  departure_company: string;
+  destination_city: string;
+  destination_company: string;
+  cargo: string;
 }
 
-export function randomJobsATS(): Promise<RandomJobsResponse> {
-  return request({
-    url: '/api/random_jobs_ats/',
-    method: 'get'
-  })
+export interface RandomJob {
+  supported_savegame_version: number;
+  assembly_time: string; // ISO 8601 格式的时间字符串
+  server: string;
+  departure_city: string;
+  departure_company: string;
+  departure_coordinates: string; // 格式: "(x, y, z) (qx, qy, qz, qw)"
+  destination_city: string;
+  destination_company: string;
+  shortest_distance_km: number;
+  ferry_distance_km?: number; // 可选，因为有些任务可能没有渡轮
+  cargo: string;
+  trailer_variant: string;
+  trailer_definition: string;
+  units_count: number;
+  i18n: I18nItem[];
+  company_truck: string;
 }
+
 
 export function release(): Promise<ReleaseResponse> {
   return request({

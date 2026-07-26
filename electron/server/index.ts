@@ -9,6 +9,9 @@ import { platform } from 'os'
 import showdown from 'showdown'
 import info from '../../package.json'
 import { SIIDecryptor } from "@trucky/sii-decrypt-ts";
+import axios from 'axios'
+import https from 'https'
+
 
 const execAsync = promisify(exec)
 const store = new Store()
@@ -521,6 +524,20 @@ const Utils = {
     })
     ipcMain.on('userData', (event: Electron.IpcMainEvent) => {
       event.reply('userData', app.getPath('userData'))
+    })
+
+    const insecureAgent = new https.Agent({
+      rejectUnauthorized: false
+    })
+    ipcMain.handle('ets666', async (event: Electron.IpcMainInvokeEvent, apiName: string) => {
+      try {
+        const { data } = await axios.get(`https://ets666.com/api/${apiName}`, {
+          httpsAgent: insecureAgent
+        })
+        return data
+      } catch (err: any) {
+        throw new Error(err.message)
+      }
     })
   },
   fileOn: () => {
