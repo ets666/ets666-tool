@@ -155,7 +155,7 @@ const addJobInfo = (jobInfo: any, inGameTime: any) => {
 const editGameSii = async (path: string, info: any, fRead: string) => {
   try {
     const { setting, jobInfo, job } = info
-    const arrFile = fRead.split('\r\n')
+    const arrFile = fRead.replace(/\r\n?/g, '\n').split('\n')
     const skills: number[] = []
     const garage: number[] = []
     const exper: number[] = []
