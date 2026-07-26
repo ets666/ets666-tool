@@ -640,7 +640,7 @@ const saveSetting = async () => {
     });
     gameSiiCatch(res);
   } else {
-    ElMessage.error("t('error.nothingSelected')");
+    ElMessage.error(t('error.nothingSelected'));
   }
 };
 

@@ -9,7 +9,9 @@ import renderer from 'vite-plugin-electron-renderer'
 
 export default defineConfig(({ mode }) => {
   const isElectron = mode === 'electron'
-  
+  // 由 VSCode 调试拉起时会设置该环境变量，避免 vite-plugin-electron 再自动启动 Electron，导致出现两个客户端
+  const isVSCodeDebug = !!process.env.VSCODE_DEBUG
+
   return {
     plugins: [
       vue(),
@@ -27,11 +29,16 @@ export default defineConfig(({ mode }) => {
           {
             entry: 'electron/main.ts',
             onstart(options) {
-              options.startup()
+              // VSCode 调试模式下，不由插件启动 Electron，交给 launch.json
+              if (!isVSCodeDebug) {
+                options.startup()
+              }
             },
             vite: {
               build: {
                 outDir: 'dist-electron',
+                sourcemap: true,
+                minify: false,
                 rollupOptions: {
                   external: ['electron']
                 }
@@ -46,6 +53,8 @@ export default defineConfig(({ mode }) => {
             vite: {
               build: {
                 outDir: 'dist-electron/preload',
+                sourcemap: 'inline',
+                minify: false,
                 rollupOptions: {
                   external: ['electron']
                 }

@@ -615,7 +615,7 @@ const Utils = {
             copyFileSync(gameSiiPath, backSiiPath)
             const infos = JSON.parse(info)
             const coverString = result.string_content
-            return coverString && await editGameSii(coverString, infos, coverString)
+            return coverString && await editGameSii(gameSiiPath, infos, coverString)
         } else {
           return result.error
         }

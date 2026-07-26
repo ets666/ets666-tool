@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // 常规：npm run dev（vite-plugin-electron 自己会拉起 Electron）
+      "label": "vite: dev",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*VITE.*",
+          "endsPattern": ".*(ready in|Local:).*"
+        }
+      }
+    },
+    {
+      // 调试专用：注入 VSCODE_DEBUG=true，vite-plugin-electron 不会自启 Electron
+      // 由 launch.json 独占启动 Electron，避免出现两个客户端
+      "label": "vite: dev (debug)",
+      "type": "shell",
+      "command": "npx vite --mode electron",
+      "isBackground": true,
+      "options": {
+        "env": {
+          "VSCODE_DEBUG": "true"
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*VITE.*",
+          "endsPattern": ".*(ready in|Local:).*"
+        }
+      }
+    }
+  ]
+}

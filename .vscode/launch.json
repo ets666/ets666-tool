@@ -1,0 +1,63 @@
+{
+  // VSCode 调试 Electron（Vue3 + Vite + vite-plugin-electron）
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // ===== 主进程 =====
+      "name": "Electron: Main",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
+      "runtimeArgs": [".", "--remote-debugging-port=9223", "--no-sandbox"],
+      // 先跑 vite（带 VSCODE_DEBUG 环境变量，vite-plugin-electron 不会自启 Electron）
+      "preLaunchTask": "vite: dev (debug)",
+      "outFiles": ["${workspaceFolder}/dist-electron/**/*.js", "!**/node_modules/**"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "../electron/*": "${workspaceFolder}/electron/*",
+        "../../electron/*": "${workspaceFolder}/electron/*",
+        "webpack:///./electron/*": "${workspaceFolder}/electron/*",
+        "webpack:///electron/*": "${workspaceFolder}/electron/*"
+      },
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development",
+        "VITE_DEV_SERVER_URL": "http://localhost:5173",
+        "VSCODE_DEBUG": "true"
+      }
+    },
+    {
+      // ===== 渲染进程 =====
+      "name": "Electron: Renderer",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9223,
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMaps": true,
+      "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
+      "sourceMapPathOverrides": {
+        "/@fs/*": "/*",
+        "/src/*": "${workspaceFolder}/src/*",
+        "webpack:///./src/*": "${workspaceFolder}/src/*",
+        "webpack:///src/*": "${workspaceFolder}/src/*",
+        "webpack:///*": "*",
+        "webpack:///./~/*": "${workspaceFolder}/node_modules/*"
+      },
+      "timeout": 30000,
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Electron: All",
+      "configurations": ["Electron: Main", "Electron: Renderer"],
+      "stopAll": true
+    }
+  ]
+}
